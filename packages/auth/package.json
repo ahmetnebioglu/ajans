@@ -1,0 +1,20 @@
+{
+  "name": "@ajans/auth",
+  "version": "0.1.0",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./options": "./src/options.ts"
+  },
+  "types": "./src/index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "next-auth": "4.24.11",
+    "@next-auth/prisma-adapter": "1.0.7",
+    "@ajans/db": "*",
+    "lucide-react": "^0.474.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
