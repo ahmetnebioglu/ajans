@@ -320,6 +320,14 @@ model Newsletter {
   createdAt         DateTime @default(now())
 }
 
+model NewsletterSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  status      String   @default("active") // active, unsubscribed
+  projectSlug String   // "mercan", "ecommerce-hub" vb.
+  createdAt   DateTime @default(now())
+}
+
 enum Role {
   USER
   ADMIN
