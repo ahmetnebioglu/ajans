@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 export async function getBlogPosts() {
   return await db.blogPost.findMany({
-    include: { categories: true },
+    include: { category: true },
     orderBy: { createdAt: "desc" },
   });
 }
@@ -21,7 +21,7 @@ export async function createBlogPost(data: any) {
       slug: data.slug,
       excerpt: data.excerpt,
       content: data.content,
-      coverImage: data.coverImage,
+      featuredImage: data.featuredImage,
       isPublished: data.isPublished,
       categoryId: data.categoryId,
     },
@@ -38,7 +38,7 @@ export async function updateBlogPost(id: string, data: any) {
       slug: data.slug,
       excerpt: data.excerpt,
       content: data.content,
-      coverImage: data.coverImage,
+      featuredImage: data.featuredImage,
       isPublished: data.isPublished,
       categoryId: data.categoryId,
     },

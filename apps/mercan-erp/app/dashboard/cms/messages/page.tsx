@@ -14,7 +14,7 @@ import {
   FileText,
   AlertCircle
 } from "lucide-react";
-import { getMessages, markAsRead, deleteMessage } from "../../../../actions/message-actions";
+import { getMessages, markRequestAsRead as markAsRead, deleteMessage } from "../../../actions/admin-actions";
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -44,14 +44,14 @@ export default function MessagesPage() {
     return matchesSearch;
   });
 
-  const handleRead = async (id: string) => {
-    const res = await markAsRead(id);
+  const handleRead = async (id: string, type: "contact" | "reference") => {
+    const res = await markAsRead(id, type);
     if (res.success) loadMessages();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, type: "contact" | "reference") => {
     if (confirm("Bu mesajı silmek istediğinize emin misiniz?")) {
-      const res = await deleteMessage(id);
+      const res = await deleteMessage(id, type);
       if (res.success) loadMessages();
     }
   };
@@ -157,14 +157,14 @@ export default function MessagesPage() {
                      <div className="flex items-center justify-end gap-3">
                         {!msg.isRead && (
                           <button 
-                            onClick={() => handleRead(msg.id)}
+                            onClick={() => handleRead(msg.id, msg.type)}
                             className="px-6 py-3 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 hover:scale-105 transition-transform"
                           >
                              Okundu İşaretle
                           </button>
                         )}
                         <button 
-                          onClick={() => handleDelete(msg.id)}
+                          onClick={() => handleDelete(msg.id, msg.type)}
                           className="p-3 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white transition-all shadow-sm"
                         >
                            <Trash2 size={18} />

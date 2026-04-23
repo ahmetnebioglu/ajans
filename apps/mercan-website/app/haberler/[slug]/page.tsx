@@ -14,7 +14,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = await db.blogPost.findUnique({
     where: { slug },
-    include: { categories: true }
+    include: { category: true }
   });
 
   if (!post) notFound();
@@ -32,9 +32,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Hero Image */}
       <div className="relative h-[40vh] md:h-[60vh] overflow-hidden bg-slate-900">
-        {post.coverImage && (
+        {post.featuredImage && (
           <img 
-            src={post.coverImage} 
+            src={post.featuredImage} 
             alt={post.title}
             className="w-full h-full object-cover"
           />
@@ -48,7 +48,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-100 space-y-6">
             <div className="flex flex-wrap items-center gap-4">
               <span className="px-4 py-1.5 bg-teal-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full">
-                {post.categories?.name || "GENEL"}
+                {post.category?.name || "GENEL"}
               </span>
               <span className="flex items-center gap-2 text-slate-400 text-[10px] font-bold uppercase tracking-widest italic">
                 <Calendar size={14} /> {format(new Date(post.createdAt), "dd MMMM yyyy", { locale: tr })}

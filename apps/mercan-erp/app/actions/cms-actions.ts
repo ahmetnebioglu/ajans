@@ -82,7 +82,7 @@ export async function deletePage(id: string) {
 
 export async function getBlogPosts() {
   return await prisma.blogPost.findMany({
-    include: { categories: true },
+    include: { category: true },
     orderBy: { createdAt: "desc" }
   });
 }
@@ -132,7 +132,7 @@ export async function updateSiteSettings(data: any) {
 // --- SECTION ACTIONS ---
 
 export async function getPageSections(pageId: string) {
-  return await prisma.section.findMany({
+  return await prisma.pageSection.findMany({
     where: { pageId },
     orderBy: { order: "asc" }
   });
@@ -143,12 +143,12 @@ export async function addSection(pageId: string, type: any, content: any) {
   if (!admin) return { success: false, error: "Yetkisiz." };
 
   try {
-    const lastSection = await prisma.section.findFirst({
+    const lastSection = await prisma.pageSection.findFirst({
       where: { pageId },
       orderBy: { order: "desc" }
     });
 
-    const section = await prisma.section.create({
+    const section = await prisma.pageSection.create({
       data: {
         pageId,
         type,
@@ -176,7 +176,7 @@ export async function deleteSection(sectionId: string, pageId: string) {
   if (!admin) return { success: false, error: "Yetkisiz." };
 
   try {
-    await prisma.section.delete({ where: { id: sectionId } });
+    await prisma.pageSection.delete({ where: { id: sectionId } });
     revalidatePath(`/dashboard/cms/pages/${pageId}`);
     
     const page = await prisma.page.findUnique({ where: { id: pageId } });
@@ -197,7 +197,7 @@ export async function savePageSections(sections: any[]) {
 
     await prisma.$transaction(
       sections.map(section => 
-        prisma.section.update({
+        prisma.pageSection.update({
           where: { id: section.id },
           data: {
             content: section.content,
@@ -209,7 +209,7 @@ export async function savePageSections(sections: any[]) {
 
     // Revalidate website content
     if (sections.length > 0) {
-      const firstSection = await prisma.section.findUnique({
+      const firstSection = await prisma.pageSection.findUnique({
         where: { id: sections[0].id },
         include: { page: true }
       });
@@ -326,7 +326,7 @@ export async function getNaceCodes() {
   });
 }
 
-export async function addNaceCode(data: { code: string; description: string; hazardClass: string }) {
+export async function addNaceCode(data: { code: string; description: string; dangerClass: string }) {
   const admin = await getAdminSession();
   if (!admin) return { success: false, error: "Yetkisiz." };
 

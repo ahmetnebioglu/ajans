@@ -14,62 +14,30 @@ import {
 interface Document {
   id: string;
   title: string;
-  category: string;
-  type: string;
-  fileSize: string;
-  fileUrl: string;
-  description: string;
+  driveFileId: string;
+  fileType?: string;
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  createdAt: Date;
 }
 
-const DOCUMENTS: Document[] = [
-  {
-    id: "1",
-    title: "LPG Dolum İstasyonları Güvenlik Talimatı",
-    category: "İSG Talimatları",
-    type: "PDF",
-    fileSize: "1.2 MB",
-    fileUrl: "/docs/lpg-guvenlik.pdf",
-    description: "LPG dolum ve boşaltım işlemleri sırasında uyulması gereken emniyet kuralları."
-  },
-  {
-    id: "2",
-    title: "Güvenli Sürüş Teknikleri El Kitabı",
-    category: "Eğitim Dökümanları",
-    type: "PDF",
-    fileSize: "4.5 MB",
-    fileUrl: "/docs/guvenli-surus.pdf",
-    description: "Şirket araçlarını kullanan personel için temel güvenli sürüş prensipleri."
-  },
-  {
-    id: "3",
-    title: "Yüksekte Çalışma İSG Soruları",
-    category: "İSG Eğitim Soruları",
-    type: "PDF",
-    fileSize: "0.8 MB",
-    fileUrl: "/docs/yuksekte-calisma-sorular.pdf",
-    description: "Yüksekte çalışma eğitimleri sonrası yapılacak değerlendirme sınavı soru bankası."
-  },
-  {
-    id: "4",
-    title: "Ofislerde Ergonomi Rehberi",
-    category: "İSG Talimatları",
-    type: "PDF",
-    fileSize: "2.1 MB",
-    fileUrl: "/docs/ofis-ergonomi.pdf",
-    description: "Ekranlı araçlarla çalışanlar için duruş ve ofis düzenleme klavuzu."
-  }
-];
+interface IsgLibraryClientProps {
+  documents: Document[];
+}
 
-const CATEGORIES = ["Tümü", "İSG Talimatları", "İSG Eğitim Soruları", "Eğitim Dökümanları", "İSG Videoları"];
-
-export default function IsgLibraryClient() {
+export default function IsgLibraryClient({ documents }: IsgLibraryClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Tümü");
 
-  const filteredDocs = DOCUMENTS.filter(doc => {
-    const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         doc.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === "Tümü" || doc.category === activeCategory;
+  // Kategorileri dökümanlardan çıkar
+  const categories = ["Tümü", ...Array.from(new Set(documents.map(doc => doc.category.name)))];
+
+  const filteredDocs = documents.filter(doc => {
+    const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = activeCategory === "Tümü" || doc.category.name === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -78,16 +46,13 @@ export default function IsgLibraryClient() {
       {/* Hero Section - Ultimate Glass Theme (#0F172A) */}
       <section className="bg-[#0F172A] py-24 relative overflow-hidden text-center">
         
-        {/* Arka Planı İkiye Bölen Çizgi (Z-index: 0) */}
         <div className="absolute inset-0 pointer-events-none">
            <div className="absolute top-0 right-0 w-[55%] h-full bg-teal-500/[0.08] skew-x-[-20deg] origin-top border-l border-white/[0.05] shadow-[-20px_0_100px_rgba(20,184,166,0.05)]" />
         </div>
 
-        {/* Global Glow */}
         <div className="absolute left-1/2 -top-24 -translate-x-1/2 w-[800px] h-[400px] bg-teal-500/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="container-wide relative z-10 space-y-8 flex flex-col items-center">
-           {/* Label Style Sync */}
            <div className="inline-flex items-center gap-2 px-4 py-1.5 border border-teal-500/20 rounded-full bg-teal-500/5">
               <Sparkles size={12} className="text-teal-400" />
               <span className="text-[10px] font-black text-teal-400 uppercase tracking-[0.2em] italic">
@@ -103,7 +68,6 @@ export default function IsgLibraryClient() {
              Güncel mevzuat ve İSG dökümanlarına modern ve hızlı erişim.
            </p>
 
-           {/* PREMIUM GLASS SEARCH INPUT */}
            <div className="w-full max-w-2xl relative group mt-4">
               <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
                 <Search className="text-teal-200/40 group-focus-within:text-teal-400 transition-all duration-300" size={22} />
@@ -127,12 +91,11 @@ export default function IsgLibraryClient() {
         </div>
       </section>
 
-      {/* Main Content Area - Aydınlık Tema Geçişi */}
+      {/* Main Content Area */}
       <section className="py-16 bg-white flex-1">
         <div className="container-wide">
-          {/* Filtering */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-16">
-            {CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
@@ -147,7 +110,6 @@ export default function IsgLibraryClient() {
             ))}
           </div>
 
-          {/* Document Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {filteredDocs.length === 0 ? (
               <div className="col-span-full py-24 text-center space-y-4">
@@ -166,21 +128,22 @@ export default function IsgLibraryClient() {
                           {doc.title}
                        </h3>
                        <span className="text-[9px] font-black bg-slate-100 text-slate-400 px-2 py-1 rounded-md uppercase tracking-widest">
-                          {doc.type}
+                          {doc.fileType || "PDF"}
                        </span>
                     </div>
                     
-                    <p className="text-sm text-slate-500 font-medium italic leading-relaxed line-clamp-2">
-                       {doc.description}
-                    </p>
-                    
                     <div className="flex items-center justify-between pt-4 border-t border-slate-50">
                        <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                          <BookOpen size={14} className="text-teal-500" /> {doc.category}
+                          <BookOpen size={14} className="text-teal-500" /> {doc.category.name}
                        </div>
-                       <button className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-teal-600 transition-all shadow-lg shadow-slate-900/5">
-                          <Download size={14} /> İNDİR ({doc.fileSize})
-                       </button>
+                       <a 
+                         href={`https://drive.google.com/file/d/${doc.driveFileId}/view?usp=sharing`} 
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-teal-600 transition-all shadow-lg shadow-slate-900/5"
+                       >
+                          <Download size={14} /> İNDİR
+                       </a>
                     </div>
                  </div>
               </div>

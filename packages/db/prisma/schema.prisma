@@ -14,8 +14,13 @@ model User {
   image         String?
   password      String?
   role          Role      @default(USER)
-  companies     Company[]
-  accounts      Account[]
+  companies     Company[] @relation("CompanyToExpert")
+  companyAccess CompanyAccess[]
+  reports           Report[]
+  auditLogs         AuditLog[]
+  notifications     Notification[]
+  createdCompanies  Company[] @relation("CompanyCreatedBy")
+  accounts          Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -61,14 +66,77 @@ model Company {
   name        String
   taxNumber   String?
   address     String?
-  experts     User[]
+  driveFolderId String? @unique // Google Drive root folder for this company
+  createdById  String?
+  createdBy    User?    @relation("CompanyCreatedBy", fields: [createdById], references: [id])
+  experts     User[]   @relation("CompanyToExpert")
+  reports     Report[]
+  folders     Folder[]
+  auditLogs   AuditLog[]
+  userAccess  CompanyAccess[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
-model Notification {
+model CompanyAccess {
   id        String   @id @default(cuid())
   userId    String
+  companyId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, companyId])
+}
+
+model Folder {
+  id        String   @id @default(cuid())
+  name      String
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Folder?  @relation("SubFolders", fields: [parentId], references: [id])
+  children  Folder[] @relation("SubFolders")
+  reports   Report[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  title       String
+  fileName    String?
+  fileUrl     String?
+  driveFileId String?
+  category    String?  @default("Genel")
+  status      String   @default("BEKLEMEDE") // BEKLEMEDE, AKSIYON_GEREKLI, COZULDU
+  note        String?  @db.Text
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  folderId    String?
+  folder      Folder?  @relation(fields: [folderId], references: [id])
+  uploadedById String?
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+  action    String
+  details   String?  @db.Text
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   message   String
   type      String   @default("INFO") // INFO, WARNING, ERROR, SUCCESS
   isRead    Boolean  @default(false)
@@ -91,6 +159,7 @@ model IsgCategory {
   id          String       @id @default(cuid())
   name        String
   slug        String       @unique
+  order       Int          @default(0)
   items       IsgLibrary[]
   documents   IsgDocument[]
   createdAt   DateTime     @default(now())
@@ -99,8 +168,8 @@ model IsgCategory {
 model IsgDocument {
   id          String      @id @default(cuid())
   title       String
-  slug        String      @unique
-  fileUrl     String
+  driveFileId String
+  fileType    String?
   isPublished Boolean     @default(false)
   categoryId  String
   category    IsgCategory @relation(fields: [categoryId], references: [id])
@@ -112,21 +181,33 @@ model Service {
   id          String   @id @default(cuid())
   title       String
   slug        String   @unique
-  content     String   @db.Text
-  icon        String?
-  image       String?
-  order       Int      @default(0)
+  summary       String?  @db.Text
+  content       String   @db.Text
+  icon          String?
+  featuredImage String?
+  isPublished   Boolean  @default(false)
+  order         Int      @default(0)
+  seoTitle      String?
+  seoDescription String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
+model ReferenceSector {
+  id         String      @id @default(cuid())
+  name       String
+  order      Int         @default(0)
+  references Reference[]
+}
+
 model Reference {
-  id          String   @id @default(cuid())
-  name        String
-  logo        String?
-  sector      String?
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
+  id        String          @id @default(cuid())
+  name      String
+  logo      String?
+  sectorId  String?
+  sector    ReferenceSector? @relation(fields: [sectorId], references: [id])
+  order     Int             @default(0)
+  createdAt DateTime        @default(now())
 }
 
 model ContactMessage {
@@ -177,17 +258,19 @@ model BlogCategory {
 }
 
 model BlogPost {
-  id          String       @id @default(cuid())
-  title       String
-  slug        String       @unique
-  excerpt     String
-  content     String       @db.Text
-  coverImage  String?
-  isPublished Boolean      @default(false)
-  categoryId  String?
-  categories  BlogCategory? @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  excerpt         String?       @db.Text
+  content         String        @db.Text
+  featuredImage   String?
+  isPublished     Boolean       @default(false)
+  seoTitle        String?
+  seoDescription  String?
+  categoryId      String?
+  category        BlogCategory? @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
 model NaceCode {
@@ -220,7 +303,7 @@ model PageSection {
 }
 
 model SiteSettings {
-  id        Int      @id @default(1)
+  id        String   @id @default("global")
   logo      String?
   title     String?
   email     String?
@@ -230,13 +313,16 @@ model SiteSettings {
 }
 
 model Newsletter {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id                String   @id @default(cuid())
+  email             String   @unique
+  verificationToken String?  @unique
+  status            String   @default("PENDING")
+  createdAt         DateTime @default(now())
 }
 
 enum Role {
   USER
   ADMIN
   EXPERT
+  CLIENT
 }

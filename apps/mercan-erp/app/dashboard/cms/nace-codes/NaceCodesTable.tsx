@@ -13,7 +13,7 @@ export function NaceCodesTable({ initialData }: { initialData: any[] }) {
   const [newNace, setNewNace] = useState({
     code: "",
     description: "",
-    hazardClass: "Az Tehlikeli"
+    dangerClass: "Az Tehlikeli"
   });
 
   const filteredData = data.filter(item => 
@@ -32,7 +32,7 @@ export function NaceCodesTable({ initialData }: { initialData: any[] }) {
     if (res.success && res.nace) {
       setData([res.nace, ...data]);
       setIsAdding(false);
-      setNewNace({ code: "", description: "", hazardClass: "Az Tehlikeli" });
+      setNewNace({ code: "", description: "", dangerClass: "Az Tehlikeli" });
     } else {
       alert(res.error || "Hata oluştu.");
     }
@@ -101,8 +101,8 @@ export function NaceCodesTable({ initialData }: { initialData: any[] }) {
                 <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 italic">Tehlike Sınıfı</label>
                 <div className="relative">
                    <select 
-                     value={newNace.hazardClass} 
-                     onChange={e => setNewNace({...newNace, hazardClass: e.target.value})}
+                     value={newNace.dangerClass} 
+                     onChange={e => setNewNace({...newNace, dangerClass: e.target.value})}
                      className="w-full p-5 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-4 focus:ring-emerald-600/5 transition-all appearance-none cursor-pointer"
                    >
                      <option value="Az Tehlikeli">Az Tehlikeli</option>
@@ -160,11 +160,11 @@ export function NaceCodesTable({ initialData }: { initialData: any[] }) {
                   <td className="p-5 text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">{item.description}</td>
                   <td className="p-5">
                     <span className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-full border ${
-                      item.hazardClass.includes("Çok") ? 'bg-rose-50 text-rose-600 border-rose-100' :
-                      item.hazardClass.includes("Az") ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                      item.dangerClass.includes("Çok") ? 'bg-rose-50 text-rose-600 border-rose-100' :
+                      item.dangerClass.includes("Az") ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
                       'bg-amber-50 text-amber-600 border-amber-100'
                     }`}>
-                      {item.hazardClass}
+                      {item.dangerClass}
                     </span>
                   </td>
                   <td className="p-5 text-right">

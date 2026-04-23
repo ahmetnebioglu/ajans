@@ -63,8 +63,11 @@ export default function CompaniesPage() {
     e.preventDefault();
     if (!newName) return;
     setIsSubmitting(true);
-    const res = await createCompany(newName, newFolderId);
-    if (res.success) {
+    const res = await createCompany({ 
+      name: newName, 
+      driveFolderId: newFolderId 
+    });
+    if (res && (res as any).id) {
       setNewName("");
       setNewFolderId("");
       loadCompanies();
@@ -84,7 +87,7 @@ export default function CompaniesPage() {
     setModalLoading(true);
     const res = await getCompanyAccess(company.id);
     if (res.success) {
-      setAuthorizedUserIds(res.authorizedUserIds || []);
+      setAuthorizedUserIds(res.access?.map((a: any) => a.userId) || []);
     }
     setModalLoading(false);
   };

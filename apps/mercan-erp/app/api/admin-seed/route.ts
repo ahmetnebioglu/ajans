@@ -61,7 +61,7 @@ export async function GET() {
 
     for (const a of assignments) {
       for (const cName of a.comps) {
-        await prisma.userCompanyAccess.upsert({
+        await prisma.companyAccess.upsert({
           where: { 
             userId_companyId: { 
               userId: users[a.user].id, 

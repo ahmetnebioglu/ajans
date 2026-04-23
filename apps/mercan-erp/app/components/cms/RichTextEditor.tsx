@@ -68,10 +68,9 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
   };
 
-  const onMediaSelect = (files: any[]) => {
-    if (files.length > 0) {
-      const file = files[0];
-      editor.chain().focus().setImage({ src: file.url }).run();
+  const onMediaSelect = (fileId: string, fileUrl?: string) => {
+    if (fileUrl) {
+      editor.chain().focus().setImage({ src: fileUrl }).run();
     }
     setIsMediaPickerOpen(false);
   };
@@ -114,9 +113,9 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
       {/* MEDIA PICKER MODAL */}
       {isMediaPickerOpen && (
         <MediaPicker 
+          isOpen={isMediaPickerOpen}
           onSelect={onMediaSelect} 
           onClose={() => setIsMediaPickerOpen(false)} 
-          multiple={false}
         />
       )}
     </div>

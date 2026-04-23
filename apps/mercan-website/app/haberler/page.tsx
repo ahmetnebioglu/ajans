@@ -8,7 +8,7 @@ import { Calendar, Tag, ChevronRight } from "lucide-react";
 export default async function HaberlerPage() {
   const posts = await db.blogPost.findMany({
     where: { isPublished: true },
-    include: { categories: true },
+    include: { category: true },
     orderBy: { createdAt: 'desc' }
   });
 
@@ -48,9 +48,9 @@ export default async function HaberlerPage() {
             >
               {/* Image Container */}
               <div className="relative h-64 overflow-hidden">
-                {post.coverImage ? (
+                {post.featuredImage ? (
                   <img 
-                    src={post.coverImage} 
+                    src={post.featuredImage} 
                     alt={post.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
@@ -61,7 +61,7 @@ export default async function HaberlerPage() {
                 )}
                 <div className="absolute top-6 left-6">
                   <span className="px-4 py-1.5 bg-teal-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
-                    {post.categories?.name || "GENEL"}
+                    {post.category?.name || "GENEL"}
                   </span>
                 </div>
               </div>
