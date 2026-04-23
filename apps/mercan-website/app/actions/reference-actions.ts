@@ -61,9 +61,61 @@ export async function createReferenceRequest(data: {
           `
         });
         console.log(`BİLGİ: ${data.email} adresine referans doğrulama maili gönderildi.`);
+
+        // 2. YÖNETİCİYE BİLDİRİM MAİLİ GÖNDER
+        const adminEmail = process.env.ADMIN_EMAIL || 'ahmetnebioglu@gmail.com';
+        await resend.emails.send({
+          from: 'Mercan OSGB Sistem <system@resend.dev>',
+          to: [adminEmail],
+          subject: `Yeni Referans Talebi: ${data.companyName}`,
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; background-color: #f0f9ff; border-radius: 32px; border: 1px solid #bae6fd;">
+               <div style="background-color: #0c4a6e; padding: 24px; border-radius: 20px; margin-bottom: 32px; text-align: center;">
+                  <h2 style="color: #ffffff; margin: 0; font-size: 18px; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: 1px;">YENİ REFERANS TALEBİ</h2>
+               </div>
+               
+               <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                     <td style="padding: 12px 0; border-bottom: 1px solid #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 800; text-transform: uppercase; width: 35%;">Talep Eden</td>
+                     <td style="padding: 12px 0; border-bottom: 1px solid #e0f2fe; color: #0f172a; font-size: 14px; font-weight: 700;">${data.fullName}</td>
+                  </tr>
+                  <tr>
+                     <td style="padding: 12px 0; border-bottom: 1px solid #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 800; text-transform: uppercase;">Firma</td>
+                     <td style="padding: 12px 0; border-bottom: 1px solid #e0f2fe; color: #0f172a; font-size: 14px; font-weight: 700;">${data.companyName}</td>
+                  </tr>
+                  <tr>
+                     <td style="padding: 12px 0; border-bottom: 1px solid #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 800; text-transform: uppercase;">E-Posta</td>
+                     <td style="padding: 12px 0; border-bottom: 1px solid #e0f2fe; color: #0369a1; font-size: 14px; font-weight: 700;">${data.email}</td>
+                  </tr>
+                  <tr>
+                     <td style="padding: 12px 0; border-bottom: 1px solid #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 800; text-transform: uppercase;">Sektör</td>
+                     <td style="padding: 12px 0; border-bottom: 1px solid #e0f2fe; color: #0f172a; font-size: 14px; font-weight: 700;">${data.sector}</td>
+                  </tr>
+               </table>
+
+               <div style="margin-top: 40px; text-align: center;">
+                  <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005'}/dashboard/cms/talepler" style="display: inline-block; background-color: #0c4a6e; color: #ffffff; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+                     Panelden Detayları Gör
+                  </a>
+               </div>
+            </div>
+          `
+        });
       }
     } catch (mailError) {
-      console.error("REFERENCE_MAIL_ERROR:", mailError);
+      console.error("REFERENCE_ADMIN_MAIL_ERROR:", mailError);
+      // HATA KAYDI: Panel bildirimi oluştur
+      try {
+        await db.notification.create({
+          data: {
+            userId: null,
+            type: "WARNING",
+            message: `Referans Talebi Bildirimi Hatası: ${data.companyName} firmasının talebi için yönetici bildirimi iletilemedi.`,
+          }
+        });
+      } catch (dbError) {
+        console.error("NOTIFICATION_DB_ERROR:", dbError);
+      }
     }
 
     revalidatePath("/dashboard/cms/talepler");
