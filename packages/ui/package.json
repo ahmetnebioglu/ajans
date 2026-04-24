@@ -6,16 +6,17 @@
   "types": "./src/index.ts",
   "license": "MIT",
   "dependencies": {
+    "clsx": "latest",
+    "lucide-react": "latest",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "lucide-react": "latest",
-    "clsx": "latest",
+    "recharts": "^3.8.1",
     "tailwind-merge": "latest"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "tailwindcss": "latest",
+    "autoprefixer": "latest",
     "postcss": "latest",
-    "autoprefixer": "latest"
+    "tailwindcss": "latest",
+    "typescript": "^5"
   }
 }
