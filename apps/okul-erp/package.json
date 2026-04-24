@@ -11,21 +11,22 @@
   },
   "dependencies": {
     "@ajans/auth": "*",
+    "@ajans/core": "^0.1.0",
     "@ajans/db": "*",
     "@ajans/ui": "*",
+    "clsx": "latest",
+    "lucide-react": "latest",
     "next": "^16.2.4",
+    "next-themes": "0.4.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "lucide-react": "latest",
-    "clsx": "latest",
-    "tailwind-merge": "latest",
-    "next-themes": "0.4.4"
+    "tailwind-merge": "latest"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4.2.2",
     "autoprefixer": "latest",
     "postcss": "latest",
     "tailwindcss": "latest",

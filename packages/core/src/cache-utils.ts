@@ -26,7 +26,7 @@ export function getTenantCacheTag(tenantId: string, resource: string): string {
  */
 export function revalidateTenantCache(tenantId: string, resource: string): void {
   const tag = getTenantCacheTag(tenantId, resource);
-  revalidateTag(tag);
+  revalidateTag(tag, "default");
 }
 
 /**

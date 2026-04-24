@@ -3,9 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 model User {
@@ -26,6 +24,12 @@ model User {
   reports          Report[]
   sessions         Session[]
   companies        Company[]       @relation("CompanyToExpert")
+  
+  // Okul ERP Relations
+  managedClasses       Classroom[]         @relation("TeacherToClass")
+  parentLinks          ParentStudent[]     @relation("ParentToLink")
+  requestedPermissions PermissionRequest[] @relation("RequestedBy")
+  approvedPermissions  PermissionRequest[] @relation("ApprovedBy")
 }
 
 model Account {
@@ -327,6 +331,66 @@ model NewsletterSubscriber {
   status      String   @default("active")
   tenantId    String
   createdAt   DateTime @default(now())
+}
+
+model Classroom {
+  id        String    @id @default(cuid())
+  name      String
+  teacherId String
+  teacher   User      @relation("TeacherToClass", fields: [teacherId], references: [id])
+  students  Student[]
+  tenantId  String
+  deletedAt DateTime?
+
+  @@index([tenantId])
+}
+
+model Student {
+  id                 String              @id @default(cuid())
+  firstName          String
+  lastName           String
+  studentNumber      String
+  classroomId        String
+  classroom          Classroom           @relation(fields: [classroomId], references: [id])
+  parentLinks        ParentStudent[]
+  permissionRequests PermissionRequest[]
+  tenantId           String
+  deletedAt          DateTime?
+
+  @@index([tenantId])
+}
+
+model ParentStudent {
+  id           String    @id @default(cuid())
+  parentId     String
+  parent       User      @relation("ParentToLink", fields: [parentId], references: [id])
+  studentId    String
+  student      Student   @relation(fields: [studentId], references: [id])
+  relationType String // Anne, Baba, Diğer
+  tenantId     String
+  deletedAt    DateTime?
+
+  @@index([tenantId])
+}
+
+model PermissionRequest {
+  id            String    @id @default(cuid())
+  studentId     String
+  student       Student   @relation(fields: [studentId], references: [id])
+  requestedById String
+  requestedBy   User      @relation("RequestedBy", fields: [requestedById], references: [id])
+  approvedById  String?
+  approvedBy    User?     @relation("ApprovedBy", fields: [approvedById], references: [id])
+  type          String // ABSENCE, EARLY_LEAVE, LATE
+  reason        String    @db.Text
+  status        String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  date          DateTime
+  tenantId      String
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([tenantId])
 }
 
 enum Role {
