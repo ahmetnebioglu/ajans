@@ -14,6 +14,11 @@ const basePrisma = new PrismaClient({
 /**
  * RLS (Row Level Security) korumalı Prisma instance'ı döner.
  * Her işlemden önce 'app.current_tenant' değerini PostgreSQL oturumuna set eder.
+ * 
+ * ÖNEMLİ (Faz 2 - Caching):
+ * Bu client ile veri çekerken (findMany, findUnique vb.), Next.js önbellek mekanizmalarında
+ * mutlaka '@ajans/core' paketindeki 'getTenantCacheTag(tenantId, resource)' kullanılmalıdır.
+ * Aksi takdirde farklı müşterilerin verileri aynı önbellek slotuna sızabilir.
  */
 export function getSecuredPrisma(tenantId: string) {
   return basePrisma.$extends({
