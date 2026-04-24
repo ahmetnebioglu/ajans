@@ -7,23 +7,23 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          Role      @default(USER)
-  companies     Company[] @relation("CompanyToExpert")
-  companyAccess CompanyAccess[]
-  reports           Report[]
-  auditLogs         AuditLog[]
-  notifications     Notification[]
-  createdCompanies  Company[] @relation("CompanyCreatedBy")
-  accounts          Account[]
-  sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id               String          @id @default(cuid())
+  name             String?
+  email            String?         @unique
+  emailVerified    DateTime?
+  image            String?
+  role             Role            @default(USER)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  password         String?
+  accounts         Account[]
+  auditLogs        AuditLog[]
+  createdCompanies Company[]       @relation("CompanyCreatedBy")
+  companyAccess    CompanyAccess[]
+  notifications    Notification[]
+  reports          Report[]
+  sessions         Session[]
+  companies        Company[]       @relation("CompanyToExpert")
 }
 
 model Account {
@@ -32,15 +32,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -62,29 +61,29 @@ model VerificationToken {
 }
 
 model Company {
-  id          String   @id @default(cuid())
-  name        String
-  taxNumber   String?
-  address     String?
-  driveFolderId String? @unique // Google Drive root folder for this company
-  createdById  String?
-  createdBy    User?    @relation("CompanyCreatedBy", fields: [createdById], references: [id])
-  experts     User[]   @relation("CompanyToExpert")
-  reports     Report[]
-  folders     Folder[]
-  auditLogs   AuditLog[]
-  userAccess  CompanyAccess[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String          @id @default(cuid())
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  address       String?
+  taxNumber     String?
+  driveFolderId String?         @unique
+  createdById   String?
+  auditLogs     AuditLog[]
+  createdBy     User?           @relation("CompanyCreatedBy", fields: [createdById], references: [id])
+  userAccess    CompanyAccess[]
+  folders       Folder[]
+  reports       Report[]
+  experts       User[]          @relation("CompanyToExpert")
 }
 
 model CompanyAccess {
   id        String   @id @default(cuid())
   userId    String
   companyId String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, companyId])
 }
@@ -93,104 +92,104 @@ model Folder {
   id        String   @id @default(cuid())
   name      String
   companyId String
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   parentId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   parent    Folder?  @relation("SubFolders", fields: [parentId], references: [id])
   children  Folder[] @relation("SubFolders")
   reports   Report[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Report {
-  id          String   @id @default(cuid())
-  title       String
-  fileName    String?
-  fileUrl     String?
-  driveFileId String?
-  category    String?  @default("Genel")
-  status      String   @default("BEKLEMEDE") // BEKLEMEDE, AKSIYON_GEREKLI, COZULDU
-  note        String?  @db.Text
-  companyId   String
-  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  folderId    String?
-  folder      Folder?  @relation(fields: [folderId], references: [id])
+  id           String   @id @default(cuid())
+  title        String
+  fileUrl      String?
+  companyId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  category     String?  @default("Genel")
+  status       String   @default("BEKLEMEDE")
+  folderId     String?
+  note         String?
   uploadedById String?
+  driveFileId  String?
+  fileName     String?
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  folder       Folder?  @relation(fields: [folderId], references: [id])
   uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model AuditLog {
   id        String   @id @default(cuid())
   userId    String?
-  user      User?    @relation(fields: [userId], references: [id])
-  companyId String?
-  company   Company? @relation(fields: [companyId], references: [id])
   action    String
-  details   String?  @db.Text
+  details   String?
   ipAddress String?
   createdAt DateTime @default(now())
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
 }
 
 model Notification {
   id        String   @id @default(cuid())
   userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   message   String
-  type      String   @default("INFO") // INFO, WARNING, ERROR, SUCCESS
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+  type      String   @default("INFO")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model IsgLibrary {
   id          String      @id @default(cuid())
   title       String
   slug        String      @unique
-  content     String      @db.Text
-  category    IsgCategory @relation(fields: [categoryId], references: [id])
+  content     String
   categoryId  String
-  attachments Json? // [{name: string, url: string}]
+  attachments Json?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  category    IsgCategory @relation(fields: [categoryId], references: [id])
 }
 
 model IsgCategory {
-  id          String       @id @default(cuid())
-  name        String
-  slug        String       @unique
-  order       Int          @default(0)
-  items       IsgLibrary[]
-  documents   IsgDocument[]
-  createdAt   DateTime     @default(now())
+  id        String        @id @default(cuid())
+  name      String
+  slug      String        @unique
+  createdAt DateTime      @default(now())
+  order     Int           @default(0)
+  documents IsgDocument[]
+  items     IsgLibrary[]
 }
 
 model IsgDocument {
   id          String      @id @default(cuid())
   title       String
-  driveFileId String
-  fileType    String?
   isPublished Boolean     @default(false)
   categoryId  String
-  category    IsgCategory @relation(fields: [categoryId], references: [id])
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  driveFileId String
+  fileType    String?
+  category    IsgCategory @relation(fields: [categoryId], references: [id])
 }
 
 model Service {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  summary       String?  @db.Text
-  content       String   @db.Text
-  icon          String?
-  featuredImage String?
-  isPublished   Boolean  @default(false)
-  order         Int      @default(0)
-  seoTitle      String?
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  content        String
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  icon           String?
+  isPublished    Boolean  @default(false)
+  featuredImage  String?
   seoDescription String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  seoTitle       String?
+  summary        String?
 }
 
 model ReferenceSector {
@@ -201,13 +200,13 @@ model ReferenceSector {
 }
 
 model Reference {
-  id        String          @id @default(cuid())
+  id        String           @id @default(cuid())
   name      String
   logo      String?
+  order     Int              @default(0)
+  createdAt DateTime         @default(now())
   sectorId  String?
   sector    ReferenceSector? @relation(fields: [sectorId], references: [id])
-  order     Int             @default(0)
-  createdAt DateTime        @default(now())
 }
 
 model ContactMessage {
@@ -217,9 +216,9 @@ model ContactMessage {
   subject           String?
   message           String
   isRead            Boolean  @default(false)
+  createdAt         DateTime @default(now())
   isVerified        Boolean  @default(false)
   verificationToken String?  @unique
-  createdAt         DateTime @default(now())
 }
 
 model HomepageSettings {
@@ -227,7 +226,7 @@ model HomepageSettings {
   heroTitle          String?
   heroSubtitle       String?
   heroButtonText     String?
-  katipProcess       Json?    // Array of steps
+  katipProcess       Json?
   naceBannerTitle    String?
   naceBannerSubtitle String?
   updatedAt          DateTime @updatedAt
@@ -240,66 +239,66 @@ model HomepageSettings {
 
 model ReferenceRequest {
   id                String   @id @default(cuid())
-  fullName          String   
-  companyName       String   
-  email             String   
-  sector            String   
+  fullName          String
+  companyName       String
+  email             String
+  sector            String
   isRead            Boolean  @default(false)
+  createdAt         DateTime @default(now())
   isVerified        Boolean  @default(false)
   verificationToken String?  @unique
-  createdAt         DateTime @default(now())
 }
 
 model BlogCategory {
-  id        String     @id @default(cuid())
-  name      String
-  slug      String     @unique
-  posts     BlogPost[]
+  id    String     @id @default(cuid())
+  name  String
+  slug  String     @unique
+  posts BlogPost[]
 }
 
 model BlogPost {
-  id              String        @id @default(cuid())
-  title           String
-  slug            String        @unique
-  excerpt         String?       @db.Text
-  content         String        @db.Text
-  featuredImage   String?
-  isPublished     Boolean       @default(false)
-  seoTitle        String?
-  seoDescription  String?
-  categoryId      String?
-  category        BlogCategory? @relation(fields: [categoryId], references: [id])
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id             String        @id @default(cuid())
+  title          String
+  slug           String        @unique
+  content        String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  categoryId     String?
+  excerpt        String?
+  isPublished    Boolean       @default(false)
+  featuredImage  String?
+  seoDescription String?
+  seoTitle       String?
+  category       BlogCategory? @relation(fields: [categoryId], references: [id])
 }
 
 model NaceCode {
-  id          String   @id @default(cuid())
-  code        String   @unique
+  id          String @id @default(cuid())
+  code        String @unique
   dangerClass String
-  description String   @db.Text
+  description String
 }
 
 model Page {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   title       String
-  slug        String   @unique
-  content     String?  @db.Text
-  isPublished Boolean  @default(false)
+  slug        String        @unique
+  content     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  isPublished Boolean       @default(false)
   sections    PageSection[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model PageSection {
   id        String   @id @default(cuid())
-  type      String   // HERO, CONTENT, FEATURES, etc.
+  type      String
   content   Json
   order     Int      @default(0)
   pageId    String
-  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
 }
 
 model SiteSettings {
@@ -315,16 +314,16 @@ model SiteSettings {
 model Newsletter {
   id                String   @id @default(cuid())
   email             String   @unique
-  verificationToken String?  @unique
-  status            String   @default("PENDING")
   createdAt         DateTime @default(now())
+  status            String   @default("PENDING")
+  verificationToken String?  @unique
 }
 
 model NewsletterSubscriber {
   id          String   @id @default(cuid())
   email       String   @unique
-  status      String   @default("active") // active, unsubscribed
-  projectSlug String   // "mercan", "ecommerce-hub" vb.
+  status      String   @default("active")
+  tenantId    String
   createdAt   DateTime @default(now())
 }
 
