@@ -49,7 +49,7 @@ export default function LandingPage() {
                 <li>• Onay süreçlerini takip etme</li>
                 <li>• Geçmiş izin kayıtları</li>
               </ul>
-              <Link href="/auth/veli" className="block text-center py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity">
+              <Link href="/login" className="block text-center py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:opacity-90 transition-opacity">
                 Veli Girişi
               </Link>
             </div>
@@ -65,7 +65,7 @@ export default function LandingPage() {
                 <li>• Devamsızlık kontrolü</li>
                 <li>• İdare ile koordinasyon</li>
               </ul>
-              <Link href="/auth/ogretmen" className="block text-center py-3 rounded-xl bg-secondary text-secondary-foreground font-semibold hover:opacity-90 transition-opacity border border-secondary-foreground/10">
+              <Link href="/login" className="block text-center py-3 rounded-xl bg-secondary text-secondary-foreground font-semibold hover:opacity-90 transition-opacity border border-secondary-foreground/10">
                 Öğretmen Girişi
               </Link>
             </div>
@@ -81,7 +81,7 @@ export default function LandingPage() {
                 <li>• İstatistik ve raporlama</li>
                 <li>• Güvenlik denetimleri</li>
               </ul>
-              <Link href="/auth/idare" className="block text-center py-3 rounded-xl bg-accent text-accent-foreground font-semibold hover:opacity-90 transition-opacity">
+              <Link href="/login" className="block text-center py-3 rounded-xl bg-accent text-accent-foreground font-semibold hover:opacity-90 transition-opacity">
                 İdareci Girişi
               </Link>
             </div>
