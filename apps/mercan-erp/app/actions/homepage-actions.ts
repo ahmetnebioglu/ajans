@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@ajans/auth/options";
@@ -86,3 +86,4 @@ export async function updateHomepageSettings(data: any) {
     return { success: false, error: error.message };
   }
 }
+

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 
 export async function GET() {
   try {
@@ -161,3 +161,4 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

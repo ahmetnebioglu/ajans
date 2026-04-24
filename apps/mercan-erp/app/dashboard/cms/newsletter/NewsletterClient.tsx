@@ -34,14 +34,14 @@ export function NewsletterClient({ initialSubscribers, projects }: NewsletterCli
 
   // Mail Gönderim State
   const [mailData, setMailData] = useState({
-    projectSlug: "all",
+    tenantId: "all",
     subject: "",
     content: ""
   });
 
   const filteredSubscribers = subscribers.filter(s => {
     const matchesSearch = s.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesProject = projectFilter === "all" || s.projectSlug === projectFilter;
+    const matchesProject = projectFilter === "all" || s.tenantId === projectFilter;
     return matchesSearch && matchesProject;
   });
 
@@ -70,7 +70,7 @@ export function NewsletterClient({ initialSubscribers, projects }: NewsletterCli
     const res = await sendNewsletter(mailData);
     if (res.success) {
       alert(res.message);
-      setMailData({ projectSlug: "all", subject: "", content: "" });
+      setMailData({ tenantId: "all", subject: "", content: "" });
     }
     setLoading(false);
   };
@@ -162,7 +162,7 @@ export function NewsletterClient({ initialSubscribers, projects }: NewsletterCli
                         </td>
                         <td className="p-6">
                           <span className="px-3 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg text-[9px] font-black uppercase tracking-widest border border-blue-500/10 italic">
-                            <Tag size={10} className="inline mr-1" /> {s.projectSlug}
+                            <Tag size={10} className="inline mr-1" /> {s.tenantId}
                           </span>
                         </td>
                         <td className="p-6">
@@ -205,8 +205,8 @@ export function NewsletterClient({ initialSubscribers, projects }: NewsletterCli
                 <div className="space-y-3">
                   <label className="text-[11px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 italic">Hedef Proje (Alıcılar)</label>
                   <select 
-                    value={mailData.projectSlug}
-                    onChange={e => setMailData({...mailData, projectSlug: e.target.value})}
+                    value={mailData.tenantId}
+                    onChange={e => setMailData({...mailData, tenantId: e.target.value})}
                     className="w-full p-5 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-4 focus:ring-blue-600/5 transition-all appearance-none cursor-pointer uppercase italic"
                   >
                     <option value="all">TÜM ABONELER</option>
@@ -251,3 +251,4 @@ export function NewsletterClient({ initialSubscribers, projects }: NewsletterCli
     </div>
   );
 }
+

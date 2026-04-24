@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
@@ -43,3 +43,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: "Sunucu hatası." }, { status: 500 });
   }
 }
+

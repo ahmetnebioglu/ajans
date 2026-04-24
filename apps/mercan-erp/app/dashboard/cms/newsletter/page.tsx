@@ -1,7 +1,7 @@
 import React from "react";
 import { NewsletterClient } from "./NewsletterClient";
 import { getAllSubscribers } from "../../../actions/newsletter-actions";
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 
 export default async function NewsletterPage() {
   const subscribersRes = await getAllSubscribers();
@@ -9,8 +9,8 @@ export default async function NewsletterPage() {
   
   // Mevcut proje slug'larını çekelim (Filtreleme için)
   const projects = await db.newsletterSubscriber.findMany({
-    select: { projectSlug: true },
-    distinct: ['projectSlug'],
+    select: { tenantId: true },
+    distinct: ['tenantId'],
   });
 
   return (
@@ -26,8 +26,10 @@ export default async function NewsletterPage() {
 
       <NewsletterClient 
         initialSubscribers={initialSubscribers} 
-        projects={projects.map(p => p.projectSlug)}
+        projects={projects.map(p => p.tenantId)}
       />
     </div>
   );
 }
+
+

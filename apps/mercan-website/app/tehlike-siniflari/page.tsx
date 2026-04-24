@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import NaceSearch from "./NaceSearch";
 
 // ISR: Arka planda veriler her saat güncellensin
@@ -60,3 +60,4 @@ export default async function NaceCodesPage() {
     </div>
   );
 }
+

@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export async function getReferenceRequests() {
@@ -25,3 +25,4 @@ export async function deleteReferenceRequest(id: string) {
   revalidatePath("/dashboard/referans-talepleri");
   return { success: true };
 }
+

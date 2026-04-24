@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { Shield, Target, Eye, Users, CheckCircle2 } from "lucide-react";
 import CountUp from "@/components/ui/CountUp";
 
@@ -151,3 +151,4 @@ export default async function CorporatePage() {
     </div>
   );
 }
+

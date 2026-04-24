@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export async function getServices() {
@@ -101,3 +101,4 @@ export async function deleteService(id: string) {
     return { success: false, error: error.message || "Hizmet silinemedi." };
   }
 }
+

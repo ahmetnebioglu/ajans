@@ -1,4 +1,4 @@
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import Link from "next/link";
 import { ArrowRight, User, ShieldCheck, Activity, ClipboardCheck, HeartPulse, Zap, Sparkles } from "lucide-react";
 
@@ -146,3 +146,4 @@ export default async function ServicesPage() {
     </main>
   );
 }
+

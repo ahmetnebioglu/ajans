@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { Mail, Calendar, User, MessageSquare, CheckCircle2, Clock, ShieldCheck } from "lucide-react";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
@@ -81,3 +81,4 @@ export default async function ContactRequestsPage() {
     </div>
   );
 }
+

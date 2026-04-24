@@ -1,14 +1,14 @@
 "use server";
 
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 /**
  * Tüm aboneleri veya projeye göre aboneleri listeler.
  */
-export async function getAllSubscribers(projectSlug?: string) {
+export async function getAllSubscribers(tenantId?: string) {
   try {
-    const where = projectSlug && projectSlug !== "all" ? { projectSlug } : {};
+    const where = tenantId && tenantId !== "all" ? { tenantId } : {};
     const subscribers = await db.newsletterSubscriber.findMany({
       where,
       orderBy: { createdAt: "desc" },
@@ -66,7 +66,7 @@ const getResend = () => {
 /**
  * Bülten gönderimi (Gerçek Gönderim).
  */
-export async function sendNewsletter(data: { projectSlug: string; subject: string; content: string }) {
+export async function sendNewsletter(data: { tenantId: string; subject: string; content: string }) {
   try {
     const resend = getResend();
     if (!resend) {
@@ -75,8 +75,8 @@ export async function sendNewsletter(data: { projectSlug: string; subject: strin
 
     // 1. Hedef aboneleri çek
     const whereClause: any = { status: "active" };
-    if (data.projectSlug !== "all") {
-      whereClause.projectSlug = data.projectSlug;
+    if (data.tenantId !== "all") {
+      whereClause.tenantId = data.tenantId;
     }
 
     const subscribers = await db.newsletterSubscriber.findMany({
@@ -103,7 +103,7 @@ export async function sendNewsletter(data: { projectSlug: string; subject: strin
         <div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; border: 1px solid #e2e8f0; border-radius: 32px; background-color: #ffffff;">
           <div style="margin-bottom: 40px; text-align: center;">
              <h1 style="color: #0f172a; font-size: 28px; font-weight: 900; text-transform: uppercase; font-style: italic; margin: 0;">BÜLTEN <span style="color: #2563eb;">GÜNCELLEMESİ</span></h1>
-             <p style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px;">${data.projectSlug.toUpperCase()} PROJESİNDEN SİZE BİR MESAJ VAR</p>
+             <p style="color: #64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px;">${data.tenantId.toUpperCase()} PROJESİNDEN SİZE BİR MESAJ VAR</p>
           </div>
           
           <div style="color: #334155; font-size: 16px; line-height: 1.8;">
@@ -139,3 +139,5 @@ export async function sendNewsletter(data: { projectSlug: string; subject: strin
     return { success: false, error: "Gönderim sırasında beklenmedik bir hata oluştu." };
   }
 }
+
+

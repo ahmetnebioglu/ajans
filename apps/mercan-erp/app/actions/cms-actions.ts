@@ -1,7 +1,7 @@
 "use server";
 // Triggering reload to pick up new Prisma Client (local path) - 2026-04-22
 
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@ajans/auth/options";
@@ -402,5 +402,6 @@ export async function uploadIsgDocument(formData: FormData) {
     return { success: false, error: "Dosya yüklenemedi." };
   }
 }
+
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { MessageSquare, FileText } from "lucide-react";
 import RequestsClient from "./RequestsClient";
 
@@ -29,3 +29,4 @@ export default async function UnifiedRequestsPage() {
     </div>
   );
 }
+

@@ -1,6 +1,6 @@
 // Force reload Prisma client
 import React from "react";
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import IsgLibraryClient from "./IsgLibraryClient";
 
 export const revalidate = 60; // ISR cache for fast loading
@@ -15,3 +15,4 @@ export default async function DocumentLibraryPage() {
 
   return <IsgLibraryClient documents={documents} />;
 }
+

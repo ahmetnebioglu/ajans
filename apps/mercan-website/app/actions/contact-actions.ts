@@ -1,6 +1,6 @@
 "use server"; // Updated schema support
 
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 
@@ -154,3 +154,4 @@ export async function verifyRequest(token: string, type: "contact" | "reference"
     return { success: false, error: "Doğrulama yapılamadı." };
   }
 }
+

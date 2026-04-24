@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import { uploadToDrive } from "@ajans/google-api";
 
 export async function uploadFieldReport(formData: FormData) {
@@ -103,3 +103,4 @@ export async function uploadReportAction(formData: FormData, companyId: string) 
     return { success: false, error: error.message || "Dosya yüklenirken hata oluştu." };
   }
 }
+

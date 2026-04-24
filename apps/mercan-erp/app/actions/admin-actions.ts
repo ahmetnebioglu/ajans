@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 // --- ŞİRKET YÖNETİMİ FONKSİYONLARI ---
@@ -378,3 +378,4 @@ export async function getCompanyAccess(companyId: string) {
     return { success: false, error: "Erişim listesi yüklenemedi" };
   }
 }
+

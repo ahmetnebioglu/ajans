@@ -5,7 +5,7 @@ import { LatestNews } from "@/components/home/LatestNews";
 import Link from "next/link";
 import { ArrowRight, Phone } from "lucide-react";
 
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 
 export default async function HomePage() {
   const dynamicServices = await (db as any)?.service?.findMany({
@@ -64,3 +64,4 @@ export default async function HomePage() {
     </div>
   );
 }
+

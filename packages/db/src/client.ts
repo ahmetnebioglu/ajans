@@ -22,7 +22,7 @@ export function getSecuredPrisma(tenantId: string) {
         async $allOperations({ args, query }) {
           // RLS için oturum bazlı tenant ayarı bir transaction içinde yapılmalıdır
           return basePrisma.$transaction(async (tx) => {
-            await tx.$executeRawUnsafe(`SET LOCAL app.current_tenant = $1`, tenantId);
+            await tx.$executeRawUnsafe(`SELECT set_config('app.current_tenant', $1, true)`, tenantId);
             return query(args);
           });
         },
@@ -32,4 +32,6 @@ export function getSecuredPrisma(tenantId: string) {
 }
 
 // Geliştiricilerin yanlışlıkla korumasız prisma kullanmasını zorlaştırmak için 
-// ana prisma instance'ını direkt dışa aktarmıyoruz.
+// ana prisma instance'ını direkt dışa aktarmıyoruz, ancak sistem seviyesindeki
+// işlemler (Auth vb.) için basePrisma'yı dışa aktarıyoruz.
+export { basePrisma as unsecured_prisma };

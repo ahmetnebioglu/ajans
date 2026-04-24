@@ -1,4 +1,4 @@
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Metadata } from "next";

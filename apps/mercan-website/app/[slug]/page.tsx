@@ -1,4 +1,4 @@
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { SectionRenderer } from "@/components/cms/SectionRenderer";
 

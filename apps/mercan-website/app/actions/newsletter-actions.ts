@@ -1,14 +1,14 @@
 "use server";
 
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 /**
  * Yeni bir bülten abonesi kaydeder.
  * @param email Abone e-postası
- * @param projectSlug Kaynak proje (Örn: "mercan")
+ * @param tenantId Kaynak proje (Örn: "mercan")
  */
-export async function subscribeToNewsletter(email: string, projectSlug: string) {
+export async function subscribeToNewsletter(email: string, tenantId: string) {
   try {
     if (!email || !email.includes("@")) {
       return { success: false, error: "Geçerli bir e-posta adresi girin." };
@@ -26,7 +26,7 @@ export async function subscribeToNewsletter(email: string, projectSlug: string) 
         // Unsubscribed ise tekrar active yap
         await db.newsletterSubscriber.update({
           where: { email },
-          data: { status: "active", projectSlug },
+          data: { status: "active", tenantId },
         });
         return { success: true, message: "Aboneliğiniz tekrar aktif edildi!" };
       }
@@ -36,7 +36,7 @@ export async function subscribeToNewsletter(email: string, projectSlug: string) 
     await db.newsletterSubscriber.create({
       data: {
         email,
-        projectSlug,
+        tenantId,
         status: "active",
       },
     });
@@ -52,9 +52,9 @@ export async function subscribeToNewsletter(email: string, projectSlug: string) 
 /**
  * Projeye göre aboneleri listeler.
  */
-export async function getSubscribersByProject(projectSlug?: string) {
+export async function getSubscribersByProject(tenantId?: string) {
   try {
-    const where = projectSlug ? { projectSlug } : {};
+    const where = tenantId ? { tenantId } : {};
     const subscribers = await db.newsletterSubscriber.findMany({
       where,
       orderBy: { createdAt: "desc" },
@@ -65,3 +65,5 @@ export async function getSubscribersByProject(projectSlug?: string) {
     return { success: false, error: "Aboneler yüklenemedi." };
   }
 }
+
+

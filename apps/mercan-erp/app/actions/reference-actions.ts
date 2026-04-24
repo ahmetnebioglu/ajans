@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export async function getReferenceSectors() {
@@ -34,3 +34,4 @@ export async function deleteReferenceSector(id: string) {
   revalidatePath("/dashboard/referanslar");
   return { success: true };
 }
+

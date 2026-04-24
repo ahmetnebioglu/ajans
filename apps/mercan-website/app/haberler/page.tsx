@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import Link from "next/link";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
@@ -100,3 +100,4 @@ export default async function HaberlerPage() {
     </main>
   );
 }
+

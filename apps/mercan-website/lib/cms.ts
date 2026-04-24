@@ -1,4 +1,4 @@
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 export { prisma };
 
 export async function getPageData(slug: string) {
@@ -24,3 +24,4 @@ export async function getAllPages() {
     orderBy: { createdAt: "asc" }
   });
 }
+

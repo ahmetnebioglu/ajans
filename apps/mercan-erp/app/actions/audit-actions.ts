@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 
 /**
  * Filtrelenebilir Sistem Günlüğü (Audit Logs) getirir
@@ -29,3 +29,4 @@ export async function getAuditLogs(query?: string) {
     return { success: false, error: "Günlük kayıtları alınamadı." };
   }
 }
+

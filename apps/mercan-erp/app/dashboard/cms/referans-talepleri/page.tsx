@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import { User, Mail, Building2, Map, Calendar, ShieldCheck, Clock, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
@@ -74,3 +74,4 @@ export default async function ReferenceRequestsPage() {
     </div>
   );
 }
+

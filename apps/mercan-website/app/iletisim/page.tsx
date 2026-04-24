@@ -1,6 +1,6 @@
 import React from "react";
 import { Phone, MapPin, Clock, CreditCard, Sparkles } from "lucide-react";
-import { prisma as db } from "@ajans/db";
+import { prisma as db } from "@/lib/db";
 import ContactForm from "../../components/contact/ContactForm";
 
 export const dynamic = "force-dynamic";
@@ -134,3 +134,4 @@ export default async function ContactPage() {
     </div>
   );
 }
+

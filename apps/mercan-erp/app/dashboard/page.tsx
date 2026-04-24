@@ -11,7 +11,7 @@ import {
   Shield
 } from "lucide-react";
 import Link from "next/link";
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 import StatusChart from "../components/dashboard/StatusChart";
 import TrendChart from "../components/dashboard/TrendChart";
 import RecentActivityTimeline from "../components/dashboard/RecentActivityTimeline";
@@ -356,3 +356,4 @@ export default async function DashboardPage() {
     </div>
   );
 }
+

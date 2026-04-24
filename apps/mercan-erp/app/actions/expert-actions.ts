@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@ajans/db";
+import { prisma } from "@/lib/db";
 
 /**
  * Saha uzmanının yetkisi olduğu firmaları getirir.
@@ -35,3 +35,4 @@ export async function getExpertCompanies() {
     return { success: false, error: "Firmalar yüklenirken bir hata oluştu." };
   }
 }
+
