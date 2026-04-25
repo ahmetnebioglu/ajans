@@ -23,7 +23,7 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --radius: 0px;
     
     /* Custom Corporate Colors */
     --corporate-blue: 221 83% 24%; /* #0a2351 - Traditional Corporate Blue */
@@ -76,7 +76,7 @@
 
 @layer components {
   .section-padding {
-    @apply py-24 md:py-32;
+    @apply py-16 md:py-24;
   }
   
   .container-wide {
@@ -84,16 +84,16 @@
   }
 
   .badge-premium {
-    @apply inline-flex items-center gap-2 px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-blue-100 shadow-sm shadow-blue-600/5;
+    @apply inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-[2px] text-[10px] font-black uppercase tracking-[0.2em] border border-blue-100 shadow-sm shadow-blue-600/5;
   }
 
   .btn-premium {
-    @apply px-10 py-5 bg-slate-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-slate-900/20 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 overflow-hidden border-none outline-none;
+    @apply px-8 py-4 bg-slate-900 text-white rounded-[2px] text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-slate-900/20 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 overflow-hidden border-none outline-none;
     transform: translateZ(0);
   }
 
   .card-premium {
-    @apply bg-white border border-slate-100 rounded-[3rem] p-10 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2;
+    @apply bg-white border border-slate-100 rounded-[2px] p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5;
   }
 }
 

@@ -4,6 +4,8 @@ import React from "react";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 
+import { Toaster } from "sonner";
+
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
@@ -14,6 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     >
       <SessionProvider>
         {children}
+        <Toaster richColors position="top-right" />
       </SessionProvider>
     </ThemeProvider>
   );

@@ -10,66 +10,66 @@ export default async function ContactRequestsPage() {
   });
 
   return (
-    <div className="p-8 space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-8">
+    <div className="p-6 space-y-6 font-medium italic">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic">İletişim Talepleri</h1>
-          <p className="text-slate-500 font-medium italic">Web sitesi iletişim formundan gelen mesajlar.</p>
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">İletişim <span className="text-emerald-600">Talepleri</span></h1>
+          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Web sitesi iletişim formundan gelen mesajlar.</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 text-blue-400 rounded-xl font-bold text-sm italic border border-blue-500/10">
-          <MessageSquare size={18} /> {requests.length} Toplam Mesaj
+        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-[4px] font-black text-[10px] uppercase tracking-widest border border-emerald-500/10">
+          <MessageSquare size={16} /> {requests.length} Toplam Mesaj
         </div>
       </div>
 
       <div className="space-y-4">
         {requests.length === 0 ? (
-          <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/10">
-             <Mail size={48} className="mx-auto text-slate-700 mb-4" />
-             <p className="text-slate-500 font-black uppercase italic tracking-widest text-sm">Henüz bir mesaj bulunmuyor.</p>
+          <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-slate-800">
+             <Mail size={40} className="mx-auto text-slate-300 dark:text-slate-800 mb-4" />
+             <p className="text-slate-400 font-black uppercase italic tracking-widest text-[10px]">Henüz bir mesaj bulunmuyor.</p>
           </div>
         ) : (
           requests.map((request) => (
-            <div key={request.id} className={`bg-white/5 border rounded-2xl p-6 hover:bg-white/[0.07] transition-all group relative overflow-hidden ${request.isVerified ? "border-emerald-500/20 shadow-emerald-500/5" : "border-white/5"}`}>
+            <div key={request.id} className={`bg-white dark:bg-slate-900 border rounded-[4px] p-5 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group relative overflow-hidden ${request.isVerified ? "border-emerald-500/20 shadow-emerald-500/5" : "border-slate-200 dark:border-slate-800"}`}>
                {/* Verified Badge */}
                {request.isVerified && (
-                 <div className="absolute top-0 right-0 px-4 py-1 bg-emerald-500 text-white text-[9px] font-black uppercase tracking-[0.2em] italic rounded-bl-xl shadow-lg flex items-center gap-2">
-                    <ShieldCheck size={12} /> DOĞRULANMIŞ MESAJ
+                 <div className="absolute top-0 right-0 px-3 py-1 bg-emerald-600 text-white text-[8px] font-black uppercase tracking-[0.2em] italic rounded-bl shadow-lg flex items-center gap-2">
+                    <ShieldCheck size={10} /> DOĞRULANMIŞ
                  </div>
                )}
 
-               <div className="flex flex-col gap-6">
+               <div className="flex flex-col gap-5">
                   {/* Top: Header Info */}
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-white/5 pb-6">
-                     <div className="flex items-center gap-5">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${request.isVerified ? "bg-emerald-500/10 text-emerald-500" : "bg-white/5 text-slate-500"}`}>
-                           <User size={24} />
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
+                     <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-[4px] flex items-center justify-center shrink-0 ${request.isVerified ? "bg-emerald-500/10 text-emerald-600" : "bg-slate-100 dark:bg-slate-800 text-slate-400"}`}>
+                           <User size={20} />
                         </div>
                         <div className="space-y-1">
-                           <h3 className="text-lg font-black text-white uppercase italic tracking-tighter leading-tight">
+                           <h3 className="text-base font-black text-slate-900 dark:text-white uppercase italic tracking-tighter leading-tight">
                               {request.name}
                            </h3>
-                           <div className="flex items-center gap-4 text-[11px] font-bold text-slate-500 italic uppercase tracking-widest">
-                              <span className="flex items-center gap-1.5"><Mail size={12} className="text-blue-500" /> {request.email}</span>
+                           <div className="flex items-center gap-4 text-[10px] font-bold text-slate-500 italic uppercase tracking-widest">
+                              <span className="flex items-center gap-1.5"><Mail size={10} className="text-emerald-500" /> {request.email}</span>
                               {!request.isVerified && (
-                                <span className="flex items-center gap-1.5 text-amber-500/80"><Clock size={12} /> ONAY BEKLİYOR</span>
+                                <span className="flex items-center gap-1.5 text-amber-500/80"><Clock size={10} /> ONAY BEKLİYOR</span>
                               )}
                            </div>
                         </div>
                      </div>
 
-                     <div className="flex items-center gap-3 text-[10px] font-bold text-slate-600 uppercase tracking-widest bg-white/5 px-4 py-2 rounded-lg">
-                        <Calendar size={14} /> 
-                        {format(new Date(request.createdAt), "dd MMMM yyyy | HH:mm", { locale: tr })}
+                     <div className="flex items-center gap-3 text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-[4px] border border-slate-100 dark:border-slate-700">
+                        <Calendar size={12} /> 
+                        {format(new Date(request.createdAt), "dd MMM yyyy | HH:mm", { locale: tr })}
                      </div>
                   </div>
 
                   {/* Message Content */}
                   <div className="space-y-3">
                      <div className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest italic">{request.subject || "Konu Belirtilmemiş"}</h4>
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                        <h4 className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest italic">{request.subject || "Konu Belirtilmemiş"}</h4>
                      </div>
-                     <p className={`text-slate-400 font-medium italic leading-relaxed text-sm p-6 rounded-2xl border ${request.isVerified ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.02] border-white/5"}`}>
+                     <p className={`text-slate-600 dark:text-slate-300 font-medium italic leading-relaxed text-xs p-4 rounded-[4px] border ${request.isVerified ? "bg-emerald-500/5 border-emerald-500/10" : "bg-slate-50 dark:bg-slate-950/50 border-slate-100 dark:border-slate-800"}`}>
                         {request.message}
                      </p>
                   </div>

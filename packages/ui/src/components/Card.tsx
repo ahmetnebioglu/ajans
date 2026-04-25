@@ -7,19 +7,19 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export const Card = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <div className={cn("bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] shadow-xl overflow-hidden", className)}>
+  <div className={cn("bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[4px] shadow-2xl shadow-black/5 overflow-hidden", className)}>
     {children}
   </div>
 );
 
 export const CardHeader = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <div className={cn("p-8 border-b border-slate-100 dark:border-slate-800", className)}>
+  <div className={cn("p-3 border-b border-zinc-200 dark:border-zinc-800", className)}>
     {children}
   </div>
 );
 
 export const CardContent = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <div className={cn("p-8", className)}>
+  <div className={cn("p-3", className)}>
     {children}
   </div>
 );

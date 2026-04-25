@@ -11,11 +11,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
           {/* Brand & Newsletter */}
-          <div className="lg:col-span-1 space-y-8">
+          <div className="lg:col-span-1 space-y-6">
              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-corporate-blue rounded-md flex items-center justify-center text-white font-bold italic text-xl">M</div>
+                <div className="w-9 h-9 bg-corporate-blue rounded-[2px] flex items-center justify-center text-white font-bold italic text-lg">M</div>
                 <div className="flex flex-col">
-                  <span className="font-bold uppercase tracking-tight text-xl leading-none text-slate-900">Mercan <span className="text-corporate-blue">İSG</span></span>
+                  <span className="font-bold uppercase tracking-tight text-lg leading-none text-slate-900">Mercan <span className="text-corporate-blue">İSG</span></span>
                   <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-slate-400">Kurumsal Güvenlik</span>
                 </div>
              </div>
@@ -77,9 +77,9 @@ export default function Footer() {
                   <Link 
                     key={i} 
                     href={social.href} 
-                    className="p-3 bg-slate-50 text-slate-400 rounded-md hover:bg-corporate-blue hover:text-white hover:shadow-lg transition-all"
+                    className="p-2.5 bg-slate-50 text-slate-400 rounded-[2px] hover:bg-corporate-blue hover:text-white hover:shadow-lg transition-all"
                   >
-                    <social.icon size={18} />
+                    <social.icon size={16} />
                   </Link>
                 ))}
              </div>

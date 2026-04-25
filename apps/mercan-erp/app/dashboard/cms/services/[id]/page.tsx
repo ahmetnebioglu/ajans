@@ -124,7 +124,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50"
+          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-emerald-600/20 disabled:opacity-50"
         >
           <Save size={18} />
           {saving ? "KAYDEDİLİYOR..." : "KAYDET"}
@@ -149,7 +149,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
                     slug: isNew ? generateSlug(e.target.value) : formData.slug,
                   });
                 }}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 placeholder="Örn: İSG Yönetim Hizmetleri"
               />
             </div>
@@ -161,7 +161,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
               <textarea
                 value={formData.summary}
                 onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 min-h-[100px]"
+                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 min-h-[100px]"
                 placeholder="Hizmet kartlarında gösterilecek kısa özet..."
               />
             </div>
@@ -194,7 +194,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
                 type="text"
                 value={formData.slug}
                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               />
             </div>
 
@@ -204,7 +204,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
                 id="isPublished"
                 checked={formData.isPublished}
                 onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
-                className="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500"
+                className="w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500"
               />
               <label htmlFor="isPublished" className="text-sm font-bold text-slate-700 dark:text-slate-300">
                 Yayında
@@ -219,7 +219,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
                 type="number"
                 value={formData.order}
                 onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               />
             </div>
           </div>
@@ -255,7 +255,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
             ) : (
               <button
                 onClick={() => setIsMediaPickerOpen(true)}
-                className="w-full py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 hover:text-blue-600 hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all flex flex-col items-center gap-2"
+                className="w-full py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-slate-500 hover:text-emerald-600 hover:border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all flex flex-col items-center gap-2"
               >
                 <ImageIcon size={32} />
                 <span className="text-sm font-bold">Görsel Seç</span>
@@ -277,7 +277,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
                 type="text"
                 value={formData.seoTitle}
                 onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               />
             </div>
             
@@ -288,7 +288,7 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
               <textarea
                 value={formData.seoDescription}
                 onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
-                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 min-h-[100px]"
+                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 min-h-[100px]"
               />
             </div>
           </div>

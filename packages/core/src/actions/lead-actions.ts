@@ -40,7 +40,7 @@ export async function submitContactForm(
           leadId: lead.id,
           type: 'SYSTEM_NOTE',
           description: `Müşteri ${source} üzerinden yeni bir form doldurdu.`,
-          createdById: 'SYSTEM',
+          createdById: 'system-user-id',
           tenantId: tenantId,
         },
       });
@@ -51,8 +51,7 @@ export async function submitContactForm(
     revalidateTenantCache(tenantId, 'crm-leads');
     return { success: true, leadId: result.id };
   } catch (error: unknown) {
-    console.error("CRM Lead oluşturma hatası:", error);
-    return { success: false, error: "Form gönderilirken bir hata oluştu." };
+    return { success: false, error: error instanceof Error ? error.message : "Form gönderilirken bir hata oluştu." };
   }
 }
 

@@ -3,10 +3,19 @@
   "version": "0.1.0",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/actions/protected-action.ts"
+  },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.64",
     "@ai-sdk/openai": "^3.0.53",
+    "@ajans/auth": "*",
+    "@ajans/db": "*",
+    "@google/generative-ai": "^0.24.1",
     "ai": "^6.0.168",
     "next": "^16.2.4",
+    "next-auth": "^4.24.14",
     "zod": "^3.25.76"
   }
 }

@@ -36,8 +36,8 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-white font-black italic text-2xl shadow-xl group-hover:bg-blue-600 transition-colors group-hover:rotate-6 duration-500">M</div>
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="w-10 h-10 bg-slate-900 rounded-[2px] flex items-center justify-center text-white font-black italic text-xl shadow-xl group-hover:bg-blue-600 transition-colors group-hover:rotate-3 duration-500">M</div>
           <div className="flex flex-col">
             <span className="font-black uppercase tracking-tighter text-2xl leading-none text-slate-900 italic">Mercan <span className="text-blue-600">OSGB</span></span>
             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">Kurumsal Güvenlik</span>
@@ -63,7 +63,7 @@ export default function Header() {
           <Link href="http://localhost:3001" target="_blank" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 flex items-center gap-2 transition-colors">
              PORTAL <ExternalLink size={14} />
           </Link>
-          <Link href="/iletisim#teklif" className="px-8 py-3.5 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-900/10 hover:scale-105 active:scale-95">
+          <Link href="/iletisim#teklif" className="px-6 py-2.5 bg-slate-900 text-white rounded-[2px] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-900/10 hover:scale-105 active:scale-95">
              TEKLİF ALIN
           </Link>
         </div>

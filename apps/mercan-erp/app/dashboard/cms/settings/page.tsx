@@ -40,22 +40,22 @@ export default function SiteSettingsPage() {
 
   if (loading) return (
     <div className="h-screen flex items-center justify-center">
-       <Loader2 className="animate-spin text-blue-600" size={48} />
+       <Loader2 className="animate-spin text-emerald-600" size={48} />
     </div>
   );
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-10 animate-in fade-in duration-700 italic font-medium">
+    <div className="p-6 max-w-5xl mx-auto space-y-6 animate-in fade-in duration-700 italic font-medium">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="space-y-1">
-           <Link href="/dashboard/cms" className="flex items-center gap-2 text-slate-400 hover:text-blue-600 transition-colors text-[10px] font-black uppercase tracking-widest mb-2 group">
-              <ChevronLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> CMS Hub
+           <Link href="/dashboard/cms" className="flex items-center gap-2 text-slate-400 hover:text-emerald-600 transition-colors text-[9px] font-black uppercase tracking-widest mb-1 group">
+              <ChevronLeft size={12} className="group-hover:-translate-x-1 transition-transform" /> CMS Hub
            </Link>
-           <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
-              Site <span className="text-blue-600">Ayarları</span>
+           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
+              Site <span className="text-emerald-600">Ayarları</span>
            </h1>
-           <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest">
+           <p className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest">
               Kurumsal kimlik, sosyal medya ve genel yapılandırma
            </p>
         </div>
@@ -63,39 +63,40 @@ export default function SiteSettingsPage() {
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="px-10 py-4 bg-slate-900 dark:bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl flex items-center gap-3 hover:scale-105 transition-all active:scale-95 disabled:opacity-50"
+          className="px-6 py-2.5 bg-emerald-600 text-white rounded-[4px] text-[9px] font-black uppercase tracking-[0.2em] shadow-[0_10px_25px_rgba(16,185,129,0.4)] flex items-center gap-2 hover:scale-105 hover:bg-emerald-700 transition-all active:scale-95 disabled:opacity-50 border border-emerald-500/50"
         >
-           {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-           Değişiklikleri Kaydet
+           {saving ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
+           KAYDET
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
          {/* Left Column: General & Branding */}
-         <div className="lg:col-span-2 space-y-8">
+         <div className="lg:col-span-2 space-y-4">
             {/* Branding Card */}
-            <div className="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-2xl space-y-8">
-               <div className="flex items-center gap-4 text-blue-600">
-                  <ImageIcon size={24} />
-                  <h3 className="text-xl font-black uppercase tracking-tighter">Marka & Logo</h3>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-[4px] border border-slate-200 dark:border-slate-800 shadow-sm space-y-6 relative overflow-hidden">
+               <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600" />
+               <div className="flex items-center gap-3 text-emerald-600">
+                  <ImageIcon size={20} />
+                  <h3 className="text-lg font-black uppercase tracking-tighter text-slate-900 dark:text-white"><span className="text-emerald-600">Marka</span> & Logo</h3>
                </div>
                
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Kurumsal Logo (Drive ID)</label>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                     <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Kurumsal Logo (Drive ID)</label>
                      <input 
                        type="text" 
                        value={settings.logo || ""}
                        onChange={(e) => setSettings({...settings, logo: e.target.value})}
-                       className="w-full p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-blue-600/5 transition-all outline-none"
+                       className="w-full p-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-[4px] text-xs font-bold focus:ring-1 focus:ring-emerald-600 transition-all outline-none text-slate-900 dark:text-white"
                        placeholder="1x8y2z..."
                      />
                   </div>
-                  <div className="space-y-3">
-                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Favicon (Drive ID)</label>
+                  <div className="space-y-2">
+                     <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Favicon (Drive ID)</label>
                      <input 
                        type="text" 
-                       className="w-full p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-blue-600/5 transition-all outline-none"
+                       className="w-full p-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-[4px] text-xs font-bold focus:ring-1 focus:ring-emerald-600 transition-all outline-none text-slate-900 dark:text-white"
                        placeholder="1a2b3c..."
                      />
                   </div>
@@ -103,30 +104,31 @@ export default function SiteSettingsPage() {
             </div>
 
             {/* Contact & Address */}
-            <div className="bg-white dark:bg-slate-900 p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-2xl space-y-8">
-               <div className="flex items-center gap-4 text-emerald-600">
-                  <MapPin size={24} />
-                  <h3 className="text-xl font-black uppercase tracking-tighter">İletişim Bilgileri</h3>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-[4px] border border-slate-200 dark:border-slate-800 shadow-sm space-y-6 relative overflow-hidden">
+               <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600" />
+               <div className="flex items-center gap-3 text-emerald-600">
+                  <MapPin size={20} />
+                  <h3 className="text-lg font-black uppercase tracking-tighter text-slate-900 dark:text-white italic"><span className="text-emerald-600">İletişim</span> Bilgileri</h3>
                </div>
                
-               <div className="space-y-6">
-                  <div className="space-y-3">
-                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Açık Adres</label>
+               <div className="space-y-4">
+                  <div className="space-y-2">
+                     <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Açık Adres</label>
                      <textarea 
                        value={settings.address || ""}
                        onChange={(e) => setSettings({...settings, address: e.target.value})}
                        rows={3}
-                       className="w-full p-6 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-[2rem] text-sm font-bold focus:ring-4 focus:ring-blue-600/5 transition-all outline-none resize-none"
+                       className="w-full p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-[4px] text-xs font-bold focus:ring-1 focus:ring-emerald-600 transition-all outline-none resize-none text-slate-900 dark:text-white"
                        placeholder="Merkez mah. No:1..."
                      />
                   </div>
-                  <div className="space-y-3">
-                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Footer Metni (Copyright)</label>
+                  <div className="space-y-2">
+                     <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Footer Metni (Copyright)</label>
                      <input 
                        type="text" 
                        value={settings.footerText || ""}
                        onChange={(e) => setSettings({...settings, footerText: e.target.value})}
-                       className="w-full p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-blue-600/5 transition-all outline-none"
+                       className="w-full p-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-[4px] text-xs font-bold focus:ring-1 focus:ring-emerald-600 transition-all outline-none text-slate-900 dark:text-white"
                        placeholder="© 2026 Mercan ERP"
                      />
                   </div>
@@ -135,27 +137,27 @@ export default function SiteSettingsPage() {
          </div>
 
          {/* Right Column: Social Media */}
-         <div className="space-y-8">
-            <div className="bg-slate-900 text-white p-10 rounded-[3rem] shadow-2xl space-y-8 relative overflow-hidden">
-               <div className="absolute right-0 top-0 w-32 h-32 bg-blue-600 opacity-20 rounded-full blur-3xl -mr-16 -mt-16" />
-               <div className="flex items-center gap-4 text-blue-400 relative z-10">
-                  <Share2 size={24} />
-                  <h3 className="text-xl font-black uppercase tracking-tighter">Sosyal Medya</h3>
+         <div className="space-y-4">
+            <div className="bg-white dark:bg-slate-950 p-6 rounded-[4px] shadow-sm space-y-6 relative overflow-hidden border border-slate-200 dark:border-zinc-800/50">
+               <div className="absolute right-0 top-0 w-32 h-32 bg-emerald-600 opacity-10 rounded-full blur-3xl -mr-16 -mt-16" />
+               <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400 relative z-10">
+                  <Share2 size={20} />
+                  <h3 className="text-lg font-black uppercase tracking-tighter text-slate-900 dark:text-white">Sosyal <span className="text-emerald-600">Medya</span></h3>
                </div>
 
-               <div className="space-y-6 relative z-10">
+               <div className="space-y-4 relative z-10">
                   {[
                     { id: 'twitter', icon: LinkIcon, label: 'Twitter / X', color: 'text-sky-400' },
                     { id: 'linkedin', icon: LinkIcon, label: 'LinkedIn', color: 'text-blue-500' },
                     { id: 'instagram', icon: LinkIcon, label: 'Instagram', color: 'text-rose-400' },
                   ].map((social) => (
-                    <div key={social.id} className="space-y-2">
-                       <label className="text-[8px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
-                          <social.icon size={12} className={social.color} /> {social.label}
+                    <div key={social.id} className="space-y-1.5">
+                       <label className="text-[7px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                          <social.icon size={10} className={social.color} /> {social.label}
                        </label>
                        <input 
                          type="text" 
-                         className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold focus:border-blue-500 transition-all outline-none"
+                         className="w-full p-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[4px] text-[10px] font-bold focus:border-emerald-500 transition-all outline-none text-slate-900 dark:text-white"
                          placeholder="https://..."
                        />
                     </div>
@@ -164,17 +166,17 @@ export default function SiteSettingsPage() {
             </div>
 
             {/* SEO Info Placeholder */}
-            <div className="p-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[2.5rem] text-center space-y-4">
-               <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto">
-                  <Globe className="text-slate-400" size={24} />
+            <div className="p-6 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[4px] text-center space-y-3 bg-white/50 dark:bg-transparent">
+               <div className="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-[4px] flex items-center justify-center mx-auto border border-slate-100 dark:border-slate-700">
+                  <Globe className="text-slate-400" size={20} />
                </div>
                <div className="space-y-1">
-                  <h4 className="font-black uppercase tracking-tighter text-slate-900 dark:text-white italic">SEO Yapılandırması</h4>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Meta etiketleri ve robots.txt ayarları yakında eklenecek.</p>
+                  <h4 className="text-sm font-black uppercase tracking-tighter text-slate-900 dark:text-white italic leading-none">SEO Yapılandırması</h4>
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 opacity-60">Meta etiketleri ve robots.txt ayarları yakında eklenecek.</p>
                </div>
-            </div>
-         </div>
-      </div>
+             </div>
+          </div>
+       </div>
     </div>
   );
 }

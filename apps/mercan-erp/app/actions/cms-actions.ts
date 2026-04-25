@@ -1,33 +1,23 @@
 "use server";
-// Triggering reload to pick up new Prisma Client (local path) - 2026-04-22
 
-import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@ajans/auth/options";
+import { protectedAction } from "@ajans/core/server";
 import { uploadToDrive } from "@ajans/google-api";
-
-/**
- * GÜVENLİK KONTROLÜ
- */
-async function getAdminSession() {
-  const session = await getServerSession(authOptions);
-  if (!session || (session.user as any).role !== "ADMIN") return null;
-  return session.user;
-}
 
 // --- WEBSITE REVALIDATION HELPER ---
 async function triggerWebsiteRevalidate(path: string) {
   try {
     const websiteUrl = process.env.WEBSITE_URL || "http://localhost:3000";
     const secret = process.env.REVALIDATE_SECRET;
-    
+
     if (!secret) {
       console.warn("REVALIDATE_SECRET is missing. Cannot revalidate website.");
       return;
     }
 
-    const res = await fetch(`${websiteUrl}/api/revalidate?path=${path}&secret=${secret}`);
+    const res = await fetch(
+      `${websiteUrl}/api/revalidate?path=${path}&secret=${secret}`,
+    );
     if (!res.ok) {
       console.error(`Revalidation failed for path ${path}: ${res.statusText}`);
     }
@@ -39,369 +29,354 @@ async function triggerWebsiteRevalidate(path: string) {
 // --- PAGE & SECTION ACTIONS ---
 
 export async function getPages() {
-  return await prisma.page.findMany({
-    include: { _count: { select: { sections: true } } },
-    orderBy: { updatedAt: "desc" }
+  return protectedAction(async ({ db }) => {
+    return await db.page.findMany({
+      include: { _count: { select: { sections: true } } },
+      orderBy: { updatedAt: "desc" },
+    });
   });
 }
 
 export async function createPage(title: string, slug: string) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    const page = await prisma.page.create({
-      data: { title, slug }
+    const page = await db.page.create({
+      data: { title, slug },
     });
     revalidatePath("/dashboard/cms");
     await triggerWebsiteRevalidate(`/${slug}`);
-    return { success: true, page };
-  } catch (error) {
-    return { success: false, error: "Sayfa oluşturulamadı." };
-  }
+    return page;
+  });
 }
 
 export async function deletePage(id: string) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    const page = await prisma.page.findUnique({ where: { id } });
-    if (!page) return { success: false, error: "Sayfa bulunamadı." };
-    
-    await prisma.page.delete({ where: { id } });
+    const page = await db.page.findUnique({ where: { id } });
+    if (!page) throw new Error("Sayfa bulunamadı.");
+
+    await db.page.delete({ where: { id } });
     revalidatePath("/dashboard/cms");
     await triggerWebsiteRevalidate(`/${page.slug}`);
     return { success: true };
-  } catch (error) {
-    return { success: false, error: "Sayfa silinemedi." };
-  }
+  });
 }
 
 // --- BLOG ACTIONS ---
 
 export async function getBlogPosts() {
-  return await prisma.blogPost.findMany({
-    include: { category: true },
-    orderBy: { createdAt: "desc" }
+  return protectedAction(async ({ db }) => {
+    return await db.blogPost.findMany({
+      include: { category: true },
+      orderBy: { createdAt: "desc" },
+    });
   });
 }
 
-export async function createBlogPost(data: { title: string; slug: string; content: string; featuredImage?: string }) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+export async function createBlogPost(data: {
+  title: string;
+  slug: string;
+  content: string;
+  featuredImage?: string;
+}) {
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    const post = await prisma.blogPost.create({ data });
+    const post = await db.blogPost.create({ data });
     revalidatePath("/dashboard/cms/blog");
     await triggerWebsiteRevalidate(`/blog/${data.slug}`);
     await triggerWebsiteRevalidate(`/blog`);
-    return { success: true, post };
-  } catch (error) {
-    return { success: false, error: "Blog yazısı oluşturulamadı." };
-  }
+    return post;
+  });
 }
 
 // --- SETTINGS ACTIONS ---
 
 export async function getSiteSettings() {
-  let settings = await prisma.siteSettings.findUnique({ where: { id: "global" } });
-  if (!settings) {
-    settings = await prisma.siteSettings.create({ data: { id: "global" } });
-  }
-  return settings;
+  return protectedAction(async ({ db }) => {
+    let settings = await db.siteSettings.findUnique({
+      where: { id: "global" },
+    });
+    if (!settings) {
+      settings = await db.siteSettings.create({ data: { id: "global" } });
+    }
+    return settings;
+  });
 }
 
 export async function updateSiteSettings(data: any) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    await prisma.siteSettings.update({
+    await db.siteSettings.update({
       where: { id: "global" },
-      data
+      data,
     });
     revalidatePath("/dashboard/cms/settings");
-    await triggerWebsiteRevalidate(`/`); // Revalidate home or layout
+    await triggerWebsiteRevalidate(`/`);
     return { success: true };
-  } catch (error) {
-    return { success: false, error: "Ayarlar güncellenemedi." };
-  }
+  });
 }
 
 // --- SECTION ACTIONS ---
 
 export async function getPageSections(pageId: string) {
-  return await prisma.pageSection.findMany({
-    where: { pageId },
-    orderBy: { order: "asc" }
+  return protectedAction(async ({ db }) => {
+    return await db.pageSection.findMany({
+      where: { pageId },
+      orderBy: { order: "asc" },
+    });
   });
 }
 
 export async function addSection(pageId: string, type: any, content: any) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    const lastSection = await prisma.pageSection.findFirst({
+    const lastSection = await db.pageSection.findFirst({
       where: { pageId },
-      orderBy: { order: "desc" }
+      orderBy: { order: "desc" },
     });
 
-    const section = await prisma.pageSection.create({
+    const section = await db.pageSection.create({
       data: {
         pageId,
         type,
         content,
-        order: (lastSection?.order || 0) + 1
-      }
+        order: (lastSection?.order || 0) + 1,
+      },
     });
 
     revalidatePath(`/dashboard/cms/pages/${pageId}`);
-    
-    // Website Revalidation
-    const page = await prisma.page.findUnique({ where: { id: pageId } });
+
+    const page = await db.page.findUnique({ where: { id: pageId } });
     if (page) {
-       await triggerWebsiteRevalidate(`/${page.slug}`);
+      await triggerWebsiteRevalidate(`/${page.slug}`);
     }
 
-    return { success: true, section };
-  } catch (error) {
-    return { success: false, error: "Bölüm eklenemedi." };
-  }
+    return section;
+  });
 }
 
 export async function deleteSection(sectionId: string, pageId: string) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    await prisma.pageSection.delete({ where: { id: sectionId } });
+    await db.pageSection.delete({ where: { id: sectionId } });
     revalidatePath(`/dashboard/cms/pages/${pageId}`);
-    
-    const page = await prisma.page.findUnique({ where: { id: pageId } });
+
+    const page = await db.page.findUnique({ where: { id: pageId } });
     if (page) {
-       await triggerWebsiteRevalidate(`/${page.slug}`);
+      await triggerWebsiteRevalidate(`/${page.slug}`);
     }
 
     return { success: true };
-  } catch (error) {
-    return { success: false, error: "Bölüm silinemedi." };
-  }
+  });
 }
 
 export async function savePageSections(sections: any[]) {
-  try {
-    const admin = await getAdminSession();
-    if (!admin) return { success: false, error: "Yetkisiz erişim" };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-    await prisma.$transaction(
-      sections.map(section => 
-        prisma.pageSection.update({
+    await db.$transaction(
+      sections.map((section) =>
+        db.pageSection.update({
           where: { id: section.id },
           data: {
             content: section.content,
-            order: section.order || 0
-          }
-        })
-      )
+            order: section.order || 0,
+          },
+        }),
+      ),
     );
 
-    // Revalidate website content
     if (sections.length > 0) {
-      const firstSection = await prisma.pageSection.findUnique({
+      const firstSection = await db.pageSection.findUnique({
         where: { id: sections[0].id },
-        include: { page: true }
+        include: { page: true },
       });
       if (firstSection && firstSection.page) {
         await triggerWebsiteRevalidate(`/${firstSection.page.slug}`);
       }
     }
 
-    return { success: true, message: "Değişiklikler kaydedildi ve web sitesi güncellendi." };
-  } catch (error) {
-    console.error("Save sections error:", error);
-    return { success: false, error: "Bölümler kaydedilemedi." };
-  }
+    return { message: "Değişiklikler kaydedildi ve web sitesi güncellendi." };
+  });
 }
 
 // --- ISG DOCUMENT ACTIONS ---
 
 export async function getIsgCategories() {
-  return await prisma.isgCategory.findMany({
-    orderBy: { order: "asc" }
+  return protectedAction(async ({ db }) => {
+    return await db.isgCategory.findMany({
+      orderBy: { order: "asc" },
+    });
   });
 }
 
 export async function createIsgCategory(name: string) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    const slug = name.toLowerCase()
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
+    const slug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
 
-    const category = await prisma.isgCategory.create({
-      data: { name, slug }
+    const category = await db.isgCategory.create({
+      data: { name, slug },
     });
     revalidatePath("/dashboard/cms/isg-library");
-    return { success: true, category };
-  } catch (error) {
-    return { success: false, error: "Kategori oluşturulamadı." };
-  }
-}
-
-export async function deleteIsgCategory(id: string) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
-
-  try {
-    await prisma.isgCategory.delete({ where: { id } });
-    revalidatePath("/dashboard/cms/isg-library");
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: "Kategori silinemedi. İçinde belgeler olabilir." };
-  }
-}
-
-export async function getIsgDocuments() {
-  return await prisma.isgDocument.findMany({
-    include: { category: true },
-    orderBy: { createdAt: "desc" }
+    return category;
   });
 }
 
-export async function addIsgDocument(data: { title: string; categoryId: string; driveFileId: string; fileType?: string; isPublished?: boolean }) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+export async function deleteIsgCategory(id: string) {
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    const doc = await prisma.isgDocument.create({ data });
+    await db.isgCategory.delete({ where: { id } });
+    revalidatePath("/dashboard/cms/isg-library");
+    return { success: true };
+  });
+}
+
+export async function getIsgDocuments() {
+  return protectedAction(async ({ db }) => {
+    return await db.isgDocument.findMany({
+      include: { category: true },
+      orderBy: { createdAt: "desc" },
+    });
+  });
+}
+
+export async function addIsgDocument(data: {
+  title: string;
+  categoryId: string;
+  driveFileId: string;
+  fileType?: string;
+  isPublished?: boolean;
+}) {
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
+
+    const doc = await db.isgDocument.create({ data });
     revalidatePath("/dashboard/cms/isg-library");
     await triggerWebsiteRevalidate(`/isg-evrak-destegi`);
-    return { success: true, doc: await prisma.isgDocument.findUnique({ where: { id: doc.id }, include: { category: true } }) };
-  } catch (error) {
-    return { success: false, error: "İSG Belgesi eklenemedi." };
-  }
+    return await db.isgDocument.findUnique({
+      where: { id: doc.id },
+      include: { category: true },
+    });
+  });
 }
 
 export async function deleteIsgDocument(id: string) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    await prisma.isgDocument.delete({ where: { id } });
+    await db.isgDocument.delete({ where: { id } });
     revalidatePath("/dashboard/cms/isg-library");
     await triggerWebsiteRevalidate(`/isg-evrak-destegi`);
     return { success: true };
-  } catch (error) {
-    return { success: false, error: "İSG Belgesi silinemedi." };
-  }
+  });
 }
 
-export async function toggleIsgDocumentStatus(id: string, isPublished: boolean) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+export async function toggleIsgDocumentStatus(
+  id: string,
+  isPublished: boolean,
+) {
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    await prisma.isgDocument.update({
+    await db.isgDocument.update({
       where: { id },
-      data: { isPublished }
+      data: { isPublished },
     });
     revalidatePath("/dashboard/cms/isg-library");
     await triggerWebsiteRevalidate(`/isg-evrak-destegi`);
     return { success: true };
-  } catch (error) {
-    return { success: false, error: "İSG Belgesi durumu güncellenemedi." };
-  }
+  });
 }
 
 // --- NACE CODE ACTIONS ---
 
 export async function getNaceCodes() {
-  return await prisma.naceCode.findMany({
-    orderBy: { code: "asc" }
+  return protectedAction(async ({ db }) => {
+    return await db.naceCode.findMany({
+      orderBy: { code: "asc" },
+    });
   });
 }
 
-export async function addNaceCode(data: { code: string; description: string; dangerClass: string }) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+export async function addNaceCode(data: {
+  code: string;
+  description: string;
+  dangerClass: string;
+}) {
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    const nace = await prisma.naceCode.create({ data });
+    const nace = await db.naceCode.create({ data });
     revalidatePath("/dashboard/cms/nace-codes");
     await triggerWebsiteRevalidate(`/tehlike-siniflari`);
-    return { success: true, nace };
-  } catch (error) {
-    return { success: false, error: "NACE kodu eklenemedi." };
-  }
+    return nace;
+  });
 }
 
 export async function deleteNaceCode(id: string) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
-    await prisma.naceCode.delete({ where: { id } });
+    await db.naceCode.delete({ where: { id } });
     revalidatePath("/dashboard/cms/nace-codes");
     await triggerWebsiteRevalidate(`/tehlike-siniflari`);
     return { success: true };
-  } catch (error) {
-    return { success: false, error: "NACE kodu silinemedi." };
-  }
+  });
 }
 
 export async function uploadIsgDocument(formData: FormData) {
-  const admin = await getAdminSession();
-  if (!admin) return { success: false, error: "Yetkisiz." };
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
-  try {
     const file = formData.get("file") as File;
     const title = formData.get("title") as string;
     const categoryId = formData.get("categoryId") as string;
     const fileType = formData.get("fileType") as string;
 
     if (!file || !title || !categoryId) {
-      return { success: false, error: "Eksik bilgi." };
+      throw new Error("Eksik bilgi.");
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    
-    // Google Drive'a yükle
+
     const driveFile = await uploadToDrive(
       buffer,
       file.name,
       file.type,
-      process.env.GOOGLE_DRIVE_FOLDER_ID
+      process.env.GOOGLE_DRIVE_FOLDER_ID,
     );
 
     if (!driveFile || !driveFile.id) {
-      return { success: false, error: "Google Drive yükleme hatası." };
+      throw new Error("Google Drive yükleme hatası.");
     }
 
-    // Veritabanına kaydet
-    const doc = await prisma.isgDocument.create({
+    const doc = await db.isgDocument.create({
       data: {
         title,
         categoryId,
         driveFileId: driveFile.id,
-        fileType: fileType || file.name.split('.').pop()?.toUpperCase() || "PDF",
-        isPublished: true
+        fileType:
+          fileType || file.name.split(".").pop()?.toUpperCase() || "PDF",
+        isPublished: true,
       },
-      include: { category: true }
+      include: { category: true },
     });
 
     revalidatePath("/dashboard/cms/isg-library");
     await triggerWebsiteRevalidate(`/isg-evrak-destegi`);
-    return { success: true, doc };
-  } catch (error) {
-    console.error("Upload error:", error);
-    return { success: false, error: "Dosya yüklenemedi." };
-  }
+    return doc;
+  });
 }
-
-
-

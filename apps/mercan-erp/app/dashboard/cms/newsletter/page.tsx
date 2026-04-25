@@ -17,7 +17,7 @@ export default async function NewsletterPage() {
     <div className="p-8 space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col gap-2">
         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
-          Merkezi Bülten <span className="text-blue-600">Yönetimi</span>
+          Merkezi Bülten <span className="text-emerald-600">Yönetimi</span>
         </h1>
         <p className="text-slate-500 dark:text-slate-400 font-medium italic">
           Tüm projelerden gelen aboneleri yönetin ve toplu bilgilendirme mailleri gönderin.

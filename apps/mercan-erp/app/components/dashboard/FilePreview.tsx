@@ -43,7 +43,7 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
   ];
   
   const isPreviewable = previewableExtensions.some(ext => 
-    file.fileName.toLowerCase().endsWith(ext)
+    (file.fileName || "").toLowerCase().endsWith(ext)
   );
 
   const isMockData = file.driveFileId.startsWith("mock_id");

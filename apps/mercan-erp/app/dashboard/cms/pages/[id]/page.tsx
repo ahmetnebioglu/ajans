@@ -153,7 +153,7 @@ export default function PageBuilderPage({ params }: { params: Promise<{ id: stri
               </div>
             ) : (
               sections.map((section, index) => (
-                <div key={section.id} className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden relative">
+                <div key={section.id} className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden relative">
                    {/* Section Toolbar */}
                    <div className="absolute top-6 right-6 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 transition-transform">
                       <button 

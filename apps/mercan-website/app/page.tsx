@@ -50,12 +50,12 @@ export default async function HomePage() {
                     Türkiye genelinde 2.500'den fazla firma Mercan OSGB güvencesiyle risklerini minimize ediyor.
                   </p>
                </div>
-               <div className="flex flex-col sm:flex-row justify-center gap-6 shrink-0">
-                  <Link href="/iletisim#teklif" className="btn-premium bg-blue-600 hover:bg-white hover:text-blue-600 px-12 py-6 text-xs">
-                     ÜCRETSİZ TEKLİF ALIN <ArrowRight size={20} />
+               <div className="flex flex-col sm:flex-row justify-center gap-4 shrink-0">
+                  <Link href="/iletisim#teklif" className="btn-premium bg-blue-600 hover:bg-white hover:text-blue-600 px-10 py-5 text-[10px]">
+                     ÜCRETSİZ TEKLİF ALIN <ArrowRight size={18} />
                   </Link>
-                  <Link href="tel:+902160000000" className="btn-premium bg-transparent border-white/20 hover:bg-white/5 px-12 py-6 text-xs border">
-                     <Phone size={20} /> BİZİ ARAYIN
+                  <Link href="tel:+902160000000" className="btn-premium bg-transparent border-white/20 hover:bg-white/5 px-10 py-5 text-[10px] border">
+                     <Phone size={18} /> BİZİ ARAYIN
                   </Link>
                </div>
             </div>

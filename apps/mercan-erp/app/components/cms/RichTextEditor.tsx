@@ -39,7 +39,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
       }),
       Image.configure({
         HTMLAttributes: {
-          class: "max-w-full h-auto rounded-2xl border border-white/10 shadow-2xl my-8",
+          class: "max-w-full h-auto rounded-[4px] border border-white/10 shadow-lg my-8",
         },
       }),
     ],
@@ -49,7 +49,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
     },
     editorProps: {
       attributes: {
-        class: "prose prose-invert prose-teal max-w-none min-h-[400px] outline-none p-6 font-medium italic",
+        class: "prose dark:prose-invert prose-teal max-w-none min-h-[400px] outline-none p-6 font-medium italic",
       },
     },
   });
@@ -76,7 +76,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
   };
 
   return (
-    <div className="w-full border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden bg-white dark:bg-black/20">
+    <div className="w-full border border-slate-200 dark:border-white/10 rounded-[4px] overflow-hidden bg-white dark:bg-black/20">
       {/* TOOLBAR */}
       <div className="flex flex-wrap items-center gap-1 p-2 bg-slate-50 dark:bg-white/[0.03] border-b border-slate-200 dark:border-white/5">
         <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")} icon={<Bold size={16} />} />
@@ -127,9 +127,9 @@ function ToolbarButton({ onClick, active, icon }: { onClick: () => void; active:
     <button
       type="button"
       onClick={onClick}
-      className={`p-2 rounded-lg transition-all ${
+      className={`p-2 rounded-[4px] transition-all ${
         active 
-          ? "bg-teal-500/20 text-teal-400 shadow-[0_0_10px_rgba(45,212,191,0.2)]" 
+          ? "bg-teal-500/20 text-teal-600 dark:text-teal-400 shadow-[0_0_10px_rgba(45,212,191,0.2)]" 
           : "text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5"
       }`}
     >

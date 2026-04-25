@@ -62,7 +62,7 @@ export default function MessagesPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
            <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
-              Gelen <span className="text-blue-600">Mesajlar</span>
+              Gelen <span className="text-emerald-600">Mesajlar</span>
            </h1>
            <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest">
               İletişim formu ve referans taleplerini yönetin
@@ -78,7 +78,7 @@ export default function MessagesPage() {
            </button>
            <button 
              onClick={() => setFilter("unread")}
-             className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === "unread" ? "bg-blue-600 text-white" : "text-slate-400 hover:bg-slate-50"}`}
+             className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === "unread" ? "bg-emerald-600 text-white" : "text-slate-400 hover:bg-slate-50"}`}
            >
               Okunmamış
            </button>
@@ -93,13 +93,13 @@ export default function MessagesPage() {
 
       {/* Search */}
       <div className="relative group max-w-2xl">
-         <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" size={20} />
+         <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-600 transition-colors" size={20} />
          <input 
            type="text" 
            value={search}
            onChange={(e) => setSearch(e.target.value)}
            placeholder="İsim, e-posta veya konu ile ara..."
-           className="w-full pl-16 pr-8 py-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl text-sm font-bold outline-none focus:ring-4 focus:ring-blue-600/5 transition-all shadow-sm"
+           className="w-full pl-16 pr-8 py-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl text-sm font-bold outline-none focus:ring-4 focus:ring-emerald-600/5 transition-all shadow-sm"
          />
       </div>
 
@@ -118,13 +118,13 @@ export default function MessagesPage() {
           filteredMessages.map((msg) => (
             <div 
               key={msg.id} 
-              className={`group bg-white dark:bg-slate-900 border rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden relative ${!msg.isRead ? "border-l-8 border-l-blue-600 border-slate-200 dark:border-slate-800" : "border-slate-100 dark:border-slate-800"}`}
+              className={`group bg-white dark:bg-slate-900 border rounded-[2.5rem] shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden relative ${!msg.isRead ? "border-l-8 border-l-emerald-600 border-slate-200 dark:border-slate-800" : "border-slate-100 dark:border-slate-800"}`}
             >
                <div className="p-10 flex flex-col lg:flex-row gap-10">
                   {/* Left: Sender Info */}
                   <div className="lg:w-72 shrink-0 space-y-6">
                      <div className="flex items-center gap-4">
-                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-transform group-hover:rotate-3 ${msg.subject?.includes("Referans") ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600"}`}>
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-transform group-hover:rotate-3 ${msg.subject?.includes("Referans") ? "bg-emerald-50 text-emerald-600" : "bg-emerald-50 text-emerald-600"}`}>
                            {msg.subject?.includes("Referans") ? <FileText size={28} /> : <User size={28} />}
                         </div>
                         <div className="min-w-0">
@@ -138,7 +138,7 @@ export default function MessagesPage() {
                            <Clock size={14} /> {new Date(msg.createdAt).toLocaleString("tr-TR")}
                         </div>
                         {msg.subject && (
-                          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${msg.subject.includes("Referans") ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-blue-50 text-blue-600 border-blue-100"}`}>
+                          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${msg.subject.includes("Referans") ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-emerald-50 text-emerald-600 border-emerald-100"}`}>
                              {msg.subject}
                           </div>
                         )}
@@ -158,7 +158,7 @@ export default function MessagesPage() {
                         {!msg.isRead && (
                           <button 
                             onClick={() => handleRead(msg.id, msg.type)}
-                            className="px-6 py-3 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 hover:scale-105 transition-transform"
+                            className="px-6 py-3 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-600/20 hover:scale-105 transition-transform"
                           >
                              Okundu İşaretle
                           </button>

@@ -55,83 +55,93 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="space-y-1">
+           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
+              Haberler & <span className="text-emerald-600">Blog Yönetimi</span>
+           </h1>
+           <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">
+              Web sitesindeki haberleri ve sektörel makaleleri yönetin
+           </p>
+        </div>
+
         <button
           onClick={() => handleOpenForm()}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-black uppercase italic tracking-widest text-xs rounded-xl shadow-xl shadow-blue-600/20 hover:scale-105 transition-all"
+          className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-black uppercase italic tracking-widest text-[11px] rounded-[4px] shadow-sm shadow-emerald-600/20 hover:scale-105 transition-all active:scale-95 shrink-0"
         >
-          <Plus size={16} /> YENİ YAZI EKLE
+          <Plus size={18} /> YENİ YAZI EKLE
         </button>
       </div>
 
-      {/* Blog List Table */}
-      <div className="bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-white/5 rounded-3xl overflow-hidden shadow-sm">
+      {/* TABLE */}
+      <div className="bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div className="p-8 border-b border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20 italic">
+           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-600">Blog Yazıları</p>
+        </div>
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/5">
-              <th className="p-5 text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Görsel</th>
-              <th className="p-5 text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Başlık</th>
-              <th className="p-5 text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Kategori</th>
-              <th className="p-5 text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Durum</th>
-              <th className="p-5 text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Tarih</th>
-              <th className="p-5 text-[10px] font-black uppercase tracking-widest text-slate-400 italic text-right">İşlemler</th>
+            <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 italic">
+              <th className="p-8 text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Görsel & Başlık</th>
+              <th className="p-8 text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Durum</th>
+              <th className="p-8 text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Yayın Tarihi</th>
+              <th className="p-8 text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 text-right">İşlemler</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-            {posts.map((post) => (
-              <tr key={post.id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors">
-                <td className="p-5">
-                  {post.coverImage ? (
-                    <img src={post.coverImage} className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-white/10" alt="" />
-                  ) : (
-                    <div className="w-12 h-12 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400">
-                      <ImageIcon size={20} />
-                    </div>
-                  )}
-                </td>
-                <td className="p-5">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-black text-slate-900 dark:text-white uppercase italic tracking-tighter line-clamp-1">{post.title}</span>
-                    <span className="text-[10px] font-bold text-slate-400">/{post.slug}</span>
-                  </div>
-                </td>
-                <td className="p-5">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 text-[10px] font-black text-slate-600 dark:text-slate-400 uppercase italic">
-                    <Tag size={10} /> {post.categories?.name || "Genel"}
-                  </span>
-                </td>
-                <td className="p-5">
-                  {post.isPublished ? (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 text-[9px] font-black uppercase italic tracking-widest">
-                      <Eye size={10} /> YAYINDA
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-400 dark:bg-white/5 dark:text-slate-500 text-[9px] font-black uppercase italic tracking-widest">
-                      <EyeOff size={10} /> TASLAK
-                    </span>
-                  )}
-                </td>
-                <td className="p-5 text-[11px] font-bold text-slate-500 italic">
-                  {format(new Date(post.createdAt), "dd MMM yyyy", { locale: tr })}
-                </td>
-                <td className="p-5 text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      onClick={() => handleOpenForm(post)}
-                      className="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-all"
-                    >
-                      <Edit2 size={16} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(post.id)}
-                      className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </td>
+          <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
+            {posts.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="p-24 text-center text-slate-300 dark:text-slate-800 font-black uppercase tracking-widest italic leading-loose">Henüz yazı eklenmemiş.</td>
               </tr>
-            ))}
+            ) : (
+              posts.map((post) => (
+                <tr key={post.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+                  <td className="p-8">
+                    <div className="flex items-center gap-5">
+                      {post.image ? (
+                        <div className="w-16 h-16 rounded-[4px] overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm shrink-0">
+                          <img src={post.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        </div>
+                      ) : (
+                        <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-[4px] flex items-center justify-center text-slate-300 dark:text-slate-700 shrink-0 border border-slate-200 dark:border-slate-800 shadow-inner">
+                          <ImageIcon size={24} />
+                        </div>
+                      )}
+                      <div className="flex flex-col">
+                        <span className="font-black text-slate-900 dark:text-white text-base tracking-tighter uppercase italic leading-tight group-hover:text-emerald-600 transition-colors">{post.title}</span>
+                        <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">/{post.slug}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="p-8">
+                    <span className={`px-4 py-1.5 rounded-[4px] text-[8px] font-black uppercase tracking-widest border shadow-md ${post.isPublished ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : 'bg-amber-500/10 text-amber-600 border-amber-500/20'}`}>
+                      {post.isPublished ? 'YAYINDA' : 'TASLAK'}
+                    </span>
+                  </td>
+                  <td className="p-8">
+                    <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 italic">
+                      <Calendar size={14} />
+                      <span className="text-[10px] font-black uppercase tracking-widest">{format(new Date(post.createdAt), "dd MMM yyyy", { locale: tr })}</span>
+                    </div>
+                  </td>
+                  <td className="p-8 text-right">
+                    <div className="flex items-center justify-end gap-3">
+                      <button 
+                        onClick={() => handleOpenForm(post)} 
+                        className="p-3 text-slate-300 dark:text-slate-700 hover:text-emerald-600 dark:hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 rounded-[4px] transition-all"
+                      >
+                        <Edit2 size={18} />
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(post.id)} 
+                        className="p-3 text-slate-300 dark:text-slate-700 hover:text-rose-600 dark:hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-[4px] transition-all"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -139,7 +149,7 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
       {/* Add/Edit Modal */}
       {isFormOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-[#0F172A] w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem] shadow-2xl border border-white/10 p-8 lg:p-12">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[4px] shadow-sm border border-slate-800 p-6 lg:p-8">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase italic tracking-tighter">
                 {editingPost ? "YAZIYI DÜZENLE" : "YENİ YAZI EKLE"}
@@ -157,7 +167,7 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
                     name="title"
                     defaultValue={editingPost?.title}
                     required
-                    className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-white font-bold italic"
+                    className="w-full px-5 py-3 rounded-[4px] bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-white font-bold italic"
                     placeholder="Haber başlığı..."
                   />
                 </div>
@@ -167,7 +177,7 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
                     name="slug"
                     defaultValue={editingPost?.slug}
                     required
-                    className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-white font-bold italic"
+                    className="w-full px-5 py-3 rounded-[4px] bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-white font-bold italic"
                     placeholder="haber-slug-adresi"
                   />
                 </div>
@@ -179,7 +189,7 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
                   <input
                     name="coverImage"
                     defaultValue={editingPost?.coverImage}
-                    className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-white font-bold italic"
+                    className="w-full px-5 py-3 rounded-[4px] bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-white font-bold italic"
                     placeholder="https://..."
                   />
                 </div>
@@ -188,7 +198,7 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
                   <select
                     name="categoryId"
                     defaultValue={editingPost?.categoryId}
-                    className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-white font-bold italic appearance-none"
+                    className="w-full px-5 py-3 rounded-[4px] bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-white font-bold italic appearance-none"
                   >
                     <option value="">Kategori Seçin</option>
                     {categories.map((cat) => (
@@ -205,7 +215,7 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
                   defaultValue={editingPost?.excerpt}
                   required
                   rows={3}
-                  className="w-full px-5 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-white font-bold italic resize-none"
+                  className="w-full px-5 py-3 rounded-[4px] bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-900 dark:text-white font-bold italic resize-none"
                   placeholder="Yazı listesinde görünecek kısa açıklama..."
                 />
               </div>
@@ -228,7 +238,7 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
                   <span className="text-xs font-black uppercase italic tracking-widest text-slate-500">Yayına Al</span>
                 </label>
 
-                <button type="submit" className="px-10 py-4 bg-blue-600 text-white font-black uppercase italic tracking-widest text-sm rounded-2xl shadow-xl shadow-blue-600/30 hover:scale-105 transition-all">
+                 <button type="submit" className="px-10 py-4 bg-emerald-600 text-white font-black uppercase italic tracking-[0.2em] text-[10px] rounded-[4px] shadow-sm shadow-emerald-600/20 hover:bg-slate-900 dark:hover:bg-emerald-700 transition-all active:scale-95">
                   KAYDET VE GÜNCELLE
                 </button>
               </div>

@@ -1,9 +1,19 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import * as dotenv from "dotenv";
+import * as path from "path";
+
+// Çevresel değişkenlerin (özellikle DATABASE_URL) yüklendiğinden emin ol
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 const connectionString = `${process.env.DATABASE_URL}`;
-const pool = new pg.Pool({ connectionString });
+const pool = new pg.Pool({ 
+  connectionString,
+  max: 20, // Increase pool size to handle RLS transaction overhead
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 30000,
+});
 const adapter = new PrismaPg(pool);
 
 const basePrisma = new PrismaClient({
@@ -25,11 +35,8 @@ export function getSecuredPrisma(tenantId: string) {
     query: {
       $allModels: {
         async $allOperations({ args, query }) {
-          // RLS için oturum bazlı tenant ayarı bir transaction içinde yapılmalıdır
-          return basePrisma.$transaction(async (tx) => {
-            await tx.$executeRawUnsafe(`SELECT set_config('app.current_tenant', $1, true)`, tenantId);
-            return query(args);
-          });
+          await basePrisma.$executeRawUnsafe(`SELECT set_config('app.current_tenant', $1, true)`, tenantId);
+          return query(args);
         },
       },
     },

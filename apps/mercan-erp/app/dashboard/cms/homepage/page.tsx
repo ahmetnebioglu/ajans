@@ -133,7 +133,7 @@ export default function HomepageSettingsPage() {
   if (loading) {
     return (
       <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
-        <Loader2 className="animate-spin text-blue-600" size={48} />
+        <Loader2 className="animate-spin text-emerald-600" size={48} />
         <span className="text-xs font-black uppercase tracking-widest text-slate-400">
           Ayarlar Yükleniyor...
         </span>
@@ -150,17 +150,17 @@ export default function HomepageSettingsPage() {
   ];
 
   return (
-    <div className="px-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-300 dark:border-slate-800">
-        <div className="flex items-center gap-6">
-          <div className="w-16 h-16 bg-blue-600 text-white rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-600/30">
-            <Home size={32} />
+    <div className="p-6 space-y-6 font-medium italic">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white dark:bg-slate-900 p-6 rounded-[4px] border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-emerald-600/10 text-emerald-600 rounded-[4px] flex items-center justify-center border border-emerald-600/10">
+            <Home size={24} />
           </div>
           <div>
-            <h1 className="text-3xl font-black italic uppercase tracking-tighter text-slate-900 dark:text-white leading-none">
-              Ana Sayfa <span className="text-blue-600">Yönetimi</span>
+            <h1 className="text-2xl font-black italic uppercase tracking-tighter text-slate-900 dark:text-white leading-none">
+              Ana Sayfa <span className="text-emerald-600">Yönetimi</span>
             </h1>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mt-2">
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">
               Web sitesi ana sayfa içeriklerini buradan yönetin
             </p>
           </div>
@@ -168,33 +168,33 @@ export default function HomepageSettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-600/20 transition-all active:scale-95 flex items-center justify-center disabled:opacity-50"
+          className="bg-emerald-600 hover:bg-slate-900 text-white px-8 py-3 rounded-[4px] font-black uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-600/20 transition-all active:scale-95 flex items-center justify-center disabled:opacity-50"
         >
           {saving ? (
-            <Loader2 className="animate-spin mr-3" size={18} />
+            <Loader2 className="animate-spin mr-2" size={14} />
           ) : (
-            <Save className="mr-3" size={18} />
+            <Save className="mr-2" size={14} />
           )}
           AYARLARI KAYDET
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Navigation Tabs */}
-        <div className="lg:col-span-1 space-y-3">
+        <div className="lg:col-span-1 space-y-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-4 px-6 py-5 rounded-3xl font-black uppercase tracking-widest text-[10px] transition-all border ${
+                className={`w-full flex items-center gap-3 px-5 py-4 rounded-[4px] font-black uppercase tracking-widest text-[9px] transition-all border ${
                   activeTab === tab.id
-                    ? "bg-blue-600 text-white border-blue-600 shadow-xl shadow-blue-600/20 translate-x-2"
-                    : "bg-white dark:bg-slate-900 text-slate-400 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    ? "bg-emerald-600 text-white border-emerald-600 shadow-md translate-x-1"
+                    : "bg-white dark:bg-slate-900 text-slate-500 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
                 }`}
               >
-                <Icon size={18} />
+                <Icon size={16} />
                 {tab.name}
               </button>
             );
@@ -203,12 +203,12 @@ export default function HomepageSettingsPage() {
 
         {/* Content Area */}
         <div className="lg:col-span-3">
-          <div className="bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-xl p-10 min-h-[500px]">
+          <div className="bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-slate-800 shadow-sm p-8 min-h-[500px]">
             {activeTab === "hero" && (
-              <div className="space-y-8 animate-in fade-in duration-500">
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    <ArrowRight size={14} className="text-blue-600" />
+              <div className="space-y-6 animate-in fade-in duration-500">
+                <div className="space-y-3">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ArrowRight size={12} className="text-emerald-600" />
                     Ana Başlık (Hero Title)
                   </label>
                   <input
@@ -217,30 +217,30 @@ export default function HomepageSettingsPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, heroTitle: e.target.value })
                     }
-                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-600/5 outline-none transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-emerald-600/5 outline-none transition-all"
                     placeholder="Örn: İşletmenizin Güvenliği İçin Uzman Dokunuş."
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    <ArrowRight size={14} className="text-blue-600" />
+                <div className="space-y-3">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ArrowRight size={12} className="text-emerald-600" />
                     Alt Başlık (Hero Subtitle)
                   </label>
                   <textarea
-                    rows={4}
+                    rows={3}
                     value={formData.heroSubtitle}
                     onChange={(e) =>
                       setFormData({ ...formData, heroSubtitle: e.target.value })
                     }
-                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-600/5 outline-none transition-all resize-none"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-emerald-600/5 outline-none transition-all resize-none"
                     placeholder="Kısa bir açıklama girin..."
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    <ArrowRight size={14} className="text-blue-600" />
+                <div className="space-y-3">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ArrowRight size={12} className="text-emerald-600" />
                     Buton Metni
                   </label>
                   <input
@@ -252,29 +252,29 @@ export default function HomepageSettingsPage() {
                         heroButtonText: e.target.value,
                       })
                     }
-                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-600/5 outline-none transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-emerald-600/5 outline-none transition-all"
                     placeholder="Örn: Hizmetlerimizi Keşfedin"
                   />
                 </div>
 
-                <div className="space-y-6 pt-6 border-t border-slate-100 dark:border-slate-800">
+                <div className="space-y-4 pt-6 border-t border-slate-100 dark:border-slate-800">
                   <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                      <ImageIcon size={14} className="text-blue-600" />
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                      <ImageIcon size={12} className="text-emerald-600" />
                       Slider Görselleri (Slider Images)
                     </label>
                     <button
                       onClick={addHeroImage}
-                      className="px-4 py-2 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all"
+                      className="px-4 py-2 bg-slate-900 text-white rounded-[4px] text-[8px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all"
                     >
                       YENİ GÖRSEL EKLE
                     </button>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {formData.heroImages.map((img, i) => (
-                      <div key={i} className="flex gap-4 items-center">
-                        <div className="w-24 h-16 bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0">
+                      <div key={i} className="flex gap-3 items-center">
+                        <div className="w-20 h-14 bg-slate-100 dark:bg-slate-950 rounded-[4px] overflow-hidden border border-slate-200 dark:border-slate-800 shrink-0">
                           {img ? (
                             <img 
                               src={img.includes('id=') ? `https://drive.google.com/thumbnail?id=${img.split('id=')[1]}&sz=w200` : img} 
@@ -283,37 +283,37 @@ export default function HomepageSettingsPage() {
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-slate-400">
-                              <ImageIcon size={20} />
+                              <ImageIcon size={16} />
                             </div>
                           )}
                         </div>
-                        <div className="flex-1 space-y-2">
+                        <div className="flex-1">
                            <input
                             type="text"
                             value={img}
                             onChange={(e) => updateHeroImage(i, e.target.value)}
-                            className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white outline-none"
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] text-[11px] font-bold text-slate-900 dark:text-white outline-none"
                             placeholder="Görsel URL veya kütüphaneden seçin..."
                           />
                         </div>
                         <button
                           onClick={() => openMediaPicker(i)}
-                          className="p-4 bg-blue-50 text-blue-600 rounded-2xl hover:bg-blue-600 hover:text-white transition-all"
+                          className="p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 rounded-[4px] hover:bg-emerald-600 hover:text-white transition-all"
                           title="Kütüphaneden Seç"
                         >
-                          <ImageIcon size={20} />
+                          <ImageIcon size={16} />
                         </button>
                         <button
                           onClick={() => removeHeroImage(i)}
-                          className="p-4 bg-red-50 text-red-600 rounded-2xl hover:bg-red-600 hover:text-white transition-all"
+                          className="p-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-[4px] hover:bg-rose-600 hover:text-white transition-all"
                           title="Sil"
                         >
-                          <Trash2 size={20} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     ))}
                     {formData.heroImages.length === 0 && (
-                      <div className="p-12 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[2rem] text-center text-slate-400 italic text-xs">
+                      <div className="p-8 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[4px] text-center text-slate-400 italic text-[10px] uppercase font-black tracking-widest">
                         Henüz slider görseli eklenmemiş.
                       </div>
                     )}
@@ -323,24 +323,24 @@ export default function HomepageSettingsPage() {
             )}
 
             {activeTab === "katip" && (
-              <div className="space-y-10 animate-in fade-in duration-500">
+              <div className="space-y-6 animate-in fade-in duration-500">
                 {[0, 1, 2].map((i) => (
                   <div
                     key={i}
-                    className="p-8 bg-slate-50 dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 space-y-6"
+                    className="p-6 bg-slate-50 dark:bg-slate-950 rounded-[4px] border border-slate-200 dark:border-slate-800 space-y-4"
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-black italic">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-slate-900 text-white rounded-[4px] flex items-center justify-center text-xs font-black italic">
                         {i + 1}
                       </div>
-                      <span className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white">
                         Adım {i + 1} Ayarları
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">
                           Adım Başlığı
                         </label>
                         <input
@@ -349,11 +349,11 @@ export default function HomepageSettingsPage() {
                           onChange={(e) =>
                             updateKatipStep(i, "title", e.target.value)
                           }
-                          className="w-full px-6 py-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white outline-none"
+                          className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[4px] text-xs font-bold text-slate-900 dark:text-white outline-none"
                         />
                       </div>
-                      <div className="space-y-4">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">
                           Adım Açıklaması
                         </label>
                         <input
@@ -362,7 +362,7 @@ export default function HomepageSettingsPage() {
                           onChange={(e) =>
                             updateKatipStep(i, "desc", e.target.value)
                           }
-                          className="w-full px-6 py-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white outline-none"
+                          className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[4px] text-xs font-bold text-slate-900 dark:text-white outline-none"
                         />
                       </div>
                     </div>
@@ -372,10 +372,10 @@ export default function HomepageSettingsPage() {
             )}
 
             {activeTab === "about" && (
-              <div className="space-y-8 animate-in fade-in duration-500">
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    <ArrowRight size={14} className="text-blue-600" />
+              <div className="space-y-6 animate-in fade-in duration-500">
+                <div className="space-y-3">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ArrowRight size={12} className="text-emerald-600" />
                     Bölüm Başlığı (About Title)
                   </label>
                   <input
@@ -384,14 +384,14 @@ export default function HomepageSettingsPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, aboutTitle: e.target.value })
                     }
-                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-600/5 outline-none transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] font-bold text-slate-900 dark:text-white focus:ring-4 focus:ring-emerald-600/5 outline-none transition-all"
                     placeholder="Örn: Mercan OSGB Kimdir?"
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    <ArrowRight size={14} className="text-blue-600" />
+                <div className="space-y-3">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ArrowRight size={12} className="text-emerald-600" />
                     Bölüm İçeriği
                   </label>
                   <RichTextEditor
@@ -403,12 +403,12 @@ export default function HomepageSettingsPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    <ImageIcon size={14} className="text-blue-600" />
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ImageIcon size={12} className="text-emerald-600" />
                     Bölüm Görseli
                   </label>
-                  <div className="flex gap-6 items-start">
-                    <div className="w-64 aspect-video bg-slate-100 dark:bg-slate-800 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0">
+                  <div className="flex flex-col md:flex-row gap-4 items-start">
+                    <div className="w-full md:w-64 aspect-video bg-slate-100 dark:bg-slate-950 rounded-[4px] overflow-hidden border border-slate-200 dark:border-slate-800 shrink-0">
                       {formData.aboutImage ? (
                         <img 
                           src={formData.aboutImage.includes('id=') ? `https://drive.google.com/thumbnail?id=${formData.aboutImage.split('id=')[1]}&sz=w400` : formData.aboutImage} 
@@ -417,23 +417,23 @@ export default function HomepageSettingsPage() {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-slate-400">
-                          <ImageIcon size={48} strokeWidth={1} />
+                          <ImageIcon size={32} strokeWidth={1} />
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 space-y-4">
+                    <div className="flex-1 w-full space-y-3">
                       <input
                         type="text"
                         value={formData.aboutImage}
                         onChange={(e) => setFormData({ ...formData, aboutImage: e.target.value })}
-                        className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white outline-none"
+                        className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] text-[11px] font-bold text-slate-900 dark:text-white outline-none"
                         placeholder="Görsel URL veya kütüphaneden seçin..."
                       />
                       <button
                         onClick={openAboutMediaPicker}
-                        className="flex items-center gap-2 px-6 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all"
+                        className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-[4px] text-[9px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all"
                       >
-                        <ImageIcon size={16} /> KÜTÜPHANEDEN SEÇ
+                        <ImageIcon size={14} /> KÜTÜPHANEDEN SEÇ
                       </button>
                     </div>
                   </div>
@@ -442,10 +442,10 @@ export default function HomepageSettingsPage() {
             )}
 
             {activeTab === "nace" && (
-              <div className="space-y-8 animate-in fade-in duration-500">
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    <ArrowRight size={14} className="text-blue-600" />
+              <div className="space-y-6 animate-in fade-in duration-500">
+                <div className="space-y-3">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ArrowRight size={12} className="text-emerald-600" />
                     NACE Banner Başlığı
                   </label>
                   <input
@@ -457,13 +457,13 @@ export default function HomepageSettingsPage() {
                         naceBannerTitle: e.target.value,
                       })
                     }
-                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white outline-none"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] font-bold text-slate-900 dark:text-white outline-none"
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-                    <ArrowRight size={14} className="text-blue-600" />
+                <div className="space-y-3">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ArrowRight size={12} className="text-emerald-600" />
                     NACE Banner Alt Başlığı
                   </label>
                   <textarea
@@ -475,23 +475,23 @@ export default function HomepageSettingsPage() {
                         naceBannerSubtitle: e.target.value,
                       })
                     }
-                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white outline-none resize-none"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] font-bold text-slate-900 dark:text-white outline-none resize-none"
                   />
                 </div>
               </div>
             )}
             {activeTab === "map" && (
-              <div className="space-y-8 animate-in fade-in duration-500">
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Google Harita Paylaşım Linki (iframe src)</label>
+              <div className="space-y-6 animate-in fade-in duration-500">
+                <div className="space-y-3">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Google Harita Paylaşım Linki (iframe src)</label>
                   <textarea
                     rows={6}
                     value={formData.mapUrl}
                     onChange={(e) => setFormData({ ...formData, mapUrl: e.target.value })}
-                    className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl font-bold text-slate-900 dark:text-white outline-none resize-none"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-[4px] text-xs font-bold text-slate-900 dark:text-white outline-none resize-none"
                     placeholder="Google Maps > Paylaş > Harita Yerleştir kısmındaki 'src' değerini buraya yapıştırın."
                   />
-                  <p className="text-[10px] text-slate-400 italic">Google Maps'ten aldığınız iframe kodunun sadece içindeki <b>src="..."</b> kısmını buraya yapıştırmanız yeterlidir.</p>
+                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest italic opacity-60">Google Maps'ten aldığınız iframe kodunun sadece içindeki src="..." kısmını buraya yapıştırın.</p>
                 </div>
               </div>
             )}

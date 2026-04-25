@@ -1,17 +1,14 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { protectedAction } from "@ajans/core/server";
 
 /**
  * Saha uzmanının yetkisi olduğu firmaları getirir.
- * Not: Şu an auth tam entegre olmadığı için demo uzman emailini kullanıyoruz.
  */
 export async function getExpertCompanies() {
-  const expertEmail = "uzman@mercan.com"; // Mock email for now
-  
-  try {
-    const user = await prisma.user.findUnique({
-      where: { email: expertEmail },
+  return protectedAction(async ({ db, user }) => {
+    const userData = await db.user.findUnique({
+      where: { id: user.id },
       include: {
         companyAccess: {
           include: {
@@ -21,18 +18,14 @@ export async function getExpertCompanies() {
       }
     });
 
-    if (!user) return { success: false, error: "Uzman bulunamadı." };
+    if (!userData) throw new Error("Uzman bulunamadı.");
 
-    const companies = user.companyAccess.map(access => ({
+    const companies = userData.companyAccess.map(access => ({
       id: access.company.id,
       name: access.company.name,
       driveFolderId: access.company.driveFolderId
     }));
 
-    return { success: true, companies };
-  } catch (error) {
-    console.error("Firma getirme hatası:", error);
-    return { success: false, error: "Firmalar yüklenirken bir hata oluştu." };
-  }
+    return companies;
+  });
 }
-

@@ -52,7 +52,7 @@ export function BarChart({ data, index, categories, colors = ["#0d9488"], classN
           />
           <Tooltip 
             cursor={{ fill: '#18181b' }}
-            contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '0', fontSize: '10px' }}
+            contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '2px', fontSize: '10px' }}
           />
           {categories.map((category, i) => (
             <Bar 
@@ -89,7 +89,7 @@ export function PieChart({ data, index, category, colors = ["#0d9488", "#0891b2"
             ))}
           </Pie>
           <Tooltip 
-            contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '0', fontSize: '10px' }}
+            contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '2px', fontSize: '10px' }}
           />
         </RechartsPieChart>
       </ResponsiveContainer>
@@ -125,7 +125,7 @@ export function AreaChart({ data, index, categories, colors = ["#0d9488"], class
             axisLine={false} 
           />
           <Tooltip 
-            contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '0', fontSize: '10px' }}
+            contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '2px', fontSize: '10px' }}
           />
           {categories.map((category, i) => (
             <Area 

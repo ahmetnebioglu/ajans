@@ -8,15 +8,6 @@ export default async function BlogPage() {
 
   return (
     <div className="p-8 space-y-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black uppercase italic tracking-tighter text-slate-900 dark:text-white">
-          Haberler & Blog Yönetimi
-        </h1>
-        <p className="text-slate-500 dark:text-slate-400 font-medium">
-          Web sitesindeki haberleri ve sektörel makaleleri buradan yönetebilirsiniz.
-        </p>
-      </div>
-
       <BlogClient initialPosts={posts} categories={categories} />
     </div>
   );
