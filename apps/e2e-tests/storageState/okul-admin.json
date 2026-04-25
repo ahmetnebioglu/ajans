@@ -1,0 +1,45 @@
+{
+  "cookies": [
+    {
+      "name": "next-auth.csrf-token",
+      "value": "0f75878351659ff4cb8dd2caf7caa9a3d39aacd61638537d1ba3cee626debebe%7Cf5488ae813647da5d3bb44850fdccd6a4d221ae544216a1d23d7bf8c9bb67812",
+      "domain": "127.0.0.1",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "next-auth.callback-url",
+      "value": "http%3A%2F%2F127.0.0.1%3A3006%2Fdashboard",
+      "domain": "127.0.0.1",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "okul-erp.session-token",
+      "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..bMbmgxPsQx4duAS7.yjQPU7G7zpPT1XjeTKyBmPnqHZxoqvociFIPdZQ6L4K-aHA4W_HAboYR5-DAqhZCrWoMD-0c3v7LpZkd2w7X7fvWtOtpcGjZjSjndl-kkTNl8ofB15s5FjFjPOfUKEYSzlQTYIXziI52Ra4eLECjY3YQ8xTH_D9ZXA6B8TrH59P6aiQVyIFS6quFlnzu0Y3-lLBWFal8fJCUjhhc77OmfSMYLWgC0EgDagvJ71fh1wkFlqKtjvy0fLqJNlxTevEF_l2GibYL2C9Tjwd6W2Re8Uf244ZBBdN-XKK2i2ZG0N1YjFFuZHyCKH9Y7kUcecXm.x4_uypqy5JiH8OZy4s7-yQ",
+      "domain": "127.0.0.1",
+      "path": "/",
+      "expires": 1779694338.971259,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://127.0.0.1:3006",
+      "localStorage": [
+        {
+          "name": "nextauth.message",
+          "value": "{\"event\":\"session\",\"data\":{\"trigger\":\"getSession\"},\"timestamp\":1777102338}"
+        }
+      ]
+    }
+  ]
+}

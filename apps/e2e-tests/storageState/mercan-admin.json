@@ -1,0 +1,45 @@
+{
+  "cookies": [
+    {
+      "name": "next-auth.csrf-token",
+      "value": "e64a334a8a2feedc3617338ee04cac445c0dc0dce628c227fce8fd64d7c28175%7C045342da4b589175467acfd27e6557d449fd79a58b9a26a78c1f58b6e3fc49f6",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "next-auth.callback-url",
+      "value": "http%3A%2F%2Flocalhost%3A3001%2Fdashboard",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "mercan-erp.session-token",
+      "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..3qHH89Z2ulOChVdY.RVI2UYtzYn60xBDxKbwBGaQ-3IyyRmwX8o82cfwObKAC-we84BZM8e0Ic4rNjaCT82uy827rpRjybY-iJyZkpVhscFmQjvUea8Btu4KFcvJIiCVH5B3f-O7i-9G9sC0xaSP7re9EeN7xVR57ljsMo5wlc9VRermDom42-Wrvgu9Y8LxmbxGh9YKlxSFrO_HO7YYBqSAQrchpJLHyoOOYg5r8FWJ3U5WQKE5Ts_pX6iIACs4IKEyqOtwdcK_FDHzYHBkJAvbakG16SqcXiLZ_S2h3Dsugpo9B6MIYsEwlOy79qbghdeIpsHPyZDG5m-oQB8JcuOny.n71T0CeSLr3yDLyItjiVEA",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1779694338.941569,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:3001",
+      "localStorage": [
+        {
+          "name": "nextauth.message",
+          "value": "{\"event\":\"session\",\"data\":{\"trigger\":\"getSession\"},\"timestamp\":1777102338}"
+        }
+      ]
+    }
+  ]
+}

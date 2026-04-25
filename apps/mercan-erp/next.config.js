@@ -2,7 +2,7 @@
 const nextConfig = {
   transpilePackages: ["@ajans/auth", "@ajans/db", "@ajans/google-api"],
   serverExternalPackages: ["@prisma/client", "prisma"],
-  cacheComponents: true,
+  cacheComponents: false,
   experimental: {
     serverActions: {
       bodySizeLimit: '50mb',
