@@ -3,18 +3,21 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "clean": "shx rm -rf apps/**/.next packages/**/.next apps/**/.turbo packages/**/.turbo",
+    "dev": "npm run clean && turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:generate": "turbo db:generate",
     "db:push": "turbo db:push",
     "db:seed": "turbo db:seed",
-    "start": "turbo start"
+    "start": "turbo start",
+    "stop": "taskkill /f /im node.exe 2>nul || exit 0"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
     "playwright": "^1.59.1",
     "prettier": "latest",
+    "shx": "^0.4.0",
     "turbo": "latest"
   },
   "engines": {

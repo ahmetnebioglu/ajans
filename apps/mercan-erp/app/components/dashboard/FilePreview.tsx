@@ -33,7 +33,11 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
 
   if (!isOpen || !file) return null;
 
-  const previewUrl = `https://drive.google.com/file/d/${file.driveFileId}/preview`;
+  const driveId = file?.driveFileId;
+  const isMockData = !!driveId && driveId.startsWith("mock_id");
+  const hasNoDriveId = !driveId || driveId.trim() === "";
+
+  const previewUrl = driveId ? `https://drive.google.com/file/d/${driveId}/preview` : "";
   
   // Desteklenen tüm ofis ve medya formatları
   const previewableExtensions = [
@@ -43,10 +47,8 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
   ];
   
   const isPreviewable = previewableExtensions.some(ext => 
-    (file.fileName || "").toLowerCase().endsWith(ext)
+    (file?.fileName || "").toLowerCase().endsWith(ext)
   );
-
-  const isMockData = file.driveFileId.startsWith("mock_id");
 
   return (
     <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-300">
@@ -61,14 +63,14 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
                  <Monitor size={24} />
               </div>
               <div className="min-w-0">
-                 <h3 className="text-xl font-black text-slate-900 tracking-tighter uppercase truncate leading-none mb-1">{file.title}</h3>
+                 <h3 className="text-xl font-black text-slate-900 tracking-tighter uppercase truncate leading-none mb-1">{file?.title}</h3>
                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate">PANEL ÖN İZLEME SİSTEMİ</p>
               </div>
            </div>
            
            <div className="flex items-center gap-2">
               <a 
-                href={file.fileUrl} 
+                href={file?.fileUrl} 
                 target="_blank" 
                 className="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg"
               >
@@ -82,7 +84,25 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
 
         {/* CONTENT AREA */}
         <div className="flex-1 overflow-hidden bg-slate-50 relative flex items-center justify-center">
-           {isMockData ? (
+           {hasNoDriveId ? (
+              <div className="text-center p-12 space-y-6 max-w-sm italic">
+                  <div className="w-24 h-24 bg-rose-50 text-rose-500 rounded-3xl flex items-center justify-center mx-auto shadow-inner">
+                     <FileWarning size={48} />
+                  </div>
+                  <div className="space-y-2">
+                     <h4 className="text-2xl font-black italic tracking-tighter text-slate-900 uppercase">DOSYAYA ERİŞİLEMİYOR</h4>
+                     <p className="text-xs text-slate-400 font-bold uppercase leading-relaxed tracking-widest">
+                        Bu raporun Google Drive bağlantısı bulunamadı veya dosya henüz oluşturulmadı.
+                     </p>
+                  </div>
+                  <button 
+                    onClick={onClose}
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 shadow-2xl transition-all"
+                  >
+                     KAPAT <X size={18} />
+                  </button>
+              </div>
+           ) : isMockData ? (
               <div className="text-center p-12 space-y-6 max-w-sm italic">
                   <div className="w-24 h-24 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto shadow-inner relative overflow-hidden">
                      <Monitor size={48} className="relative z-10" />
@@ -97,7 +117,7 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
                   </div>
                   <div className="p-4 bg-slate-100 rounded-xl border border-slate-200">
                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">DOSYA ID</p>
-                     <p className="text-[9px] font-mono font-bold text-slate-400 truncate">{file.driveFileId}</p>
+                     <p className="text-[9px] font-mono font-bold text-slate-400 truncate">{driveId}</p>
                   </div>
               </div>
            ) : isPreviewable ? (
@@ -128,7 +148,7 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
                     <h4 className="text-2xl font-black italic tracking-tighter text-slate-900 uppercase">ÖN İZLEME KAPALI</h4>
                     <p className="text-xs text-slate-400 font-bold uppercase leading-relaxed tracking-widest">BU DOSYA TÜRÜ İÇİN ÖN İZLEME DESTEKLENMİYOR.</p>
                  </div>
-                 <a href={file.fileUrl} target="_blank" className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 shadow-2xl transition-all">
+                 <a href={file?.fileUrl} target="_blank" className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 shadow-2xl transition-all">
                     DRIVE'DA GÖRÜNTÜLE <ExternalLink size={18} />
                  </a>
               </div>

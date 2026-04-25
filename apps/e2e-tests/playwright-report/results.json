@@ -128,7 +128,7 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2524,
+                  "duration": 4865,
                   "errors": [],
                   "stdout": [
                     {
@@ -147,13 +147,7 @@
                       "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] done in 114ms\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] done in 372ms\n"
+                      "text": ">>> [Browser] [Fast Refresh] done in 2755ms\n"
                     },
                     {
                       "text": ">>> [Browser] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n"
@@ -165,90 +159,42 @@
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"036b2159-0d9f-4904-b72c-a60abe922b83\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777104282,\n  \"exp\": 1779696282,\n  \"jti\": \"8d93757b-7726-48a8-98ee-1b6d14b51dc1\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@mercan.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T07:38:28.432Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T08:04:44.785Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"036b2159-0d9f-4904-b72c-a60abe922b83\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777104282,\n  \"exp\": 1779696282,\n  \"jti\": \"8d93757b-7726-48a8-98ee-1b6d14b51dc1\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@mercan.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T07:38:28.434Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T08:04:44.788Z\"\n}\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
+                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\" FROM (SELECT \"public\".\"Company\".\"id\" FROM \"public\".\"Company\" WHERE 1=1 OFFSET $1) AS \"sub\"\n"
+                      "text": ">>> [Browser] [Fast Refresh] done in 182ms\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
+                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\" FROM (SELECT \"public\".\"Report\".\"id\" FROM \"public\".\"Report\" WHERE 1=1 OFFSET $1) AS \"sub\"\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Report\".\"id\", \"public\".\"Report\".\"title\", \"public\".\"Report\".\"fileUrl\", \"public\".\"Report\".\"companyId\", \"public\".\"Report\".\"createdAt\", \"public\".\"Report\".\"updatedAt\", \"public\".\"Report\".\"category\", \"public\".\"Report\".\"status\", \"public\".\"Report\".\"folderId\", \"public\".\"Report\".\"note\", \"public\".\"Report\".\"uploadedById\", \"public\".\"Report\".\"driveFileId\", \"public\".\"Report\".\"fileName\" FROM \"public\".\"Report\" WHERE 1=1 ORDER BY \"public\".\"Report\".\"createdAt\" DESC LIMIT $1 OFFSET $2\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Company\".\"id\", \"public\".\"Company\".\"name\" FROM \"public\".\"Company\" WHERE \"public\".\"Company\".\"id\" IN ($1) OFFSET $2\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"name\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" IN ($1) OFFSET $2\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\", \"public\".\"Report\".\"status\" FROM \"public\".\"Report\" WHERE 1=1 GROUP BY \"public\".\"Report\".\"status\" OFFSET $1\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"AuditLog\".\"id\", \"public\".\"AuditLog\".\"userId\", \"public\".\"AuditLog\".\"action\", \"public\".\"AuditLog\".\"details\", \"public\".\"AuditLog\".\"ipAddress\", \"public\".\"AuditLog\".\"createdAt\", \"public\".\"AuditLog\".\"companyId\" FROM \"public\".\"AuditLog\" WHERE 1=1 ORDER BY \"public\".\"AuditLog\".\"createdAt\" DESC LIMIT $1 OFFSET $2\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Company\".\"id\", \"public\".\"Company\".\"name\" FROM \"public\".\"Company\" WHERE \"public\".\"Company\".\"id\" IN (NULL) OFFSET $1\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"name\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" IN (NULL) OFFSET $1\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\" FROM (SELECT \"public\".\"User\".\"id\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"role\" = CAST($1::text AS \"public\".\"Role\") OFFSET $2) AS \"sub\"\n"
-                    },
-                    {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(99%) and height(100%),\n       or add a minWidth(0) or minHeight(0) or use aspect(undefined) to control the\n       height and width.\n"
-                    },
-                    {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(99%) and height(100%),\n       or add a minWidth(0) or minHeight(0) or use aspect(undefined) to control the\n       height and width.\n"
-                    },
-                    {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(99%) and height(100%),\n       or add a minWidth(0) or minHeight(0) or use aspect(undefined) to control the\n       height and width.\n"
-                    },
-                    {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(99%) and height(100%),\n       or add a minWidth(0) or minHeight(0) or use aspect(undefined) to control the\n       height and width.\n"
+                      "text": ">>> [Browser] [Fast Refresh] done in 188ms\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-04-25T07:38:25.575Z",
+                  "startTime": "2026-04-25T08:04:39.339Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -277,7 +223,7 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1578,
+                  "duration": 8602,
                   "errors": [],
                   "stdout": [
                     {
@@ -290,7 +236,19 @@
                       "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] done in 121ms\n"
+                      "text": ">>> [Browser] [Fast Refresh] done in 885ms\n"
+                    },
+                    {
+                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
+                    },
+                    {
+                      "text": ">>> [Browser] [Fast Refresh] done in 161ms\n"
+                    },
+                    {
+                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
+                    },
+                    {
+                      "text": ">>> [Browser] [Fast Refresh] done in 1608ms\n"
                     },
                     {
                       "text": ">>> [Browser] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n"
@@ -302,54 +260,30 @@
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"5b5055c3-c18d-4c9b-b84d-a82870aeead5\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777104287,\n  \"exp\": 1779696287,\n  \"jti\": \"d2572e97-617a-464c-b9cf-638737657138\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:38:27.815Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T08:04:49.082Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"5b5055c3-c18d-4c9b-b84d-a82870aeead5\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777104287,\n  \"exp\": 1779696287,\n  \"jti\": \"d2572e97-617a-464c-b9cf-638737657138\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:38:27.817Z\"\n}\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"5b5055c3-c18d-4c9b-b84d-a82870aeead5\"\n}\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:38:27.846Z\"\n}\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"PermissionRequest\".\"id\", \"public\".\"PermissionRequest\".\"studentId\", \"public\".\"PermissionRequest\".\"requestedById\", \"public\".\"PermissionRequest\".\"approvedById\", \"public\".\"PermissionRequest\".\"type\", \"public\".\"PermissionRequest\".\"reason\", \"public\".\"PermissionRequest\".\"status\", \"public\".\"PermissionRequest\".\"date\", \"public\".\"PermissionRequest\".\"tenantId\", \"public\".\"PermissionRequest\".\"deletedAt\", \"public\".\"PermissionRequest\".\"createdAt\", \"public\".\"PermissionRequest\".\"updatedAt\" FROM \"public\".\"PermissionRequest\" WHERE (\"public\".\"PermissionRequest\".\"status\" = $1 AND \"public\".\"PermissionRequest\".\"deletedAt\" IS NULL AND \"public\".\"PermissionRequest\".\"tenantId\" = $2) ORDER BY \"public\".\"PermissionRequest\".\"createdAt\" DESC OFFSET $3\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Student\".\"id\", \"public\".\"Student\".\"firstName\", \"public\".\"Student\".\"lastName\", \"public\".\"Student\".\"studentNumber\", \"public\".\"Student\".\"classroomId\", \"public\".\"Student\".\"tenantId\", \"public\".\"Student\".\"deletedAt\" FROM \"public\".\"Student\" WHERE \"public\".\"Student\".\"id\" IN (NULL) OFFSET $1\n"
-                    },
-                    {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"name\", \"public\".\"User\".\"email\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" IN (NULL) OFFSET $1\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T08:04:49.085Z\"\n}\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-04-25T07:38:25.577Z",
+                  "startTime": "2026-04-25T08:04:39.339Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -393,7 +327,7 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6203,
+                      "duration": 14030,
                       "errors": [],
                       "stdout": [
                         {
@@ -409,12 +343,12 @@
                           "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
                         },
                         {
-                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777102715317@example.com\n"
+                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777104302782@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:30.327Z",
+                      "startTime": "2026-04-25T08:04:50.483Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -443,7 +377,7 @@
                       "workerIndex": 5,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 6035,
+                      "duration": 14641,
                       "errors": [],
                       "stdout": [
                         {
@@ -459,12 +393,12 @@
                           "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
                         },
                         {
-                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777102715427@example.com\n"
+                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777104302767@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:30.358Z",
+                      "startTime": "2026-04-25T08:04:50.524Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -493,7 +427,7 @@
                       "workerIndex": 8,
                       "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 6183,
+                      "duration": 14786,
                       "errors": [],
                       "stdout": [
                         {
@@ -509,12 +443,12 @@
                           "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
                         },
                         {
-                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777102716263@example.com\n"
+                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777104302859@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:30.366Z",
+                      "startTime": "2026-04-25T08:04:50.542Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -560,12 +494,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1878,
+                      "duration": 1922,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:30.321Z",
+                      "startTime": "2026-04-25T08:04:50.488Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -594,12 +528,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1217,
+                      "duration": 868,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:30.327Z",
+                      "startTime": "2026-04-25T08:04:50.482Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -628,12 +562,12 @@
                       "workerIndex": 6,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 2369,
+                      "duration": 1972,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:30.353Z",
+                      "startTime": "2026-04-25T08:04:50.500Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -662,12 +596,12 @@
                       "workerIndex": 7,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 1070,
+                      "duration": 984,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:30.358Z",
+                      "startTime": "2026-04-25T08:04:50.506Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -696,12 +630,12 @@
                       "workerIndex": 9,
                       "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 2114,
+                      "duration": 1722,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:30.406Z",
+                      "startTime": "2026-04-25T08:04:50.565Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -728,14 +662,14 @@
                   "results": [
                     {
                       "workerIndex": 10,
-                      "parallelIndex": 5,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1258,
+                      "duration": 447,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:38:35.247Z",
+                      "startTime": "2026-04-25T08:04:54.582Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -755,8 +689,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-04-25T07:38:24.841Z",
-    "duration": 14064.655,
+    "startTime": "2026-04-25T08:04:38.476Z",
+    "duration": 28741.247000000003,
     "expected": 11,
     "skipped": 0,
     "unexpected": 0,

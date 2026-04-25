@@ -6,8 +6,13 @@ import { signIn } from "next-auth/react";
 import { Building2, ShieldCheck, Mail, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
+  const [mounted, setMounted] = React.useState(false);
   const [testEmail, setTestEmail] = React.useState("");
   const isDev = process.env.NODE_ENV === "development";
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleTestLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +37,7 @@ export default function LoginPage() {
         {/* LOGO & TEXT */}
         <div className="text-center space-y-3">
            <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 text-white rounded-[2px] flex items-center justify-center mx-auto shadow-2xl rotate-3">
-              <Building2 size={32} />
+              {mounted ? <Building2 size={32} /> : <div className="w-8 h-8" />}
            </div>
            <div className="space-y-1">
               <h1 className="text-3xl font-black text-zinc-900 dark:text-white tracking-tighter uppercase leading-none">MERCAN ERP</h1>
@@ -42,7 +47,7 @@ export default function LoginPage() {
 
         {/* LOGIN CARD */}
         <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2px] shadow-2xl border border-zinc-200 dark:border-zinc-800 space-y-6 relative overflow-hidden group">
-           <ShieldCheck className="absolute -right-6 -bottom-6 text-zinc-100 dark:text-zinc-800/10 w-32 h-32 -rotate-12 transition-transform group-hover:rotate-0 duration-700" />
+           {mounted && <ShieldCheck className="absolute -right-6 -bottom-6 text-zinc-100 dark:text-zinc-800/10 w-32 h-32 -rotate-12 transition-transform group-hover:rotate-0 duration-700" />}
            
            <div className="space-y-2 relative z-10">
               <h3 className="text-xl font-black italic tracking-tighter text-zinc-900 dark:text-white uppercase">TEKRAR HOŞ GELDİNİZ</h3>
@@ -56,7 +61,7 @@ export default function LoginPage() {
               Google ile Giriş Yap
               <div className="flex items-center gap-2">
                  <div className="w-1.5 h-1.5 bg-teal-400 rounded-[2px] animate-ping" />
-                 <ArrowRight size={18} />
+                 {mounted && <ArrowRight size={18} />}
               </div>
            </button>
 
