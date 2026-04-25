@@ -16,7 +16,7 @@ import {
   XCircle
 } from "lucide-react";
 
-interface LeadWithActivity extends any {
+interface LeadWithActivity {
   id: string;
   fullName: string;
   email: string;

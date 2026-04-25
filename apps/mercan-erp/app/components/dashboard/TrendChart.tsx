@@ -30,7 +30,7 @@ export default function TrendChart({ data }: { data: TrendData[] }) {
 
   return (
     <div className="h-[300px] w-full font-sans italic font-bold relative">
-      <ResponsiveContainer width="99%" height="100%" minWidth={0} minHeight={0} debounce={100}>
+      <ResponsiveContainer width="100%" height={300} debounce={100}>
         <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? "#1e293b" : "#f1f5f9"} />
           <XAxis 

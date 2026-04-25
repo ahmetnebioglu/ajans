@@ -27,8 +27,8 @@ export default function NotificationsPage() {
     try {
       setLoading(true);
       const res = await getNotifications();
-      if (res && res.success) {
-        setNotifications(res.notifications || []);
+      if (res.success) {
+        setNotifications(res.data || []);
       }
     } catch (err) {
       console.error("Failed to load notifications page:", err);

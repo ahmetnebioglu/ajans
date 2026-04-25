@@ -23,7 +23,7 @@ export async function streamCrmInsights(userInput: string) {
     tools: {
       getLeadsBySource: {
         description: "En çok lead gelen kaynakları analiz eder ve grafik olarak gösterir.",
-        parameters: z.object({}),
+        inputSchema: z.object({}),
         generate: async function* () {
           yield <div className="p-4 text-[10px] font-black uppercase text-zinc-500 animate-pulse">Veriler analiz ediliyor...</div>;
           
@@ -52,7 +52,7 @@ export async function streamCrmInsights(userInput: string) {
       },
       getLeadsByStatus: {
         description: "Leadlerin durum dağılımını (New, Contacted vb.) gösterir.",
-        parameters: z.object({}),
+        inputSchema: z.object({}),
         generate: async function* () {
           yield <div className="p-4 text-[10px] font-black uppercase text-zinc-500 animate-pulse">Durumlar hesaplanıyor...</div>;
           

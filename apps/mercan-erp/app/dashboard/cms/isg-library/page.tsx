@@ -9,7 +9,10 @@ export default async function IsgLibraryPage() {
 
   return (
     <div className="animate-in fade-in duration-700">
-      <IsgLibraryTable initialDocuments={documents} initialCategories={categories} />
+      <IsgLibraryTable 
+        initialDocuments={documents.success ? documents.data : []} 
+        initialCategories={categories.success ? categories.data : []} 
+      />
     </div>
   );
 }

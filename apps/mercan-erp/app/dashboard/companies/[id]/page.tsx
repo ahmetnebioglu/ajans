@@ -306,6 +306,8 @@ export default function CompanyDetailPage() {
     if (res.success) {
       setShowBulkModal(null);
       loadData();
+    } else {
+      alert(res.error || "Toplu güncelleme sırasında bir hata oluştu.");
     }
     setIsProcessing(false);
   };
@@ -316,21 +318,33 @@ export default function CompanyDetailPage() {
     if (res.success) {
       setShowBulkModal(null);
       loadData();
+    } else {
+      alert(res.error || "Toplu silme işlemi sırasında bir hata oluştu.");
     }
     setIsProcessing(false);
   };
 
   const handleCreateFolder = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(">>> [Client:handleCreateFolder] Starting with:", { newFolderName, id, currentFolderId });
     if (!newFolderName) return;
     setIsProcessing(true);
-    const res = await createFolder(newFolderName, id, currentFolderId);
-    if (res.success) {
-      setShowFolderModal(false);
-      setNewFolderName("");
-      loadData();
+    try {
+      const res = await createFolder(newFolderName, id, currentFolderId);
+      console.log(">>> [Client:handleCreateFolder] Response:", res);
+      if (res.success) {
+        setShowFolderModal(false);
+        setNewFolderName("");
+        loadData();
+      } else {
+        console.error(">>> [Client:handleCreateFolder] Error res:", res.error);
+        alert(res.error || "Klasör oluşturulurken bir hata oluştu.");
+      }
+    } catch (err) {
+      console.error(">>> [Client:handleCreateFolder] Exception:", err);
+    } finally {
+      setIsProcessing(false);
     }
-    setIsProcessing(false);
   };
 
   const handleQuickUpload = async (e: React.FormEvent) => {
@@ -350,6 +364,8 @@ export default function CompanyDetailPage() {
       setUploadFile(null);
       setUploadNote("");
       loadData();
+    } else {
+      alert(res.error || "Dosya yüklenirken bir hata oluştu.");
     }
     setIsProcessing(false);
   };
@@ -361,6 +377,8 @@ export default function CompanyDetailPage() {
     if (res.success) {
       setShowMoveModal(null);
       loadData();
+    } else {
+      alert(res.error || "Taşıma işlemi sırasında bir hata oluştu.");
     }
     setIsProcessing(false);
   };
@@ -935,14 +953,15 @@ export default function CompanyDetailPage() {
                   İptal
                 </button>
                 <button
-                  type="submit"
+                  type="button"
                   disabled={isProcessing}
+                  onClick={(e) => handleCreateFolder(e as any)}
                   className="flex-1 p-3 bg-zinc-900 dark:bg-blue-600 text-white rounded-[4px] font-black uppercase tracking-widest shadow-xl text-[9px]"
                 >
                   {isProcessing ? (
                     <Loader2 className="animate-spin mx-auto" size={14} />
                   ) : (
-                    "OLUŞTUR"
+                    "KLASÖRÜ OLUŞTUR"
                   )}
                 </button>
               </div>

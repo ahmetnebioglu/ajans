@@ -24,8 +24,10 @@ export default function MessagesPage() {
 
   const loadMessages = async () => {
     setLoading(true);
-    const data = await getMessages();
-    setMessages(data);
+    const res = await getMessages();
+    if (res.success) {
+      setMessages(res.data || []);
+    }
     setLoading(false);
   };
 

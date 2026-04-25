@@ -1,13 +1,13 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { protectedAction } from "@ajans/core/server";
 
 /**
  * Filtrelenebilir Sistem Günlüğü (Audit Logs) getirir
  */
 export async function getAuditLogs(query?: string) {
-  try {
-    const logs = await prisma.auditLog.findMany({
+  return protectedAction(async ({ db }) => {
+    const logs = await db.auditLog.findMany({
       where: query ? {
         OR: [
           { details: { contains: query, mode: 'insensitive' } },
@@ -24,9 +24,5 @@ export async function getAuditLogs(query?: string) {
     });
 
     return { success: true, logs };
-  } catch (error) {
-    console.error("Audit log hiyerarşi hatası:", error);
-    return { success: false, error: "Günlük kayıtları alınamadı." };
-  }
+  });
 }
-

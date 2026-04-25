@@ -57,7 +57,7 @@ export default function MobileUploadPage() {
     const res = await uploadReportAction(formData, selectedCompanyId);
     
     if (res.success) {
-      setUploadedId(res.fileId || "success");
+      setUploadedId(res.data.fileId || "success");
       setStep(3);
     } else {
       alert("Hata: " + res.error);

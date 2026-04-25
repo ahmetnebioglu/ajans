@@ -32,8 +32,8 @@ export default function NotificationCenter({
       setLoading(true);
       const res = await getNotifications();
       if (res && res.success) {
-        setNotifications(res.notifications || []);
-        setUnreadCount(res.notifications?.filter((n: any) => !n.isRead).length || 0);
+        setNotifications(res.data || []);
+        setUnreadCount(res.data?.filter((n: any) => !n.isRead).length || 0);
       }
     } catch (err) {
       console.error("Failed to load notifications:", err);

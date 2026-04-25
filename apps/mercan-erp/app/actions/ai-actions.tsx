@@ -10,9 +10,7 @@ export async function chatWithAi(prompt: string) {
   return protectedAction(async ({ db, user }) => {
     // OpenAI API Key kontrolü
     if (!process.env.OPENAI_API_KEY) {
-      return {
-        error: "OPENAI_API_KEY bulunamadı. Lütfen .env dosyasını kontrol edin.",
-      };
+      throw new Error("OPENAI_API_KEY bulunamadı. Lütfen .env dosyasını kontrol edin.");
     }
 
     const result = await streamUI({
@@ -22,7 +20,7 @@ export async function chatWithAi(prompt: string) {
       tools: {
         compareLeadSources: {
           description: "CRM lead kaynaklarını karşılaştırmak için grafik oluşturur.",
-          parameters: z.object({
+          inputSchema: z.object({
             title: z.string(),
             data: z.array(z.object({
               name: z.string(),
@@ -46,7 +44,7 @@ export async function chatWithAi(prompt: string) {
         },
         showReportTrend: {
           description: "Rapor trendlerini görselleştirir.",
-          parameters: z.object({
+          inputSchema: z.object({
             title: z.string(),
             data: z.array(z.object({
               month: z.string(),

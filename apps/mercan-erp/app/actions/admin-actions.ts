@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { protectedAction } from "@ajans/core/server";
+import { unsecured_prisma } from "@ajans/db";
 
 // --- ŞİRKET YÖNETİMİ FONKSİYONLARI ---
 
@@ -42,7 +43,7 @@ export async function createCompany(data: {
   address?: string;
   driveFolderId?: string;
 }) {
-  return protectedAction(async ({ db }) => {
+  return protectedAction(async ({ db, tenantId }) => {
     const company = await db.$transaction(async (tx) => {
       const created = await tx.company.create({
         data: {
@@ -50,6 +51,7 @@ export async function createCompany(data: {
           taxNumber: data.taxNumber,
           address: data.address,
           driveFolderId: data.driveFolderId,
+          tenantId,
         },
       });
       return created;
@@ -217,11 +219,22 @@ export async function getReports(
 }
 
 export async function updateReportStatus(id: string, status: string) {
-  return protectedAction(async ({ db }) => {
+  return protectedAction(async ({ db, user, tenantId }) => {
     await db.$transaction(async (tx) => {
-      await tx.report.update({
-        where: { id },
+      const updated = await tx.report.update({
+        where: { id: id },
         data: { status },
+      });
+
+      // Audit Log Kaydı
+      await tx.auditLog.create({
+        data: {
+          action: "STATUS_CHANGE",
+          details: `${updated.title} isimli raporun durumu ${status} olarak güncellendi.`,
+          companyId: updated.companyId || null,
+          userId: (user as any).id || null,
+          tenantId: tenantId || "mercan",
+        }
       });
     });
     revalidatePath("/dashboard/reports");
@@ -335,10 +348,28 @@ export async function createFolder(
   companyId: string,
   parentId: string | null = null,
 ) {
-  return protectedAction(async ({ db }) => {
+  console.log(`>>> [Action:createFolder] Name: ${name}, CompanyId: ${companyId}`);
+  return protectedAction(async ({ db, user, tenantId }) => {
+    console.log(`>>> [Action:createFolder] Inside protectedAction. TenantId: ${tenantId}`);
     await db.$transaction(async (tx) => {
       await tx.folder.create({
-        data: { name, companyId, parentId },
+        data: { 
+          name, 
+          companyId, 
+          parentId: parentId || null,
+          tenantId: tenantId || "mercan",
+        },
+      });
+      
+      // Audit Log Kaydı
+      await tx.auditLog.create({
+        data: {
+          action: "CREATED_FOLDER",
+          details: `${name} isimli klasör oluşturuldu.`,
+          companyId: companyId || null,
+          userId: (user as any).id || null,
+          tenantId: tenantId || "mercan",
+        }
       });
     });
     revalidatePath(`/dashboard/companies/${companyId}`);
@@ -350,13 +381,26 @@ export async function moveReport(
   reportId: string,
   targetFolderId: string | null,
 ) {
-  return protectedAction(async ({ db }) => {
+  return protectedAction(async ({ db, user, tenantId }) => {
     const report = await db.$transaction(async (tx) => {
-      return await tx.report.update({
+      const updated = await tx.report.update({
         where: { id: reportId },
-        data: { folderId: targetFolderId },
-        include: { company: true },
+        data: { folderId: targetFolderId || null },
+        include: { company: true, folder: true },
       });
+
+      // Audit Log Kaydı
+      await tx.auditLog.create({
+        data: {
+          action: "MOVED",
+          details: `${updated.title} isimli rapor ${updated.folder?.name || "Kök Dizin"} konumuna taşındı.`,
+          companyId: updated.companyId || null,
+          userId: (user as any).id || null,
+          tenantId: tenantId || "mercan",
+        }
+      });
+
+      return updated;
     });
     revalidatePath(`/dashboard/companies/${report.companyId}`);
     return { success: true };
@@ -364,14 +408,25 @@ export async function moveReport(
 }
 
 export async function logPdfGeneration(companyId: string, companyName: string) {
-  return protectedAction(async ({ db }) => {
+  return protectedAction(async ({ db, user, tenantId }) => {
     await db.$transaction(async (tx) => {
       await tx.notification.create({
         data: {
-          userId: null, 
+          userId: user.id, 
           message: `${companyName} firması için PDF rapor oluşturuldu.`,
           type: "SUCCESS",
         },
+      });
+
+      // Audit Log Kaydı
+      await tx.auditLog.create({
+        data: {
+          action: "PDF_GENERATE",
+          details: `${companyName} firması için sistemden denetim raporu (PDF) oluşturuldu.`,
+          companyId: companyId || null,
+          userId: (user as any).id || null,
+          tenantId: tenantId || "mercan",
+        }
       });
     });
     return { success: true };

@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 8
+      "actualWorkers": 2
     },
     "preserveOutput": "always",
     "projects": [
@@ -20,7 +20,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 8
+          "actualWorkers": 2
         },
         "id": "mercan-erp",
         "name": "mercan-erp",
@@ -29,14 +29,14 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       },
       {
         "outputDir": "C:/GitHub/ajans/apps/e2e-tests/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 8
+          "actualWorkers": 2
         },
         "id": "okul-erp",
         "name": "okul-erp",
@@ -45,14 +45,14 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       },
       {
         "outputDir": "C:/GitHub/ajans/apps/e2e-tests/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 8
+          "actualWorkers": 2
         },
         "id": "mercan-website",
         "name": "mercan-website",
@@ -61,14 +61,14 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       },
       {
         "outputDir": "C:/GitHub/ajans/apps/e2e-tests/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 8
+          "actualWorkers": 2
         },
         "id": "setup",
         "name": "setup",
@@ -77,7 +77,7 @@
         "testMatch": [
           "/.*\\.setup\\.ts/"
         ],
-        "timeout": 30000
+        "timeout": 60000
       }
     ],
     "quiet": false,
@@ -118,7 +118,7 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 30000,
+              "timeout": 60000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "setup",
@@ -128,7 +128,7 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4865,
+                  "duration": 1926,
                   "errors": [],
                   "stdout": [
                     {
@@ -144,12 +144,6 @@
                       "text": ">>> [Browser] >>> [Client:Login] Redirecting to /dashboard...\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] done in 2755ms\n"
-                    },
-                    {
                       "text": ">>> [Browser] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n"
                     },
                     {
@@ -159,42 +153,78 @@
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777104282,\n  \"exp\": 1779696282,\n  \"jti\": \"8d93757b-7726-48a8-98ee-1b6d14b51dc1\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777118575,\n  \"exp\": 1779710575,\n  \"jti\": \"82b76f14-9a30-4a18-926a-7652dbc2e4f4\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@mercan.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T08:04:44.785Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T12:02:56.050Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777104282,\n  \"exp\": 1779696282,\n  \"jti\": \"8d93757b-7726-48a8-98ee-1b6d14b51dc1\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777118575,\n  \"exp\": 1779710575,\n  \"jti\": \"82b76f14-9a30-4a18-926a-7652dbc2e4f4\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@mercan.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T08:04:44.788Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T12:02:56.052Z\"\n}\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] done in 182ms\n"
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\" FROM (SELECT \"public\".\"Company\".\"id\" FROM \"public\".\"Company\" WHERE 1=1 OFFSET $1) AS \"sub\"\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] done in 188ms\n"
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\" FROM (SELECT \"public\".\"Report\".\"id\" FROM \"public\".\"Report\" WHERE 1=1 OFFSET $1) AS \"sub\"\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Report\".\"id\", \"public\".\"Report\".\"title\", \"public\".\"Report\".\"fileUrl\", \"public\".\"Report\".\"companyId\", \"public\".\"Report\".\"tenantId\", \"public\".\"Report\".\"createdAt\", \"public\".\"Report\".\"updatedAt\", \"public\".\"Report\".\"category\", \"public\".\"Report\".\"status\", \"public\".\"Report\".\"folderId\", \"public\".\"Report\".\"note\", \"public\".\"Report\".\"uploadedById\", \"public\".\"Report\".\"driveFileId\", \"public\".\"Report\".\"fileName\" FROM \"public\".\"Report\" WHERE 1=1 ORDER BY \"public\".\"Report\".\"createdAt\" DESC LIMIT $1 OFFSET $2\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Company\".\"id\", \"public\".\"Company\".\"name\" FROM \"public\".\"Company\" WHERE \"public\".\"Company\".\"id\" IN ($1,$2,$3,$4,$5) OFFSET $6\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"name\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" IN ($1,$2,$3,$4,$5) OFFSET $6\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\", \"public\".\"Report\".\"status\" FROM \"public\".\"Report\" WHERE 1=1 GROUP BY \"public\".\"Report\".\"status\" OFFSET $1\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"AuditLog\".\"id\", \"public\".\"AuditLog\".\"userId\", \"public\".\"AuditLog\".\"action\", \"public\".\"AuditLog\".\"details\", \"public\".\"AuditLog\".\"ipAddress\", \"public\".\"AuditLog\".\"createdAt\", \"public\".\"AuditLog\".\"companyId\", \"public\".\"AuditLog\".\"tenantId\" FROM \"public\".\"AuditLog\" WHERE 1=1 ORDER BY \"public\".\"AuditLog\".\"createdAt\" DESC LIMIT $1 OFFSET $2\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"name\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) OFFSET $11\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Company\".\"id\", \"public\".\"Company\".\"name\" FROM \"public\".\"Company\" WHERE \"public\".\"Company\".\"id\" IN ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) OFFSET $11\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\" FROM (SELECT \"public\".\"User\".\"id\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"role\" = CAST($1::text AS \"public\".\"Role\") OFFSET $2) AS \"sub\"\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-04-25T08:04:39.339Z",
+                  "startTime": "2026-04-25T12:02:53.706Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -213,7 +243,7 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 30000,
+              "timeout": 60000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "setup",
@@ -223,7 +253,7 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 8602,
+                  "duration": 1677,
                   "errors": [],
                   "stdout": [
                     {
@@ -233,24 +263,6 @@
                       "text": ">>> [Browser] [HMR] connected\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] done in 885ms\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] done in 161ms\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] done in 1608ms\n"
-                    },
-                    {
                       "text": ">>> [Browser] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n"
                     },
                     {
@@ -260,30 +272,54 @@
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777104287,\n  \"exp\": 1779696287,\n  \"jti\": \"d2572e97-617a-464c-b9cf-638737657138\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777118575,\n  \"exp\": 1779710575,\n  \"jti\": \"af5235c4-b28f-457a-bfcf-dfb07e714528\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T08:04:49.082Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T12:02:56.056Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777104287,\n  \"exp\": 1779696287,\n  \"jti\": \"d2572e97-617a-464c-b9cf-638737657138\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777118575,\n  \"exp\": 1779710575,\n  \"jti\": \"af5235c4-b28f-457a-bfcf-dfb07e714528\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T08:04:49.085Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T12:02:56.060Z\"\n}\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777118575,\n  \"exp\": 1779710575,\n  \"jti\": \"af5235c4-b28f-457a-bfcf-dfb07e714528\"\n}\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T12:02:56.086Z\"\n}\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"PermissionRequest\".\"id\", \"public\".\"PermissionRequest\".\"studentId\", \"public\".\"PermissionRequest\".\"requestedById\", \"public\".\"PermissionRequest\".\"approvedById\", \"public\".\"PermissionRequest\".\"type\", \"public\".\"PermissionRequest\".\"reason\", \"public\".\"PermissionRequest\".\"status\", \"public\".\"PermissionRequest\".\"date\", \"public\".\"PermissionRequest\".\"tenantId\", \"public\".\"PermissionRequest\".\"deletedAt\", \"public\".\"PermissionRequest\".\"createdAt\", \"public\".\"PermissionRequest\".\"updatedAt\" FROM \"public\".\"PermissionRequest\" WHERE (\"public\".\"PermissionRequest\".\"status\" = $1 AND \"public\".\"PermissionRequest\".\"deletedAt\" IS NULL AND \"public\".\"PermissionRequest\".\"tenantId\" = $2) ORDER BY \"public\".\"PermissionRequest\".\"createdAt\" DESC OFFSET $3\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Student\".\"id\", \"public\".\"Student\".\"firstName\", \"public\".\"Student\".\"lastName\", \"public\".\"Student\".\"studentNumber\", \"public\".\"Student\".\"classroomId\", \"public\".\"Student\".\"tenantId\", \"public\".\"Student\".\"deletedAt\" FROM \"public\".\"Student\" WHERE \"public\".\"Student\".\"id\" IN (NULL) OFFSET $1\n"
+                    },
+                    {
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"name\", \"public\".\"User\".\"email\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" IN (NULL) OFFSET $1\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-04-25T08:04:39.339Z",
+                  "startTime": "2026-04-25T12:02:53.708Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -299,25 +335,25 @@
       ]
     },
     {
-      "title": "lead-flow.spec.ts",
-      "file": "lead-flow.spec.ts",
+      "title": "reports-management.spec.ts",
+      "file": "reports-management.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "CRM Lead Akış Testi",
-          "file": "lead-flow.spec.ts",
+          "title": "Rapor Yönetimi ve Taşıma Testi",
+          "file": "reports-management.spec.ts",
           "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli",
+              "title": "Bir raporu yeni oluşturulan bir klasöre taşıyabilmeli ve audit log doğrulanmalı",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "mercan-erp",
@@ -327,28 +363,40 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 14030,
+                      "duration": 9155,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": ">>> [Lead Flow] Website /iletisim sayfasına gidiliyor...\n"
+                          "text": ">>> [Report Management] Şirketler listesine gidiliyor...\n"
                         },
                         {
-                          "text": ">>> [Lead Flow] Form dolduruluyor...\n"
+                          "text": ">>> [Report Management] Yeni klasör oluşturuluyor: E2E_Test_Folder_1777118580213\n"
                         },
                         {
-                          "text": ">>> [Lead Flow] Form gönderiliyor...\n"
+                          "text": ">>> [Report Management] Klasör oluşturma formu gönderiliyor...\n"
                         },
                         {
-                          "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
+                          "text": ">>> [Report Management] Test raporu hazırlanıyor: test-report-1777118582920.txt\n"
                         },
                         {
-                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777104302782@example.com\n"
+                          "text": ">>> [Report Management] Rapor yükleniyor: test-report-1777118582920.txt\n"
+                        },
+                        {
+                          "text": ">>> [Report Management] Rapor taşınmaya başlanıyor: test-report-1777118582920.txt\n"
+                        },
+                        {
+                          "text": ">>> [Report Management] Klasör içine giriliyor...\n"
+                        },
+                        {
+                          "text": ">>> [Report Management] Sistem günlüğü kontrol ediliyor...\n"
+                        },
+                        {
+                          "text": ">>> [Report Management] Test başarıyla tamamlandı!\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T08:04:50.483Z",
+                      "startTime": "2026-04-25T12:02:57.764Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -356,330 +404,9 @@
                   "status": "expected"
                 }
               ],
-              "id": "c0adb524c4409f12d6ca-355673d95177f55065ee",
-              "file": "lead-flow.spec.ts",
-              "line": 4,
-              "column": 7
-            },
-            {
-              "title": "Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "okul-erp",
-                  "projectName": "okul-erp",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 14641,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": ">>> [Lead Flow] Website /iletisim sayfasına gidiliyor...\n"
-                        },
-                        {
-                          "text": ">>> [Lead Flow] Form dolduruluyor...\n"
-                        },
-                        {
-                          "text": ">>> [Lead Flow] Form gönderiliyor...\n"
-                        },
-                        {
-                          "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
-                        },
-                        {
-                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777104302767@example.com\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-25T08:04:50.524Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c0adb524c4409f12d6ca-e3b03fda5b960894e6cf",
-              "file": "lead-flow.spec.ts",
-              "line": 4,
-              "column": 7
-            },
-            {
-              "title": "Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mercan-website",
-                  "projectName": "mercan-website",
-                  "results": [
-                    {
-                      "workerIndex": 8,
-                      "parallelIndex": 6,
-                      "status": "passed",
-                      "duration": 14786,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": ">>> [Lead Flow] Website /iletisim sayfasına gidiliyor...\n"
-                        },
-                        {
-                          "text": ">>> [Lead Flow] Form dolduruluyor...\n"
-                        },
-                        {
-                          "text": ">>> [Lead Flow] Form gönderiliyor...\n"
-                        },
-                        {
-                          "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
-                        },
-                        {
-                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777104302859@example.com\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-25T08:04:50.542Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c0adb524c4409f12d6ca-c64ea786003279ad7429",
-              "file": "lead-flow.spec.ts",
-              "line": 4,
-              "column": 7
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "tenant-isolation.spec.ts",
-      "file": "tenant-isolation.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Tenant İzolasyon Testi",
-          "file": "tenant-isolation.spec.ts",
-          "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "Mercan Admin, Okul ERP rotalarına erişememeli veya veri görmemeli",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mercan-erp",
-                  "projectName": "mercan-erp",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 1922,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-25T08:04:50.488Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "7d8e83e4ff540a62ed2c-2da941976787da61fb47",
-              "file": "tenant-isolation.spec.ts",
-              "line": 5,
-              "column": 7
-            },
-            {
-              "title": "Okul Admin, Mercan ERP verilerini görememeli",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mercan-erp",
-                  "projectName": "mercan-erp",
-                  "results": [
-                    {
-                      "workerIndex": 4,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 868,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-25T08:04:50.482Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "7d8e83e4ff540a62ed2c-6f8cb26f46256b8f2fe7",
-              "file": "tenant-isolation.spec.ts",
-              "line": 25,
-              "column": 7
-            },
-            {
-              "title": "Mercan Admin, Okul ERP rotalarına erişememeli veya veri görmemeli",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "okul-erp",
-                  "projectName": "okul-erp",
-                  "results": [
-                    {
-                      "workerIndex": 6,
-                      "parallelIndex": 4,
-                      "status": "passed",
-                      "duration": 1972,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-25T08:04:50.500Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "7d8e83e4ff540a62ed2c-5b1a9177c9c23a8590b5",
-              "file": "tenant-isolation.spec.ts",
-              "line": 5,
-              "column": 7
-            },
-            {
-              "title": "Okul Admin, Mercan ERP verilerini görememeli",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "okul-erp",
-                  "projectName": "okul-erp",
-                  "results": [
-                    {
-                      "workerIndex": 7,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 984,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-25T08:04:50.506Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "7d8e83e4ff540a62ed2c-0289a29da4ad01666b0e",
-              "file": "tenant-isolation.spec.ts",
-              "line": 25,
-              "column": 7
-            },
-            {
-              "title": "Mercan Admin, Okul ERP rotalarına erişememeli veya veri görmemeli",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mercan-website",
-                  "projectName": "mercan-website",
-                  "results": [
-                    {
-                      "workerIndex": 9,
-                      "parallelIndex": 7,
-                      "status": "passed",
-                      "duration": 1722,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-25T08:04:50.565Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "7d8e83e4ff540a62ed2c-45b7eeee3cbbe6dff02b",
-              "file": "tenant-isolation.spec.ts",
-              "line": 5,
-              "column": 7
-            },
-            {
-              "title": "Okul Admin, Mercan ERP verilerini görememeli",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "mercan-website",
-                  "projectName": "mercan-website",
-                  "results": [
-                    {
-                      "workerIndex": 10,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 447,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-04-25T08:04:54.582Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "7d8e83e4ff540a62ed2c-baba92b5d79654a796ae",
-              "file": "tenant-isolation.spec.ts",
-              "line": 25,
+              "id": "141a28097ee9059d2800-aa9d68dd5f99ddd53250",
+              "file": "reports-management.spec.ts",
+              "line": 8,
               "column": 7
             }
           ]
@@ -689,9 +416,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-04-25T08:04:38.476Z",
-    "duration": 28741.247000000003,
-    "expected": 11,
+    "startTime": "2026-04-25T12:02:52.844Z",
+    "duration": 15324.009,
+    "expected": 3,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

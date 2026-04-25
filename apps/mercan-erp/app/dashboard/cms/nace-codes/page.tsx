@@ -8,7 +8,7 @@ export default async function NaceCodesManagementPage() {
 
   return (
     <div className="p-6 space-y-6 font-medium italic">
-      <NaceCodesTable initialData={codes} />
+      <NaceCodesTable initialData={codes.success ? codes.data : []} />
     </div>
   );
 }

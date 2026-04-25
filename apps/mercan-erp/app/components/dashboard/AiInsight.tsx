@@ -15,13 +15,12 @@ export function AiInsight() {
 
     setIsLoading(true);
     try {
-      // @ts-ignore
       const result = await chatWithAi(input);
       
-      if (result && 'error' in result) {
-        setElements(prev => [...prev, <p className="text-xs text-rose-500 font-bold uppercase italic">{result.error}</p>]);
+      if (!result.success) {
+        setElements(prev => [...prev, <p key={Date.now()} className="text-xs text-rose-500 font-bold uppercase italic">{result.error}</p>]);
       } else {
-        setElements(prev => [...prev, result]);
+        setElements(prev => [...prev, result.data]);
       }
       
       setInput("");

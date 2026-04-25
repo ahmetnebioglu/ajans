@@ -79,12 +79,15 @@ model Company {
   taxNumber     String?
   driveFolderId String?         @unique
   createdById   String?
+  tenantId      String          @default("mercan")
   auditLogs     AuditLog[]
   createdBy     User?           @relation("CompanyCreatedBy", fields: [createdById], references: [id])
   userAccess    CompanyAccess[]
   folders       Folder[]
   reports       Report[]
   experts       User[]          @relation("CompanyToExpert")
+
+  @@index([tenantId])
 }
 
 model CompanyAccess {
@@ -103,12 +106,15 @@ model Folder {
   name      String
   companyId String
   parentId  String?
+  tenantId  String   @default("mercan")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   parent    Folder?  @relation("SubFolders", fields: [parentId], references: [id])
   children  Folder[] @relation("SubFolders")
   reports   Report[]
+
+  @@index([tenantId])
 }
 
 model Report {
@@ -116,6 +122,7 @@ model Report {
   title        String
   fileUrl      String?
   companyId    String
+  tenantId     String   @default("mercan")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   category     String?  @default("Genel")
@@ -128,6 +135,8 @@ model Report {
   company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   folder       Folder?  @relation(fields: [folderId], references: [id])
   uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
+
+  @@index([tenantId])
 }
 
 model AuditLog {
@@ -138,8 +147,11 @@ model AuditLog {
   ipAddress String?
   createdAt DateTime @default(now())
   companyId String?
+  tenantId  String   @default("mercan")
   company   Company? @relation(fields: [companyId], references: [id])
   user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
 }
 
 model Notification {

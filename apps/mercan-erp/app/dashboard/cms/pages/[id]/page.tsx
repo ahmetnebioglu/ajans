@@ -33,9 +33,14 @@ export default function PageBuilderPage({ params }: { params: Promise<{ id: stri
 
   const loadSections = async () => {
     setLoading(true);
-    const data = await getPageSections(pageId);
+    const res = await getPageSections(pageId);
+    if (!res.success) {
+      setSections([]);
+      setLoading(false);
+      return;
+    }
     // Veriyi şemaya göre normalize et (Hydration)
-    const hydratedData = data.map((s: any) => ({
+    const hydratedData = res.data.map((s: any) => ({
       ...s,
       content: parseSectionContent(s.type, s.content)
     }));

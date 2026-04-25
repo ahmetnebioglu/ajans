@@ -157,7 +157,11 @@ export default function ReportsTable({
                             <div className="font-black text-slate-900 dark:text-white uppercase text-xs tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{report.title}</div>
                             <div className="text-[9px] font-bold text-slate-300 dark:text-slate-500 mt-1 uppercase tracking-tighter italic">{report.category}</div>
                         </td>
-                        <td className="p-8 text-[10px] font-black text-blue-500 dark:text-blue-400 uppercase italic opacity-70 group-hover:opacity-100">{report.company?.name}</td>
+                        <td className="p-8 text-[10px] font-black text-blue-500 dark:text-blue-400 uppercase italic opacity-70 group-hover:opacity-100">
+                          <button onClick={() => router.push(`/dashboard/companies/${report.companyId}`)} className="hover:underline text-left">
+                            {report.company?.name}
+                          </button>
+                        </td>
                         <td className="p-8">
                             <div className={`px-3 py-1 rounded-[4px] border text-[9px] font-black uppercase tracking-widest w-fit shadow-sm ${bgStatus(report.status)}`}>
                                 {report.status?.replace("_", " ")}

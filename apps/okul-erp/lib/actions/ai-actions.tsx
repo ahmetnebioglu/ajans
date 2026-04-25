@@ -9,9 +9,7 @@ import { protectedAction } from "@ajans/core/server";
 export async function chatWithAi(prompt: string) {
   return protectedAction(async ({ db, user }) => {
     if (!process.env.OPENAI_API_KEY) {
-      return {
-        error: "OPENAI_API_KEY bulunamadı. Lütfen .env dosyasını kontrol edin.",
-      };
+      throw new Error("OPENAI_API_KEY bulunamadı. Lütfen .env dosyasını kontrol edin.");
     }
 
     const result = await streamUI({
@@ -21,7 +19,7 @@ export async function chatWithAi(prompt: string) {
       tools: {
         analyzePermissions: {
           description: "İzin taleplerini kategorize edip analiz eder.",
-          parameters: z.object({
+          inputSchema: z.object({
             title: z.string(),
             data: z.array(z.object({
               category: z.string(),
@@ -45,7 +43,7 @@ export async function chatWithAi(prompt: string) {
         },
         studentTrend: {
           description: "Öğrenci devamsızlık veya izin trendlerini gösterir.",
-          parameters: z.object({
+          inputSchema: z.object({
             title: z.string(),
             data: z.array(z.object({
               day: z.string(),

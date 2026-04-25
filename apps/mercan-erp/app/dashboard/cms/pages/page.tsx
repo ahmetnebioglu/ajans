@@ -26,9 +26,24 @@ export default function PagesManagementPage() {
 
   const loadPages = async () => {
     setLoading(true);
-    const data = await getPages();
-    setPages(data);
+    const res = await getPages();
+    if (res.success) {
+      setPages(res.data);
+    }
     setLoading(false);
+  };
+
+  const handleDelete = async (id: string, title: string) => {
+    if (!confirm(`"${title}" sayfasını ve tüm içeriklerini silmek istediğinize emin misiniz?`)) return;
+    
+    setLoading(true);
+    const res = await deletePage(id);
+    if (res.success) {
+      loadPages();
+    } else {
+      alert(res.error || "Silinirken bir hata oluştu.");
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -48,19 +63,6 @@ export default function PagesManagementPage() {
       loadPages();
     } else {
       alert(res.error || "Hata oluştu.");
-    }
-  };
-
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`"${title}" sayfasını ve tüm içeriklerini silmek istediğinize emin misiniz?`)) return;
-    
-    setLoading(true);
-    const res = await deletePage(id);
-    if (res.success) {
-      loadPages();
-    } else {
-      alert(res.error || "Silinirken bir hata oluştu.");
-      setLoading(false);
     }
   };
 
