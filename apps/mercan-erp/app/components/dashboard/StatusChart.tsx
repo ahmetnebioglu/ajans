@@ -25,9 +25,11 @@ export default function StatusChart({ data }: { data: StatusData[] }) {
 
   const isDark = mounted && resolvedTheme === "dark";
 
+  if (!mounted) return <div className="h-[300px] w-full" />;
+
   return (
-    <div className="h-[300px] w-full flex items-center justify-center font-sans italic font-bold">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="h-[300px] w-full font-sans italic font-bold relative">
+      <ResponsiveContainer width="99%" height="100%" minWidth={0} minHeight={0} debounce={100}>
         <PieChart>
           <Pie
             data={data}

@@ -138,12 +138,6 @@
                       "text": ">>> [Browser] [HMR] connected\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] done in 162ms\n"
-                    },
-                    {
                       "text": ">>> [Browser] >>> [Client:Login] signIn result: {\n  \"error\": null,\n  \"status\": 200,\n  \"ok\": true,\n  \"url\": \"http://localhost:3001/dashboard\"\n}\n"
                     },
                     {
@@ -153,13 +147,13 @@
                       "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] done in 119ms\n"
+                      "text": ">>> [Browser] [Fast Refresh] done in 114ms\n"
                     },
                     {
                       "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] done in 350ms\n"
+                      "text": ">>> [Browser] [Fast Refresh] done in 372ms\n"
                     },
                     {
                       "text": ">>> [Browser] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n"
@@ -171,25 +165,25 @@
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777102338,\n  \"exp\": 1779694338,\n  \"jti\": \"3f74b3b4-e03b-4126-a40e-ca3ee8077ec1\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"036b2159-0d9f-4904-b72c-a60abe922b83\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@mercan.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T07:32:19.393Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T07:38:28.432Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777102338,\n  \"exp\": 1779694338,\n  \"jti\": \"3f74b3b4-e03b-4126-a40e-ca3ee8077ec1\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Mercan Admin\",\n  \"email\": \"admin@mercan.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"mercan\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"036b2159-0d9f-4904-b72c-a60abe922b83\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@mercan.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T07:32:19.395Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Mercan Admin\",\n    \"email\": \"admin@mercan.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw110000i4b3a9oge1e2\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"mercan\"\n  },\n  \"expires\": \"2026-05-25T07:38:28.434Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
@@ -228,10 +222,10 @@
                       "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"AuditLog\".\"id\", \"public\".\"AuditLog\".\"userId\", \"public\".\"AuditLog\".\"action\", \"public\".\"AuditLog\".\"details\", \"public\".\"AuditLog\".\"ipAddress\", \"public\".\"AuditLog\".\"createdAt\", \"public\".\"AuditLog\".\"companyId\" FROM \"public\".\"AuditLog\" WHERE 1=1 ORDER BY \"public\".\"AuditLog\".\"createdAt\" DESC LIMIT $1 OFFSET $2\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"name\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" IN (NULL) OFFSET $1\n"
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Company\".\"id\", \"public\".\"Company\".\"name\" FROM \"public\".\"Company\" WHERE \"public\".\"Company\".\"id\" IN (NULL) OFFSET $1\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"Company\".\"id\", \"public\".\"Company\".\"name\" FROM \"public\".\"Company\" WHERE \"public\".\"Company\".\"id\" IN (NULL) OFFSET $1\n"
+                      "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT \"public\".\"User\".\"id\", \"public\".\"User\".\"name\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"id\" IN (NULL) OFFSET $1\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
@@ -240,39 +234,21 @@
                       "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT COUNT(*) AS \"_count$_all\" FROM (SELECT \"public\".\"User\".\"id\" FROM \"public\".\"User\" WHERE \"public\".\"User\".\"role\" = CAST($1::text AS \"public\".\"Role\") OFFSET $2) AS \"sub\"\n"
                     },
                     {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the\n       height and width.\n"
+                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(99%) and height(100%),\n       or add a minWidth(0) or minHeight(0) or use aspect(undefined) to control the\n       height and width.\n"
                     },
                     {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the\n       height and width.\n"
+                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(99%) and height(100%),\n       or add a minWidth(0) or minHeight(0) or use aspect(undefined) to control the\n       height and width.\n"
                     },
                     {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the\n       height and width.\n"
+                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(99%) and height(100%),\n       or add a minWidth(0) or minHeight(0) or use aspect(undefined) to control the\n       height and width.\n"
                     },
                     {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the\n       height and width.\n"
-                    },
-                    {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the\n       height and width.\n"
-                    },
-                    {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the\n       height and width.\n"
-                    },
-                    {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the\n       height and width.\n"
-                    },
-                    {
-                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(100%) and height(100%),\n       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the\n       height and width.\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
-                    },
-                    {
-                      "text": ">>> [Browser] [Fast Refresh] done in 183ms\n"
+                      "text": ">>> [Browser] The width(-1) and height(-1) of chart should be greater than 0,\n       please check the style of container, or the props width(99%) and height(100%),\n       or add a minWidth(0) or minHeight(0) or use aspect(undefined) to control the\n       height and width.\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-04-25T07:32:16.565Z",
+                  "startTime": "2026-04-25T07:38:25.575Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -301,7 +277,7 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1880,
+                  "duration": 1578,
                   "errors": [],
                   "stdout": [
                     {
@@ -314,7 +290,7 @@
                       "text": ">>> [Browser] [Fast Refresh] rebuilding\n"
                     },
                     {
-                      "text": ">>> [Browser] [Fast Refresh] done in 169ms\n"
+                      "text": ">>> [Browser] [Fast Refresh] done in 121ms\n"
                     },
                     {
                       "text": ">>> [Browser] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\n"
@@ -326,37 +302,37 @@
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102338,\n  \"exp\": 1779694338,\n  \"jti\": \"e5f4547a-4d5e-4c91-8a0f-aceecd825c8d\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"5b5055c3-c18d-4c9b-b84d-a82870aeead5\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:32:19.175Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:38:27.815Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102338,\n  \"exp\": 1779694338,\n  \"jti\": \"e5f4547a-4d5e-4c91-8a0f-aceecd825c8d\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"5b5055c3-c18d-4c9b-b84d-a82870aeead5\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:32:19.177Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:38:27.817Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] User: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   undefined\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102338,\n  \"exp\": 1779694338,\n  \"jti\": \"e5f4547a-4d5e-4c91-8a0f-aceecd825c8d\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:JWT] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"name\": \"Okul Admin\",\n  \"email\": \"admin@okul.com\",\n  \"picture\": null,\n  \"sub\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n  \"role\": \"ADMIN\",\n  \"tenantId\": \"okul\",\n  \"iat\": 1777102707,\n  \"exp\": 1779694707,\n  \"jti\": \"5b5055c3-c18d-4c9b-b84d-a82870aeead5\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Token: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   admin@okul.com\n"
                     },
                     {
-                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:32:19.247Z\"\n}\n"
+                      "text": ">>> [Browser] %c%s%c >>> [Auth:Session] Session: background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   {\n  \"user\": {\n    \"name\": \"Okul Admin\",\n    \"email\": \"admin@okul.com\",\n    \"image\": null,\n    \"id\": \"cmodyxw1c0001i4b33pn5g932\",\n    \"role\": \"ADMIN\",\n    \"tenantId\": \"okul\"\n  },\n  \"expires\": \"2026-05-25T07:38:27.846Z\"\n}\n"
                     },
                     {
                       "text": ">>> [Browser] %c%s%c prisma:query background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   SELECT set_config('app.current_tenant', $1, true)\n"
@@ -373,7 +349,7 @@
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-04-25T07:32:16.575Z",
+                  "startTime": "2026-04-25T07:38:25.577Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -403,7 +379,7 @@
           "specs": [
             {
               "title": "Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -416,57 +392,34 @@
                     {
                       "workerIndex": 2,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 2894,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n\n    at C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts:6:16",
-                        "location": {
-                          "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                          "column": 16,
-                          "line": 6
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m'Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m browser }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Website /iletisim sayfasına gidiliyor...'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:3005/iletisim'\u001b[39m\u001b[33m,\u001b[39m { waitUntil\u001b[33m:\u001b[39m \u001b[32m'networkidle'\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \n \u001b[90m 8 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Form dolduruluyor...'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mconst\u001b[39m testEmail \u001b[33m=\u001b[39m \u001b[32m`test-${Date.now()}@example.com`\u001b[39m\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                            "column": 16,
-                            "line": 6
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m'Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m browser }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Website /iletisim sayfasına gidiliyor...'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:3005/iletisim'\u001b[39m\u001b[33m,\u001b[39m { waitUntil\u001b[33m:\u001b[39m \u001b[32m'networkidle'\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \n \u001b[90m 8 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Form dolduruluyor...'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mconst\u001b[39m testEmail \u001b[33m=\u001b[39m \u001b[32m`test-${Date.now()}@example.com`\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts:6:16\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 6203,
+                      "errors": [],
                       "stdout": [
                         {
                           "text": ">>> [Lead Flow] Website /iletisim sayfasına gidiliyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Form dolduruluyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Form gönderiliyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777102715317@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:21.318Z",
+                      "startTime": "2026-04-25T07:38:30.327Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\GitHub\\ajans\\apps\\e2e-tests\\test-results\\lead-flow-CRM-Lead-Akış-Te-eef29--ve-ERP-panelinde-görünmeli-mercan-erp\\test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\GitHub\\ajans\\apps\\e2e-tests\\test-results\\lead-flow-CRM-Lead-Akış-Te-eef29--ve-ERP-panelinde-görünmeli-mercan-erp\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                        "column": 16,
-                        "line": 6
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "c0adb524c4409f12d6ca-355673d95177f55065ee",
@@ -476,7 +429,7 @@
             },
             {
               "title": "Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -489,57 +442,34 @@
                     {
                       "workerIndex": 5,
                       "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 2881,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n\n    at C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts:6:16",
-                        "location": {
-                          "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                          "column": 16,
-                          "line": 6
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m'Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m browser }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Website /iletisim sayfasına gidiliyor...'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:3005/iletisim'\u001b[39m\u001b[33m,\u001b[39m { waitUntil\u001b[33m:\u001b[39m \u001b[32m'networkidle'\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \n \u001b[90m 8 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Form dolduruluyor...'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mconst\u001b[39m testEmail \u001b[33m=\u001b[39m \u001b[32m`test-${Date.now()}@example.com`\u001b[39m\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                            "column": 16,
-                            "line": 6
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m'Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m browser }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Website /iletisim sayfasına gidiliyor...'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:3005/iletisim'\u001b[39m\u001b[33m,\u001b[39m { waitUntil\u001b[33m:\u001b[39m \u001b[32m'networkidle'\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \n \u001b[90m 8 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Form dolduruluyor...'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mconst\u001b[39m testEmail \u001b[33m=\u001b[39m \u001b[32m`test-${Date.now()}@example.com`\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts:6:16\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 6035,
+                      "errors": [],
                       "stdout": [
                         {
                           "text": ">>> [Lead Flow] Website /iletisim sayfasına gidiliyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Form dolduruluyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Form gönderiliyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777102715427@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:21.365Z",
+                      "startTime": "2026-04-25T07:38:30.358Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\GitHub\\ajans\\apps\\e2e-tests\\test-results\\lead-flow-CRM-Lead-Akış-Te-eef29--ve-ERP-panelinde-görünmeli-okul-erp\\test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\GitHub\\ajans\\apps\\e2e-tests\\test-results\\lead-flow-CRM-Lead-Akış-Te-eef29--ve-ERP-panelinde-görünmeli-okul-erp\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                        "column": 16,
-                        "line": 6
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "c0adb524c4409f12d6ca-e3b03fda5b960894e6cf",
@@ -549,7 +479,7 @@
             },
             {
               "title": "Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -562,57 +492,34 @@
                     {
                       "workerIndex": 8,
                       "parallelIndex": 6,
-                      "status": "failed",
-                      "duration": 2765,
-                      "error": {
-                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n",
-                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n\n    at C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts:6:16",
-                        "location": {
-                          "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                          "column": 16,
-                          "line": 6
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m'Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m browser }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Website /iletisim sayfasına gidiliyor...'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:3005/iletisim'\u001b[39m\u001b[33m,\u001b[39m { waitUntil\u001b[33m:\u001b[39m \u001b[32m'networkidle'\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \n \u001b[90m 8 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Form dolduruluyor...'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mconst\u001b[39m testEmail \u001b[33m=\u001b[39m \u001b[32m`test-${Date.now()}@example.com`\u001b[39m\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                            "column": 16,
-                            "line": 6
-                          },
-                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3005/iletisim\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3005/iletisim\", waiting until \"networkidle\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m'Yeni bir lead oluşturulmalı ve ERP panelinde görünmeli'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page\u001b[33m,\u001b[39m browser }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Website /iletisim sayfasına gidiliyor...'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:3005/iletisim'\u001b[39m\u001b[33m,\u001b[39m { waitUntil\u001b[33m:\u001b[39m \u001b[32m'networkidle'\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \n \u001b[90m 8 |\u001b[39m     console\u001b[33m.\u001b[39mlog(\u001b[32m'>>> [Lead Flow] Form dolduruluyor...'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mconst\u001b[39m testEmail \u001b[33m=\u001b[39m \u001b[32m`test-${Date.now()}@example.com`\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts:6:16\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 6183,
+                      "errors": [],
                       "stdout": [
                         {
                           "text": ">>> [Lead Flow] Website /iletisim sayfasına gidiliyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Form dolduruluyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Form gönderiliyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Başarı mesajı bekleniyor...\n"
+                        },
+                        {
+                          "text": ">>> [Lead Flow] Mercan ERP kontrolü başlıyor... Aranan E-posta: test-1777102716263@example.com\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:21.402Z",
+                      "startTime": "2026-04-25T07:38:30.366Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\GitHub\\ajans\\apps\\e2e-tests\\test-results\\lead-flow-CRM-Lead-Akış-Te-eef29--ve-ERP-panelinde-görünmeli-mercan-website\\test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\GitHub\\ajans\\apps\\e2e-tests\\test-results\\lead-flow-CRM-Lead-Akış-Te-eef29--ve-ERP-panelinde-görünmeli-mercan-website\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\GitHub\\ajans\\apps\\e2e-tests\\tests\\lead-flow.spec.ts",
-                        "column": 16,
-                        "line": 6
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "c0adb524c4409f12d6ca-c64ea786003279ad7429",
@@ -653,12 +560,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1387,
+                      "duration": 1878,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:21.312Z",
+                      "startTime": "2026-04-25T07:38:30.321Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -687,12 +594,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 928,
+                      "duration": 1217,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:21.338Z",
+                      "startTime": "2026-04-25T07:38:30.327Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -721,12 +628,12 @@
                       "workerIndex": 6,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 1192,
+                      "duration": 2369,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:21.367Z",
+                      "startTime": "2026-04-25T07:38:30.353Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -755,12 +662,12 @@
                       "workerIndex": 7,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 903,
+                      "duration": 1070,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:21.341Z",
+                      "startTime": "2026-04-25T07:38:30.358Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -789,12 +696,12 @@
                       "workerIndex": 9,
                       "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 1242,
+                      "duration": 2114,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:21.416Z",
+                      "startTime": "2026-04-25T07:38:30.406Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -821,14 +728,14 @@
                   "results": [
                     {
                       "workerIndex": 10,
-                      "parallelIndex": 2,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 440,
+                      "duration": 1258,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-04-25T07:32:25.003Z",
+                      "startTime": "2026-04-25T07:38:35.247Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -848,11 +755,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-04-25T07:32:15.803Z",
-    "duration": 10984.85,
-    "expected": 8,
+    "startTime": "2026-04-25T07:38:24.841Z",
+    "duration": 14064.655,
+    "expected": 11,
     "skipped": 0,
-    "unexpected": 3,
+    "unexpected": 0,
     "flaky": 0
   }
 }
