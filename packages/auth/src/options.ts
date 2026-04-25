@@ -5,13 +5,14 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { unsecured_prisma as prisma } from "@ajans/db";
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma as any),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    ...(process.env.NODE_ENV === "development" ? [
+    ...(process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test" ? [
       CredentialsProvider({
         id: "credentials",
         name: "Test Girişi",
@@ -34,29 +35,35 @@ export const authOptions: NextAuthOptions = {
   },
   cookies: {
     sessionToken: {
-      name: `next-auth.session-token`,
+      name: process.env.NEXTAUTH_COOKIE_NAME || `next-auth.session-token`,
       options: {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
         secure: process.env.NODE_ENV === 'production',
-        domain: process.env.NODE_ENV === 'production' ? '.mercanerp.com' : 'localhost'
+        ...(process.env.NODE_ENV === 'production' ? { domain: '.mercanerp.com' } : {})
       },
     },
   },
   callbacks: {
     async jwt({ token, user }) {
+      console.log(">>> [Auth:JWT] User:", user?.email);
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
+        token.tenantId = (user as any).tenantId;
       }
+      console.log(">>> [Auth:JWT] Token:", JSON.stringify(token, null, 2));
       return token;
     },
     async session({ session, token }) {
+      console.log(">>> [Auth:Session] Token:", token?.email);
       if (token && session.user) {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role;
+        (session.user as any).tenantId = token.tenantId;
       }
+      console.log(">>> [Auth:Session] Session:", JSON.stringify(session, null, 2));
       return session;
     },
   },
