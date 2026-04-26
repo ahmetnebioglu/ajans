@@ -55,14 +55,14 @@ async function ReportsList({ query, sort, dir }: { query: string; sort: string; 
   const reports = res.success ? res.data : [];
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-[4px] border border-zinc-200 dark:border-zinc-800 shadow-2xl overflow-hidden">
-      <div className="p-8 border-b border-zinc-50 dark:border-zinc-800 bg-slate-50/30 dark:bg-zinc-800/20 italic">
-         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-600">Rapor Listesi</p>
+    <div className="bg-white dark:bg-zinc-950 rounded-[4px] border border-zinc-200 dark:border-zinc-800 shadow-2xl overflow-hidden">
+      <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 italic">
+         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-zinc-500">Rapor Listesi</p>
       </div>
       {!res.success ? (
          <div className="p-12 text-center text-rose-500 font-bold uppercase italic tracking-widest leading-loose">
             Veriler Alınırken Bir Hata Oluştu. <br/>
-            <span className="text-slate-400 dark:text-slate-500 text-xs">{res.error}</span>
+            <span className="text-slate-400 dark:text-slate-600 text-xs">{res.error}</span>
          </div>
       ) : (
          <ReportsTable initialReports={reports} currentSort={sort} currentDir={dir} />

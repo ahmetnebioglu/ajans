@@ -57,7 +57,7 @@ export default function CrmKanbanClient({ initialLeads, tenantId, userId }: { in
   return (
     <KanbanBoard 
       onDragEnd={onDragEnd}
-      className="flex flex-col xl:flex-row gap-4 min-h-0 h-full overflow-x-auto scrollbar-hide pb-2 bg-zinc-950"
+      className="flex flex-col xl:flex-row gap-4 min-h-0 h-full overflow-x-auto scrollbar-hide bg-zinc-950"
     >
       {COLUMNS.map((col) => (
         <KanbanColumn 
@@ -68,7 +68,7 @@ export default function CrmKanbanClient({ initialLeads, tenantId, userId }: { in
           {/* Column Header - STICKY & SHARP */}
           <div className="sticky top-0 z-20 flex items-center justify-between border-b border-zinc-800 p-2.5 bg-zinc-900/95 backdrop-blur-sm shrink-0">
             <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 italic flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-teal-500 rounded-[4px] animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-red-600 rounded-[4px] animate-pulse" />
               {col.title}
             </h3>
             <span className="text-[9px] font-mono text-zinc-600 bg-black px-2 py-0.5 border border-zinc-800 rounded-[4px]">
@@ -83,15 +83,15 @@ export default function CrmKanbanClient({ initialLeads, tenantId, userId }: { in
                 key={lead.id} 
                 id={lead.id} 
                 item={lead}
-                className="bg-black border border-zinc-800 rounded-[4px] p-2.5 relative group cursor-grab active:cursor-grabbing hover:border-teal-500/50 transition-all shadow-md shrink-0"
+                className="bg-black border border-zinc-800 rounded-[4px] p-2.5 relative group cursor-grab active:cursor-grabbing hover:border-red-600/50 transition-all shadow-md shrink-0"
                 activeClassName="opacity-0"
               >
                 {/* Neon Accent Line - SHARP */}
-                <div className="absolute top-2.5 left-0 w-0.5 h-4 bg-zinc-800 group-hover:bg-teal-500 transition-colors" />
+                <div className="absolute top-2.5 left-0 w-0.5 h-4 bg-zinc-800 group-hover:bg-red-600 transition-colors" />
 
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[7px] font-black uppercase tracking-widest text-teal-500 bg-teal-500/5 px-1.5 py-0.5 border border-teal-500/20 rounded-[4px]">
+                    <span className="text-[7px] font-black uppercase tracking-widest text-red-500 bg-red-500/5 px-1.5 py-0.5 border border-red-500/20 rounded-[4px]">
                       {lead.source}
                     </span>
                     <span className="text-[7px] font-mono text-zinc-600">
@@ -129,7 +129,7 @@ export default function CrmKanbanClient({ initialLeads, tenantId, userId }: { in
                       <Calendar size={9} />
                       <span className="text-[7px] font-bold uppercase">{new Date(lead.createdAt).toLocaleDateString('tr-TR')}</span>
                     </div>
-                    <ArrowRight size={10} className="text-zinc-800 group-hover:text-teal-500 transition-colors" />
+                    <ArrowRight size={10} className="text-zinc-800 group-hover:text-red-600 transition-colors" />
                   </div>
                 </div>
               </LeadCard>

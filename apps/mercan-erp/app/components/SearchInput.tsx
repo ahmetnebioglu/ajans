@@ -70,12 +70,12 @@ export default function SearchInput({
              <Search size={18} className="group-focus-within:scale-110 transition-transform" />
           )}
        </div>
-       <input 
+        <input 
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
-          className="w-full pl-11 pr-11 py-3.5 bg-slate-100/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm dark:text-white font-bold uppercase tracking-tight italic outline-none focus:bg-white dark:focus:bg-slate-900 focus:border-blue-600 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30 transition-all shadow-sm"
+          className="w-full pl-11 pr-11 py-3.5 bg-slate-100/50 dark:bg-zinc-950/50 border border-slate-200 dark:border-zinc-800 rounded-xl text-sm dark:text-white font-bold uppercase tracking-tight italic outline-none focus:bg-white dark:focus:bg-zinc-900 focus:border-blue-600 dark:focus:border-blue-400 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30 transition-all shadow-sm"
        />
        {value && (
          <button 

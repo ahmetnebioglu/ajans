@@ -14,20 +14,21 @@ export default function LoginPage() {
     setMounted(true);
   }, []);
 
+  const isDevOrTest = process.env.NODE_ENV === "development" || 
+                      process.env.NODE_ENV === "test" || 
+                      (typeof window !== 'undefined' && window.location.hostname === 'localhost');
+
   const handleTestLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!testEmail) return;
-    const result = await signIn("credentials", { 
+    
+    // VIP Pass: redirect: true kullanarak NextAuth'un yönlendirmeyi yönetmesini sağlıyoruz
+    await signIn("credentials", { 
       email: testEmail, 
       password: "test", 
       callbackUrl: "/dashboard",
-      redirect: false
+      redirect: true
     });
-    console.log(">>> [Client:Login] signIn result:", JSON.stringify(result, null, 2));
-    if (result?.ok) {
-      console.log(">>> [Client:Login] Redirecting to /dashboard...");
-      window.location.href = "/dashboard";
-    }
   };
 
   return (
@@ -66,7 +67,7 @@ export default function LoginPage() {
            </button>
 
            {/* DEV ONLY LOGIN AREA */}
-           { (isDev || process.env.NODE_ENV === 'test') && (
+           { isDevOrTest && (
              <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 space-y-3 relative z-10">
                 <div className="flex items-center gap-2 text-[9px] font-black uppercase text-amber-500">
                    <div className="w-1.5 h-1.5 bg-amber-500 rounded-[2px] animate-pulse" />
@@ -79,8 +80,9 @@ export default function LoginPage() {
                      className="w-full p-3.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-[2px] text-[11px] font-bold outline-none focus:ring-2 focus:ring-teal-500 transition-all font-mono dark:text-white"
                      value={testEmail}
                      onChange={(e) => setTestEmail(e.target.value)}
+                     required
                    />
-                   <button className="w-full p-3.5 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded-[2px] border border-teal-200 dark:border-teal-800 font-black text-[10px] uppercase tracking-widest hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-all active:scale-95 shadow-sm">
+                   <button type="submit" className="w-full p-3.5 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded-[2px] border border-teal-200 dark:border-teal-800 font-black text-[10px] uppercase tracking-widest hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-all active:scale-95 shadow-sm">
                      HIZLI GİRİŞ YAP
                    </button>
                 </form>

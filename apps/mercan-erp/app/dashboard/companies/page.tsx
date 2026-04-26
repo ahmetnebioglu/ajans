@@ -141,20 +141,20 @@ export default function CompaniesPage() {
                  </div>
                  <h2 className="font-black text-slate-900 dark:text-white tracking-tighter uppercase text-[11px]">Yeni Firma Ekle</h2>
               </div>
-              <form onSubmit={handleAddCompany} className="space-y-3">
+               <form onSubmit={handleAddCompany} className="space-y-3">
                 <input 
                   type="text" 
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Firma Adı"
-                  className="w-full p-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-800 dark:text-white rounded-[4px] outline-none focus:ring-1 focus:ring-blue-500 transition-all font-black text-[10px] uppercase"
+                  className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 dark:text-white rounded-[4px] outline-none focus:ring-1 focus:ring-blue-500 transition-all font-black text-[10px] uppercase"
                 />
                 <input 
                   type="text" 
                   value={newFolderId}
                   onChange={(e) => setNewFolderId(e.target.value)}
                   placeholder="Google Drive Folder ID"
-                  className="w-full p-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-800 dark:text-white rounded-[4px] outline-none focus:ring-1 focus:ring-blue-500 transition-all font-mono text-[9px]"
+                  className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 dark:text-white rounded-[4px] outline-none focus:ring-1 focus:ring-blue-500 transition-all font-mono text-[9px]"
                 />
                 <button 
                   type="submit"
@@ -172,12 +172,12 @@ export default function CompaniesPage() {
         {/* COMPANIES TABLE */}
         <div className={isAdmin ? "lg:col-span-2" : "lg:col-span-3"}>
           <div className="bg-white dark:bg-zinc-900 rounded-[4px] border border-zinc-200 dark:border-zinc-800 shadow-2xl overflow-hidden">
-            <div className="p-8 border-b border-zinc-50 dark:border-zinc-800 bg-slate-50/30 dark:bg-zinc-800/20 italic">
-               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-600">Firma Listesi</p>
+            <div className="p-8 border-b border-zinc-50 dark:border-zinc-800 bg-slate-50/30 dark:bg-zinc-950/40 italic">
+               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">Firma Listesi</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-slate-50 dark:bg-zinc-800/50 border-b border-zinc-200 dark:border-zinc-800 italic">
+                <thead className="bg-slate-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 italic">
                   <tr>
                     <th className="p-8 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-500 tracking-widest">Firma</th>
                     <th className="p-8 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-500 tracking-widest">İstatistik</th>
@@ -298,7 +298,7 @@ export default function CompaniesPage() {
                              
                              <button
                                onClick={() => handleToggleAccess(user.id)}
-                               className={`px-4 py-2 rounded-[4px] text-[8px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 ${hasAccess ? "bg-zinc-950 dark:bg-zinc-700 text-white" : "bg-blue-600 text-white"}`}
+                               className={`px-4 py-2 rounded-[4px] text-[8px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 ${hasAccess ? "bg-zinc-950 dark:bg-zinc-950 border border-zinc-800 text-white" : "bg-blue-600 text-white"}`}
                              >
                                 {hasAccess ? "YETKİYİ AL" : "YETKİ VER"}
                              </button>

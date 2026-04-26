@@ -54,17 +54,17 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
     <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-300">
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl cursor-zoom-out" onClick={onClose} />
 
-      <div className="relative w-full max-w-6xl h-full flex flex-col bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-200">
+      <div className="relative w-full max-w-6xl h-full flex flex-col bg-white dark:bg-zinc-950 rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-200 dark:border-zinc-800">
         
         {/* HEADER */}
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-10 font-medium italic">
+        <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md sticky top-0 z-10 font-medium italic">
            <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shadow-inner flex-shrink-0">
+              <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center shadow-inner flex-shrink-0">
                  <Monitor size={24} />
               </div>
               <div className="min-w-0">
-                 <h3 className="text-xl font-black text-slate-900 tracking-tighter uppercase truncate leading-none mb-1">{file?.title}</h3>
-                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate">PANEL ÖN İZLEME SİSTEMİ</p>
+                 <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tighter uppercase truncate leading-none mb-1">{file?.title}</h3>
+                 <p className="text-[10px] text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-widest truncate">PANEL ÖN İZLEME SİSTEMİ</p>
               </div>
            </div>
            
@@ -83,7 +83,7 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
         </div>
 
         {/* CONTENT AREA */}
-        <div className="flex-1 overflow-hidden bg-slate-50 relative flex items-center justify-center">
+        <div className="flex-1 overflow-hidden bg-slate-50 dark:bg-zinc-950 relative flex items-center justify-center">
            {hasNoDriveId ? (
               <div className="text-center p-12 space-y-6 max-w-sm italic">
                   <div className="w-24 h-24 bg-rose-50 text-rose-500 rounded-3xl flex items-center justify-center mx-auto shadow-inner">
@@ -109,15 +109,15 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
                      <div className="absolute inset-0 bg-blue-400/10 animate-pulse" />
                   </div>
                   <div className="space-y-2">
-                     <h4 className="text-2xl font-black italic tracking-tighter text-slate-900 uppercase">SİMÜLASYON VERİSİ</h4>
-                     <p className="text-xs text-slate-400 font-bold uppercase leading-relaxed tracking-widest">
+                     <h4 className="text-2xl font-black italic tracking-tighter text-slate-900 dark:text-white uppercase">SİMÜLASYON VERİSİ</h4>
+                     <p className="text-xs text-slate-400 dark:text-zinc-500 font-bold uppercase leading-relaxed tracking-widest">
                         Bu dosya test süreçleri için otomatik üretilmiştir. <br />
                         Gerçek bir Google Drive dosyası değildir.
                      </p>
                   </div>
-                  <div className="p-4 bg-slate-100 rounded-xl border border-slate-200">
-                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">DOSYA ID</p>
-                     <p className="text-[9px] font-mono font-bold text-slate-400 truncate">{driveId}</p>
+                  <div className="p-4 bg-slate-100 dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800">
+                     <p className="text-[10px] font-black text-slate-500 dark:text-zinc-600 uppercase tracking-widest leading-none mb-1">DOSYA ID</p>
+                     <p className="text-[9px] font-mono font-bold text-slate-400 dark:text-zinc-700 truncate">{driveId}</p>
                   </div>
               </div>
            ) : isPreviewable ? (
@@ -156,8 +156,8 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
         </div>
 
         {/* FOOTER */}
-        <div className="p-4 bg-white border-t border-slate-100 flex justify-center italic">
-           <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.4em]">Mercan ERP Güvenli Ön İzleme Katmanı</p>
+        <div className="p-4 bg-white dark:bg-zinc-900/50 border-t border-slate-100 dark:border-zinc-800 flex justify-center italic">
+           <p className="text-[9px] font-black text-slate-300 dark:text-zinc-600 uppercase tracking-[0.4em]">Mercan ERP Güvenli Ön İzleme Katmanı</p>
         </div>
 
       </div>

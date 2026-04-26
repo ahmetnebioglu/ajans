@@ -128,11 +128,11 @@ export default function UserManagementPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-50/50 dark:bg-zinc-800/50">
-                <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Kullanıcı Bilgileri</th>
-                <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Mevcut Rol</th>
-                <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest">Atanmış Firmalar</th>
-                <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest text-right">Aksiyonlar</th>
+              <tr className="bg-slate-50/50 dark:bg-zinc-950/50">
+                <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-600 tracking-widest">Kullanıcı Bilgileri</th>
+                <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-600 tracking-widest">Mevcut Rol</th>
+                <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-600 tracking-widest">Atanmış Firmalar</th>
+                <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-600 tracking-widest text-right">Aksiyonlar</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
@@ -158,7 +158,7 @@ export default function UserManagementPage() {
                   </td>
 
                   <td className="p-4">
-                    <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[4px] text-[8px] font-black uppercase tracking-[0.15em] ${user.role === "ADMIN" ? "bg-zinc-900 text-amber-500 shadow-lg" : user.role === "EXPERT" ? "bg-blue-600 text-white shadow-lg" : "bg-white dark:bg-zinc-800 border border-slate-100 dark:border-zinc-700 text-slate-500"}`}>
+                    <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[4px] text-[8px] font-black uppercase tracking-[0.15em] ${user.role === "ADMIN" ? "bg-zinc-950 dark:bg-blue-600/10 border border-zinc-800 dark:border-blue-900/30 text-amber-500 shadow-lg" : user.role === "EXPERT" ? "bg-blue-600 text-white shadow-lg" : "bg-white dark:bg-zinc-800 border border-slate-100 dark:border-zinc-700 text-slate-500"}`}>
                       {user.role === "ADMIN" && <Shield size={10} />}
                       {user.role}
                     </span>
@@ -186,7 +186,7 @@ export default function UserManagementPage() {
                          <select 
                            value={user.role}
                            onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                           className="bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 p-2 rounded-[4px] text-[9px] font-black uppercase outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer dark:text-white"
+                           className="bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 p-2 rounded-[4px] text-[9px] font-black uppercase outline-none focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer dark:text-white"
                          >
                            <option value="ADMIN">ADMIN YAP</option>
                            <option value="EXPERT">EXPERT YAP</option>

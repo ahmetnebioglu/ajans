@@ -441,3 +441,17 @@ export async function getCompanyAccess(companyId: string) {
     });
   });
 }
+
+export async function getAuditLogs() {
+  return protectedAction(async ({ db, tenantId }) => {
+    return await db.auditLog.findMany({
+      where: { tenantId },
+      include: {
+        user: { select: { name: true, email: true } },
+        company: { select: { name: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 100, // Sayfa performansı için son 100 kaydı alalım
+    });
+  });
+}

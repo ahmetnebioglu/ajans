@@ -23,5 +23,10 @@ export default async function DashboardLayout({
     redirect("/login?error=TenantMismatch");
   }
 
+  // RBAC Check: Only ADMIN can access /dashboard and its sub-routes
+  if (user.role !== "ADMIN") {
+    redirect("/unauthorized");
+  }
+
   return <DashboardClientLayout>{children}</DashboardClientLayout>;
 }

@@ -1,26 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Table, Tag, Tooltip, Modal, Select, Button, message } from "antd";
 import { 
   ExternalLink, 
+  Eye, 
+  Trash2, 
+  CheckSquare, 
+  X, 
+  Loader2,
   Calendar,
-  User as UserIcon,
   Building2,
-  RefreshCw,
-  AlertTriangle,
-  CheckCircle2,
   Clock,
-  ArrowUp,
-  ArrowDown,
-  ChevronsUpDown,
-  Eye,
-  Trash2,
-  CheckSquare,
-  X,
-  Loader2
+  ShieldCheck,
+  MoreVertical
 } from "lucide-react";
 import { updateReportStatus, bulkUpdateReportStatus, bulkDeleteReports } from "../actions/admin-actions";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import FilePreview from "./dashboard/FilePreview";
 
 interface ReportsTableProps {
@@ -30,41 +27,28 @@ interface ReportsTableProps {
 }
 
 export default function ReportsTable({ 
-  initialReports, 
-  currentSort = "createdAt", 
-  currentDir = "desc" 
+  initialReports,
+  currentSort,
+  currentDir
 }: ReportsTableProps) {
   const [reports, setReports] = useState(initialReports);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [previewFile, setPreviewFile] = useState<any>(null);
-  
-  // SELECTION STATE
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showBulkModal, setShowBulkModal] = useState<"status" | "delete" | null>(null);
   const [isBulkProcessing, setIsBulkProcessing] = useState(false);
   const [bulkNewStatus, setBulkNewStatus] = useState("COZULDU");
 
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   useEffect(() => { setReports(initialReports); }, [initialReports]);
-
-  // SELECTION HANDLERS
-  const toggleSelect = (id: string) => {
-    setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
-  };
-
-  const toggleSelectAll = () => {
-    if (selectedIds.length === reports.length) setSelectedIds([]);
-    else setSelectedIds(reports.map(r => r.id));
-  };
 
   const handleStatusUpdate = async (id: string, newStatus: string) => {
     setUpdatingId(id);
     const res = await updateReportStatus(id, newStatus);
     if (res.success) {
       setReports(prev => prev.map(r => r.id === id ? { ...r, status: newStatus } : r));
+      message.success("Durum başarıyla güncellendi");
     }
     setUpdatingId(null);
   };
@@ -76,6 +60,7 @@ export default function ReportsTable({
       setSelectedIds([]);
       setShowBulkModal(null);
       router.refresh();
+      message.success("Toplu durum güncellemesi başarılı");
     }
     setIsBulkProcessing(false);
   };
@@ -87,168 +72,293 @@ export default function ReportsTable({
       setSelectedIds([]);
       setShowBulkModal(null);
       router.refresh();
+      message.success("Seçili raporlar silindi");
     }
     setIsBulkProcessing(false);
   };
 
-  const handleSort = (field: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    const newDir = (currentSort === field && currentDir === "asc") ? "desc" : "asc";
-    params.set("sort", field);
-    params.set("dir", newDir);
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
-
-  const SortHeader = ({ field, label }: { field: string, label: string }) => {
-    const isActive = currentSort === field;
-    return (
-      <th onClick={() => handleSort(field)} className="p-4 cursor-pointer group hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-colors">
-        <div className="flex items-center gap-2">
-           <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-slate-500"}`}>{label}</span>
-           {isActive ? (currentDir === "asc" ? <ArrowUp size={12} className="text-blue-600 dark:text-blue-400" /> : <ArrowDown size={12} className="text-blue-600 dark:text-blue-400" />) : <ChevronsUpDown size={12} className="text-slate-300 dark:text-slate-700 opacity-0 group-hover:opacity-100" />}
+  const columns = [
+    {
+      title: "RAPOR BİLGİSİ",
+      dataIndex: "title",
+      key: "title",
+      render: (text: string, record: any) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="font-black text-slate-900 dark:text-white uppercase text-[11px] tracking-tight truncate max-w-[250px]">
+            {text}
+          </span>
+          <span className="text-[8px] font-bold text-slate-400 dark:text-zinc-600 uppercase italic tracking-widest">
+            {record.category}
+          </span>
         </div>
-      </th>
-    );
-  };
-
-  const bgStatus = (status: string) => {
-    switch (status) {
-      case "AKSIYON_GEREKLI": return "bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/50";
-      case "COZULDU": return "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50";
-      default: return "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900/50";
-    }
-  };
-
-  if (reports.length === 0) return <div className="p-20 text-center text-slate-400 font-black italic uppercase tracking-widest leading-loose">Sonuç Bulunamadı.</div>;
+      ),
+    },
+    {
+      title: "FİRMA",
+      dataIndex: ["company", "name"],
+      key: "company",
+      render: (name: string, record: any) => (
+        <div className="flex items-center gap-2">
+          <Building2 size={12} className="text-blue-500 opacity-50" />
+          <Link 
+            href={`/dashboard/companies/${record.companyId}`}
+            className="text-[10px] font-black text-blue-500 dark:text-blue-400 uppercase italic hover:underline"
+          >
+            {name}
+          </Link>
+        </div>
+      ),
+    },
+    {
+      title: "DURUM",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string, record: any) => {
+        const colors: Record<string, string> = {
+          BEKLEMEDE: "orange",
+          AKSIYON_GEREKLI: "red",
+          COZULDU: "green",
+        };
+        return (
+          <div className="flex items-center gap-2">
+            {updatingId === record.id ? (
+              <Loader2 className="animate-spin text-blue-500" size={12} />
+            ) : (
+              <Tag color={colors[status]} className="font-black text-[8px] uppercase tracking-[0.15em] border-none px-2 py-0.5 rounded-[2px] shadow-sm">
+                {status.replace("_", " ")}
+              </Tag>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      title: "TARİH",
+      dataIndex: "createdAt",
+      key: "date",
+      width: 120,
+      render: (date: Date) => (
+        <div className="flex items-center gap-2 text-slate-400 dark:text-zinc-600 font-bold italic text-[9px]">
+          <Calendar size={12} />
+          {new Date(date).toLocaleDateString("tr-TR")}
+        </div>
+      ),
+    },
+    {
+      title: "AKSİYONLAR",
+      key: "actions",
+      align: "right" as const,
+      render: (_: any, record: any) => (
+        <div className="flex items-center justify-end gap-1.5">
+          <Tooltip title="Önizle">
+            <button 
+              onClick={() => {
+                const driveIdMatch = record.fileUrl?.match(/\/d\/(.+?)\//) || record.fileUrl?.match(/\/d\/(.+?)$/);
+                setPreviewFile({
+                  ...record,
+                  driveFileId: driveIdMatch ? driveIdMatch[1] : "mock_id_" + record.id,
+                  fileName: record.title + ".pdf"
+                });
+              }} 
+              className="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-[4px] hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+              aria-label="Raporu Önizle"
+            >
+              <Eye size={14} />
+            </button>
+          </Tooltip>
+          <Tooltip title="Drive'da Aç">
+            <a 
+              href={record.fileUrl || "#"} 
+              target="_blank" 
+              rel="noreferrer" 
+              className="p-2 bg-zinc-950 dark:bg-zinc-800 text-white rounded-[4px] hover:bg-indigo-600 transition-all shadow-md"
+              aria-label="Dosyayı Yeni Sekmede Aç"
+            >
+              <ExternalLink size={14} />
+            </a>
+          </Tooltip>
+          <div className="w-px h-4 bg-slate-200 dark:bg-zinc-800 mx-1" />
+          <Select 
+            value={record.status}
+            onChange={(val) => handleStatusUpdate(record.id, val)}
+            className="status-select-mini"
+            suffixIcon={<MoreVertical size={10} />}
+            variant="borderless"
+            options={[
+              { value: "BEKLEMEDE", label: "BEKLEMEDE" },
+              { value: "AKSIYON_GEREKLI", label: "AKSİYON" },
+              { value: "COZULDU", label: "ÇÖZÜLDÜ" },
+            ]}
+          />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="relative">
-        <div className="overflow-x-auto text-sm italic font-medium">
-            <table className="w-full text-left border-collapse">
-                <thead className="bg-slate-50 dark:bg-zinc-800/50 border-b border-zinc-200 dark:border-zinc-800">
-                    <tr>
-                        <th className="p-8 w-10">
-                           <input 
-                            type="checkbox" 
-                            className="w-4 h-4 rounded-[4px] border-zinc-200 dark:border-zinc-800 bg-transparent text-blue-600 focus:ring-blue-500 cursor-pointer"
-                            checked={selectedIds.length === reports.length && reports.length > 0}
-                            onChange={toggleSelectAll}
-                           />
-                        </th>
-                        <SortHeader field="title" label="Rapor Bilgisi" />
-                        <SortHeader field="company" label="Firma" />
-                        <SortHeader field="status" label="Durum" />
-                        <SortHeader field="createdAt" label="Tarih" />
-                        <th className="p-8 text-[9px] font-black text-slate-400 dark:text-zinc-500 uppercase tracking-widest text-right">İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-50 dark:divide-zinc-800/50">
-                    {reports.map((report) => (
-                    <tr key={report.id} className={`group transition-all duration-300 ${selectedIds.includes(report.id) ? "bg-blue-50/50 dark:bg-blue-900/20" : "hover:bg-slate-50/50 dark:hover:bg-zinc-800/30"}`}>
-                        <td className="p-8 w-10">
-                           <input 
-                            type="checkbox" 
-                            className="w-4 h-4 rounded-[4px] border-zinc-200 dark:border-zinc-800 bg-transparent text-blue-600 focus:ring-blue-500 cursor-pointer"
-                            checked={selectedIds.includes(report.id)}
-                            onChange={() => toggleSelect(report.id)}
-                           />
-                        </td>
-                        <td className="p-8">
-                            <div className="font-black text-slate-900 dark:text-white uppercase text-xs tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{report.title}</div>
-                            <div className="text-[9px] font-bold text-slate-300 dark:text-slate-500 mt-1 uppercase tracking-tighter italic">{report.category}</div>
-                        </td>
-                        <td className="p-8 text-[10px] font-black text-blue-500 dark:text-blue-400 uppercase italic opacity-70 group-hover:opacity-100">
-                          <button onClick={() => router.push(`/dashboard/companies/${report.companyId}`)} className="hover:underline text-left">
-                            {report.company?.name}
-                          </button>
-                        </td>
-                        <td className="p-8">
-                            <div className={`px-3 py-1 rounded-[4px] border text-[9px] font-black uppercase tracking-widest w-fit shadow-sm ${bgStatus(report.status)}`}>
-                                {report.status?.replace("_", " ")}
-                            </div>
-                        </td>
-                        <td className="p-8 text-[10px] font-bold text-slate-400 dark:text-slate-500 whitespace-nowrap italic"><Calendar size={12} className="inline mr-1" /> {new Date(report.createdAt).toLocaleDateString("tr-TR")}</td>
-                        <td className="p-8 text-right">
-                           <div className="flex items-center justify-end gap-2">
-                              <button onClick={() => setPreviewFile(report)} className="p-2.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-[4px] hover:bg-blue-600 hover:text-white transition-all shadow-sm"><Eye size={16} /></button>
-                              <a href={report.fileUrl} target="_blank" className="p-2.5 bg-slate-900 dark:bg-slate-700 text-white rounded-[4px] hover:bg-blue-600 transition-all shadow-md"><ExternalLink size={16} /></a>
-                           </div>
-                        </td>
-                    </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+      <Table
+        rowSelection={{
+          selectedRowKeys: selectedIds,
+          onChange: (keys) => setSelectedIds(keys as string[]),
+        }}
+        columns={columns}
+        dataSource={reports}
+        rowKey="id"
+        pagination={{ 
+          pageSize: 10, 
+          position: ["bottomCenter"],
+          showSizeChanger: false,
+          className: "premium-pagination"
+        }}
+        className="ant-table-premium"
+        locale={{ emptyText: "Rapor bulunamadı" }}
+      />
 
-        {/* FLOATING ACTION BAR */}
-        {selectedIds.length > 0 && (
-           <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[300] animate-in slide-in-from-bottom-10 duration-500">
-              <div className="bg-slate-900 text-white px-8 py-5 rounded-[4px] shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-slate-800 flex items-center gap-8 backdrop-blur-md italic font-medium">
-                 <div className="flex items-center gap-3 pr-8 border-r border-slate-700">
-                    <div className="w-10 h-10 bg-blue-600 rounded-[4px] flex items-center justify-center font-black text-lg shadow-lg">{selectedIds.length}</div>
-                    <span className="text-xs font-black uppercase tracking-widest">Dosya Seçildi</span>
-                 </div>
-                 
-                 <div className="flex items-center gap-3">
-                    <button 
-                     onClick={() => setShowBulkModal("status")}
-                     className="flex items-center gap-2 px-6 py-2.5 bg-white/10 hover:bg-white/20 rounded-[4px] text-[10px] font-black uppercase tracking-widest transition-all"
-                    >
-                       <CheckSquare size={16} className="text-emerald-400" /> Toplu Durum Değiştir
-                    </button>
-                    <button 
-                     onClick={() => setShowBulkModal("delete")}
-                     className="flex items-center gap-2 px-6 py-2.5 bg-rose-500/20 hover:bg-rose-500 text-rose-100 rounded-[4px] text-[10px] font-black uppercase tracking-widest transition-all"
-                    >
-                       <Trash2 size={16} /> Toplu Sil
-                    </button>
-                    <button onClick={() => setSelectedIds([])} className="p-2.5 text-slate-500 hover:text-white transition-colors border-l border-slate-700 ml-2"><X size={18} /></button>
-                 </div>
-              </div>
+      <style jsx global>{`
+        .ant-table-premium {
+          background: transparent !important;
+        }
+        .ant-table-premium .ant-table {
+          background: transparent !important;
+          color: #94a3b8 !important;
+        }
+        .ant-table-premium .ant-table-thead > tr > th {
+          background: #09090b !important;
+          color: #52525b !important;
+          font-size: 9px !important;
+          font-weight: 900 !important;
+          letter-spacing: 0.15em !important;
+          text-transform: uppercase !important;
+          padding: 20px 24px !important;
+          border-bottom: 1px solid #27272a !important;
+        }
+        .ant-table-premium .ant-table-tbody > tr > td {
+          padding: 20px 24px !important;
+          border-bottom: 1px solid #27272a !important;
+          transition: all 0.3s ease !important;
+        }
+        .ant-table-premium .ant-table-tbody > tr:hover > td {
+          background: #f8fafc !important;
+        }
+        .dark .ant-table-premium .ant-table-tbody > tr:hover > td {
+          background: #18181b !important;
+        }
+        .status-select-mini {
+          width: 32px !important;
+        }
+        .status-select-mini .ant-select-selection-item {
+          display: none !important;
+        }
+        .premium-pagination.ant-pagination {
+          margin-top: 32px !important;
+          margin-bottom: 32px !important;
+        }
+        .premium-pagination .ant-pagination-item {
+          border-radius: 4px !important;
+          border: 1px solid #e2e8f0 !important;
+          background: white !important;
+          font-family: inherit !important;
+          font-weight: 900 !important;
+          font-size: 11px !important;
+        }
+        .dark .premium-pagination .ant-pagination-item {
+          background: #09090b !important;
+          border-color: #18181b !important;
+        }
+        .premium-pagination .ant-pagination-item-active {
+          background: #4f46e5 !important;
+          border-color: #4f46e5 !important;
+        }
+        .premium-pagination .ant-pagination-item-active a {
+          color: white !important;
+        }
+        .dark .premium-pagination .ant-pagination-item a {
+          color: #3f3f46 !important;
+        }
+        .dark .premium-pagination .ant-pagination-item-active a {
+          color: white !important;
+        }
+      `}</style>
+
+      {/* FLOATING ACTION BAR */}
+      {selectedIds.length > 0 && (
+         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[300] animate-in slide-in-from-bottom-10 duration-500">
+            <div className="bg-slate-900 text-white px-8 py-5 rounded-[4px] shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-slate-800 flex items-center gap-8 backdrop-blur-md italic font-medium">
+               <div className="flex items-center gap-3 pr-8 border-r border-slate-700">
+                  <div className="w-10 h-10 bg-blue-600 rounded-[4px] flex items-center justify-center font-black text-lg shadow-lg">{selectedIds.length}</div>
+                  <span className="text-xs font-black uppercase tracking-widest">Seçili</span>
+               </div>
+               <div className="flex items-center gap-3">
+                  <button onClick={() => setShowBulkModal("status")} className="flex items-center gap-2 px-6 py-2.5 bg-white/10 hover:bg-white/20 rounded-[4px] text-[10px] font-black uppercase tracking-widest transition-all">
+                     <CheckSquare size={16} className="text-emerald-400" /> Durum
+                  </button>
+                  <button onClick={() => setShowBulkModal("delete")} className="flex items-center gap-2 px-6 py-2.5 bg-rose-500/20 hover:bg-rose-500 text-rose-100 rounded-[4px] text-[10px] font-black uppercase tracking-widest transition-all">
+                     <Trash2 size={16} /> Sil
+                  </button>
+                  <button onClick={() => setSelectedIds([])} className="p-2.5 text-slate-500 hover:text-white transition-colors border-l border-slate-700 ml-2"><X size={18} /></button>
+               </div>
             </div>
-         )}
-        {showBulkModal === "status" && (
-           <div className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-in fade-in">
-              <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[4px] shadow-2xl p-10 space-y-8 animate-in zoom-in-95 border dark:border-slate-800">
-                 <div className="text-center space-y-2">
-                    <h3 className="text-3xl font-black italic uppercase tracking-tighter text-slate-900 dark:text-white leading-none">TOPLU STATÜ</h3>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">{selectedIds.length} DOSYA GÜNCELLENECEK</p>
-                 </div>
-                 <div className="grid grid-cols-1 gap-2">
-                    {["BEKLEMEDE", "AKSIYON_GEREKLI", "COZULDU"].map((s) => (
-                       <button key={s} onClick={() => setBulkNewStatus(s)} className={`p-4 rounded-[4px] border-2 text-[10px] font-black uppercase tracking-widest transition-all ${bulkNewStatus === s ? "bg-blue-50 dark:bg-blue-900/30 border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-md" : "border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-600"}`}>
-                          {s.replace("_", " ")}
-                       </button>
-                    ))}
-                 </div>
-                 <div className="flex gap-2 pt-4">
-                    <button onClick={() => setShowBulkModal(null)} className="flex-1 p-4 text-[10px] font-black uppercase text-slate-400 dark:text-slate-600">Vazgeç</button>
-                    <button onClick={handleBulkStatusUpdate} disabled={isBulkProcessing} className="flex-2 p-4 bg-blue-600 text-white rounded-[4px] text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-2">
-                       {isBulkProcessing ? <Loader2 className="animate-spin" size={14} /> : "GÜNCELLEMEYİ ONAYLA"}
-                    </button>
-                 </div>
-              </div>
-           </div>
-        )}
+          </div>
+       )}
 
-         {showBulkModal === "delete" && (
-           <div className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-in fade-in">
-              <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[4px] shadow-2xl p-10 space-y-8 animate-in zoom-in-95 border-t-8 border-rose-600 dark:border-rose-500 shadow-[0_20px_50px_rgba(244,63,94,0.15)]">
-                 <div className="text-center space-y-2">
-                    <h3 className="text-3xl font-black italic uppercase tracking-tighter text-rose-600 dark:text-rose-400 leading-none">TOPLU SİLME</h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 font-bold leading-relaxed uppercase tracking-widest px-4">{selectedIds.length} Adet rapor sistemden kalıcı olarak temizlenecektir.</p>
-                 </div>
-                 <div className="flex gap-2">
-                    <button onClick={() => setShowBulkModal(null)} className="flex-1 p-4 text-[10px] font-black uppercase text-slate-400 dark:text-slate-600">İptal</button>
-                    <button onClick={handleBulkDelete} disabled={isBulkProcessing} className="flex-2 p-4 bg-rose-600 text-white rounded-[4px] text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-2">
-                       {isBulkProcessing ? <Loader2 className="animate-spin" size={14} /> : "KALICI OLARAK SİL"}
-                    </button>
-                 </div>
-              </div>
-           </div>
-        )}
+      {/* BULK MODALS */}
+      <Modal
+        title={null}
+        footer={null}
+        open={showBulkModal === "status"}
+        onCancel={() => setShowBulkModal(null)}
+        centered
+        className="premium-modal"
+      >
+        <div className="p-6 space-y-6">
+          <div className="text-center space-y-2">
+            <h3 className="text-2xl font-black italic uppercase tracking-tighter dark:text-white">Toplu Statü Güncelle</h3>
+            <p className="text-[10px] text-slate-400 dark:text-zinc-600 font-bold uppercase tracking-widest">{selectedIds.length} DOSYA SEÇİLDİ</p>
+          </div>
+          <div className="grid grid-cols-1 gap-2">
+            {["BEKLEMEDE", "AKSIYON_GEREKLI", "COZULDU"].map((s) => (
+              <button key={s} onClick={() => setBulkNewStatus(s)} className={`p-4 rounded-[4px] border-2 text-[10px] font-black uppercase tracking-widest transition-all ${bulkNewStatus === s ? "bg-blue-600 text-white border-blue-600 shadow-xl" : "dark:bg-zinc-800 border-transparent text-slate-400"}`}>
+                {s.replace("_", " ")}
+              </button>
+            ))}
+          </div>
+          <Button 
+            onClick={handleBulkStatusUpdate} 
+            loading={isBulkProcessing}
+            className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white border-none font-black uppercase tracking-widest text-[10px] rounded-[4px] shadow-2xl"
+          >
+            DEĞİŞİKLİKLERİ ONAYLA
+          </Button>
+        </div>
+      </Modal>
 
-        <FilePreview isOpen={!!previewFile} onClose={() => setPreviewFile(null)} file={previewFile} />
+      <Modal
+        title={null}
+        footer={null}
+        open={showBulkModal === "delete"}
+        onCancel={() => setShowBulkModal(null)}
+        centered
+        className="premium-modal"
+      >
+        <div className="p-6 space-y-6 text-center">
+           <div className="w-20 h-20 bg-rose-100 dark:bg-rose-900/30 text-rose-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
+              <Trash2 size={40} />
+           </div>
+           <div className="space-y-2">
+              <h3 className="text-2xl font-black italic uppercase tracking-tighter dark:text-white">Emin Misiniz?</h3>
+              <p className="text-xs text-slate-500 dark:text-zinc-500 font-bold uppercase tracking-widest leading-relaxed">
+                {selectedIds.length} adet rapor kalıcı olarak silinecektir. <br/> Bu işlem geri alınamaz.
+              </p>
+           </div>
+           <div className="flex gap-3">
+              <Button onClick={() => setShowBulkModal(null)} className="flex-1 h-12 font-black uppercase text-[10px] dark:bg-zinc-800 dark:text-white border-none">VAZGEÇ</Button>
+              <Button onClick={handleBulkDelete} loading={isBulkProcessing} className="flex-1 h-12 bg-rose-600 hover:bg-rose-700 text-white border-none font-black uppercase text-[10px]">EVET, SİL</Button>
+           </div>
+        </div>
+      </Modal>
+
+      <FilePreview isOpen={!!previewFile} onClose={() => setPreviewFile(null)} file={previewFile} />
     </div>
   );
 }
