@@ -13,6 +13,7 @@ out/
 build/
 dist/
 .turbo/
+next-env.d.ts
 
 # =========================================
 # 3. ENVIRONMENT VARIABLES
