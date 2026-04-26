@@ -34,6 +34,7 @@ model User {
 
   // CRM Relations
   leadActivities       LeadActivity[]
+  leaveRequests        LeaveRequest[]
 }
 
 model Account {
@@ -414,6 +415,7 @@ enum Role {
   ADMIN
   EXPERT
   CLIENT
+  HR_MANAGER
 }
 
 model Lead {
@@ -444,6 +446,77 @@ model LeadActivity {
   tenantId    String
   deletedAt   DateTime?
   createdAt   DateTime  @default(now())
+
+  @@index([tenantId])
+}
+
+enum JobStatus {
+  ACTIVE
+  DRAFT
+  CLOSED
+}
+
+model JobPosting {
+  id          String      @id @default(cuid())
+  title       String
+  description String      @db.Text
+  status      JobStatus   @default(DRAFT)
+  tenantId    String
+  candidates  Candidate[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([tenantId])
+}
+
+enum CandidateStatus {
+  NEW
+  REVIEW
+  INTERVIEW
+  REJECTED
+  HIRED
+}
+
+model Candidate {
+  id           String          @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String
+  phone        String?
+  cvUrl        String?
+  status       CandidateStatus @default(NEW)
+  appliedForId String
+  jobPosting   JobPosting      @relation(fields: [appliedForId], references: [id])
+  tenantId     String
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([tenantId])
+}
+
+enum LeaveType {
+  ANNUAL
+  SICK
+  EXCUSE
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model LeaveRequest {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  startDate DateTime
+  endDate   DateTime
+  type      LeaveType
+  status    LeaveStatus @default(PENDING)
+  tenantId  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
   @@index([tenantId])
 }

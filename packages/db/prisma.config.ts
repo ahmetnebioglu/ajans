@@ -1,11 +1,15 @@
-import { defineConfig } from '@prisma/config'
+import { defineConfig } from "@prisma/config";
 
 export default defineConfig({
   datasource: {
-    url: process.env.DATABASE_URL || "postgresql://root:rootpassword@localhost:5433/agency_master_db?schema=public",
-    directUrl: process.env.DIRECT_URL || "postgresql://root:rootpassword@localhost:5433/agency_master_db?schema=public",
+    url:
+      process.env.DATABASE_URL ||
+      "postgresql://root:rootpassword@localhost:5433/agency_master_db?schema=public",
+    directUrl:
+      process.env.DIRECT_URL ||
+      "postgresql://root:rootpassword@localhost:5433/agency_master_db?schema=public",
   },
   migrations: {
     seed: "npx tsx prisma/seed.ts",
   },
-})
+});

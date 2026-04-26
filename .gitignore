@@ -49,6 +49,8 @@ lerna-debug.log*
 # =========================================
 coverage/
 .nyc_output/
+playwright-report/
+test-results/
 
 # =========================================
 # 7. OS & EDITOR FILES
