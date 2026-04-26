@@ -32,11 +32,19 @@ export default function Footer() {
           <div className="space-y-8">
              <h4 className="text-sm font-bold uppercase tracking-tight text-slate-900 italic border-l-2 border-corporate-blue pl-4">Hızlı Erişim</h4>
              <ul className="space-y-4">
-                {['Anasayfa', 'Kurumsal', 'Hizmetlerimiz', 'İSG Kütüphanesi', 'Haberler', 'İletişim'].map(item => (
-                  <li key={item}>
-                    <Link href="#" className="text-slate-500 text-[11px] font-bold uppercase tracking-widest hover:text-corporate-blue transition-colors">{item}</Link>
-                  </li>
-                ))}
+               {[
+                 { name: 'Anasayfa', href: '/' },
+                 { name: 'Kurumsal', href: '/kurumsal' },
+                 { name: 'Hizmetlerimiz', href: '/hizmetlerimiz' },
+                 { name: 'İSG Kütüphanesi', href: '/isg-evrak-destegi' },
+                 { name: 'Haberler', href: '/haberler' },
+                 { name: 'Kariyer', href: '/kariyer' },
+                 { name: 'İletişim', href: '/iletisim' }
+               ].map(item => (
+                 <li key={item.name}>
+                   <Link href={item.href} className="text-slate-500 text-[11px] font-bold uppercase tracking-widest hover:text-corporate-blue transition-colors">{item.name}</Link>
+                 </li>
+               ))}
              </ul>
           </div>
 

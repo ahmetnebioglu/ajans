@@ -11,6 +11,7 @@ const navLinks = [
   { name: "Referanslar", href: "/referanslar" },
   { name: "İSG Kütüphanesi", href: "/isg-evrak-destegi" },
   { name: "Haberler", href: "/haberler" },
+  { name: "Kariyer", href: "/kariyer" },
   { name: "İletişim", href: "/iletisim" },
 ];
 
