@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { Layout, Menu, Dropdown, Avatar, Tag, Divider, ConfigProvider, theme as antdTheme } from "antd";
+import { Layout, Menu, Dropdown, Avatar, Tag, Divider, ConfigProvider, Switch, theme as antdTheme } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { 
   LayoutDashboard, 
   Building2, 
@@ -27,7 +28,9 @@ import {
   Calendar,
   Contact,
   LineChart,
-  ClipboardList
+  ClipboardList,
+  Sun,
+  Moon
 } from "lucide-react";
 
 const { Sider } = Layout;
@@ -92,8 +95,11 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
+  const { theme, setTheme } = useTheme();
   const config = MODULE_CONFIG[module];
   const user = session?.user;
+
+  const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const moduleSwitcherItems = [
     {
@@ -166,8 +172,8 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
       collapsed={collapsed}
       onCollapse={onCollapse}
       width={260}
-      theme="dark"
-      className="z-50 border-r border-white/5"
+      theme={isDark ? "dark" : "light"}
+      className={`z-50 border-r ${isDark ? 'border-white/5' : 'border-slate-200'}`}
       style={{
         background: "transparent",
         height: "100vh",
@@ -201,7 +207,7 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
         {/* MAIN NAV */}
         <div className="flex-1 overflow-y-auto px-3 py-4 hide-those-scrollbars">
           <Menu
-            theme="dark"
+            theme={isDark ? "dark" : "light"}
             mode="inline"
             selectedKeys={[pathname]}
             items={config.items}
@@ -221,11 +227,21 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
                  placement="topRight"
                  classNames={{ root: "premium-dropdown" }}
                >
-                 <button className="w-12 h-12 rounded-[4px] bg-zinc-900 border border-zinc-800 flex items-center justify-center text-slate-500 hover:text-white transition-colors relative group">
+                 <button className={`w-12 h-12 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 text-slate-500' : 'bg-white border-slate-200 text-slate-400'} border flex items-center justify-center hover:text-blue-500 transition-colors relative group`}>
                     <Bell size={20} />
-                    <span className="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-zinc-900 group-hover:animate-ping" />
+                    <span className={`absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 ${isDark ? 'border-zinc-900' : 'border-white'} group-hover:animate-ping`} />
                  </button>
                </Dropdown>
+            </div>
+
+            {/* THEME SWITCHER */}
+            <div className="flex-shrink-0">
+              <button 
+                onClick={() => setTheme(isDark ? "light" : "dark")}
+                className={`w-12 h-12 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 text-slate-500' : 'bg-white border-slate-200 text-slate-400'} border flex items-center justify-center hover:text-blue-500 transition-colors group`}
+              >
+                {isDark ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} className="text-indigo-400" />}
+              </button>
             </div>
 
             {/* PROFILE DROPDOWN */}
@@ -235,7 +251,7 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
               placement="topRight"
               classNames={{ root: "premium-dropdown" }}
             >
-              <button className={`flex-1 h-12 flex items-center gap-3 px-2 rounded-[4px] bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all text-left group ${collapsed ? 'justify-center' : ''}`}>
+              <button className={`flex-1 h-12 flex items-center gap-3 px-2 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 hover:border-zinc-700' : 'bg-white border-slate-200 hover:border-slate-300'} border transition-all text-left group ${collapsed ? 'justify-center' : ''}`}>
                 <Avatar 
                   src={user?.image} 
                   shape="square" 
@@ -246,10 +262,10 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
                 {!collapsed && (
                   <>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-black text-white uppercase truncate tracking-tight leading-none mb-1">{user?.name || "Kullanıcı"}</div>
+                      <div className={`text-[10px] font-black uppercase truncate tracking-tight leading-none mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>{user?.name || "Kullanıcı"}</div>
                       <div className="text-[8px] font-bold text-slate-500 uppercase tracking-widest truncate leading-none">{((user as any)?.role || "USER")}</div>
                     </div>
-                    <ChevronUp size={14} className="text-slate-600 group-hover:text-white transition-colors" />
+                    <ChevronUp size={14} className={`${isDark ? 'text-slate-600' : 'text-slate-400'} group-hover:text-blue-500 transition-colors`} />
                   </>
                 )}
               </button>
@@ -259,10 +275,11 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
       </div>
 
       <style jsx global>{`
-        .premium-unified-menu.ant-menu-dark {
+        .premium-unified-menu.ant-menu {
           background: transparent !important;
+          border: none !important;
         }
-        .premium-unified-menu.ant-menu-dark .ant-menu-item {
+        .premium-unified-menu.ant-menu .ant-menu-item {
           height: 48px !important;
           line-height: 48px !important;
           margin-bottom: 8px !important;
@@ -272,21 +289,21 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
           font-size: 10px !important;
           font-style: italic !important;
           border-radius: 6px !important;
-          background: transparent !important;
-          color: rgba(255,255,255,0.5) !important;
-        }
-        .premium-unified-menu.ant-menu-dark .ant-menu-item:hover {
-          color: #fff !important;
-          background: rgba(255,255,255,0.05) !important;
-        }
-        .premium-unified-menu.ant-menu-dark .ant-menu-item-selected {
-          background-color: transparent !important;
-          color: #fff !important;
-          border: 1px solid ${config.color}50 !important;
-          box-shadow: inset 0 0 10px ${config.color}20 !important;
-          position: relative;
-        }
-        .premium-unified-menu.ant-menu-dark .ant-menu-item-selected::after {
+           background: transparent !important;
+           color: ${isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'} !important;
+         }
+         .premium-unified-menu.ant-menu .ant-menu-item:hover {
+           color: ${isDark ? '#fff' : '#000'} !important;
+           background: ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} !important;
+         }
+         .premium-unified-menu.ant-menu .ant-menu-item-selected {
+           background-color: transparent !important;
+           color: ${isDark ? '#fff' : '#000'} !important;
+           border: 1px solid ${config.color}50 !important;
+           box-shadow: inset 0 0 10px ${config.color}20 !important;
+           position: relative;
+         }
+         .premium-unified-menu.ant-menu .ant-menu-item-selected::after {
           content: "";
           position: absolute;
           left: 0;
@@ -298,10 +315,10 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
           border: none !important;
         }
         .premium-dropdown .ant-dropdown-menu {
-          background: #0f172a !important;
-          border: 1px solid rgba(255,255,255,0.05) !important;
+          background: ${isDark ? "#0f172a" : "#ffffff"} !important;
+          border: 1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} !important;
           padding: 8px !important;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
+          box-shadow: 0 20px 50px ${isDark ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.1)"} !important;
         }
         .premium-dropdown .ant-dropdown-menu-item {
           font-size: 11px !important;
