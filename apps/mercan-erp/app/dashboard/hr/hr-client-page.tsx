@@ -113,7 +113,7 @@ export default function HRDashboardPage() {
                   title={<Text className="text-[10px] font-black uppercase tracking-widest text-slate-400">{s.title}</Text>}
                   value={s.value}
                   prefix={s.icon}
-                  valueStyle={{ fontWeight: 900, fontStyle: "italic", fontSize: "32px", letterSpacing: "-0.05em" }}
+                  styles={{ content: { fontWeight: 900, fontStyle: "italic", fontSize: "32px", letterSpacing: "-0.05em" } }}
                 />
               </Skeleton>
             </Card>

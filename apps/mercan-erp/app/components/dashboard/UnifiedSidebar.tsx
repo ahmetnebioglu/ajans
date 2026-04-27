@@ -220,7 +220,7 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
                   type: 'group',
                   children: [
                     { key: "/dashboard/system/users", icon: <Shield size={18} />, label: "Kullanıcılar" },
-                    { key: "/dashboard/system/logs", icon: <History size={18} />, label: "Sistem Günlüğü" },
+                    { key: "/dashboard/logs", icon: <History size={18} />, label: "Sistem Günlüğü" },
                   ]
                 }
               ] : [])
@@ -230,60 +230,65 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
           />
         </div>
 
-        {/* PROFILE CARD & NOTIFICATIONS */}
-        <div className="p-4 border-t border-white/5 bg-transparent">
+        {/* PROFILE SECTION - DISCORD STYLE */}
+        <div className="p-3 border-t border-white/5 bg-transparent">
           <div className={`flex items-center gap-2 ${collapsed ? 'flex-col' : ''}`}>
-            {/* NOTIFICATION BELL */}
-            <div className="flex-shrink-0">
-               <Dropdown
-                 menu={{ items: notificationItems }}
-                 trigger={['click']}
-                 placement="topRight"
-                 classNames={{ root: "premium-dropdown" }}
-               >
-                 <button className={`w-12 h-12 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-500'} border flex items-center justify-center hover:text-blue-500 transition-colors relative group`}>
-                    <Bell size={20} />
-                    <span className={`absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 ${isDark ? 'border-zinc-900' : 'border-white'} group-hover:animate-ping`} />
-                 </button>
-               </Dropdown>
+            {/* STATIC PROFILE INFO */}
+            <div className={`flex items-center gap-2 ${collapsed ? 'justify-center w-full' : 'flex-1 min-w-0'}`}>
+              <Avatar 
+                src={user?.image} 
+                shape="square" 
+                size={collapsed ? 36 : 32}
+                className="bg-indigo-600 border border-white/10 shadow-md shrink-0"
+                icon={<User size={18} />} 
+              />
+              {!collapsed && (
+                <div className="flex-1 min-w-0">
+                  <div className={`text-[10px] font-black uppercase truncate tracking-tight leading-none mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                    {user?.name || "Kullanıcı"}
+                  </div>
+                  <div className="text-[8px] font-bold text-slate-500 uppercase tracking-widest truncate leading-none">
+                    {(userRole || "USER")}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* THEME SWITCHER */}
-            <div className="flex-shrink-0">
-               <button 
-                onClick={() => setTheme(isDark ? "light" : "dark")}
-                className={`w-12 h-12 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-500'} border flex items-center justify-center hover:text-blue-500 transition-colors group`}
+            {/* ACTION BUTTONS (Discord style mini buttons) */}
+            <div className={`flex items-center gap-1 ${collapsed ? 'flex-col mt-2' : ''}`}>
+              {/* NOTIFICATIONS */}
+              <Dropdown
+                menu={{ items: notificationItems }}
+                trigger={['click']}
+                placement="topRight"
+                classNames={{ root: "premium-dropdown" }}
               >
-                {isDark ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} className="text-indigo-400" />}
-              </button>
-            </div>
+                <button className={`w-8 h-8 rounded-[4px] ${isDark ? 'bg-zinc-900 hover:bg-zinc-800 text-slate-500' : 'bg-slate-50 hover:bg-slate-100 text-slate-500'} flex items-center justify-center transition-colors relative group`}>
+                  <Bell size={16} />
+                  <span className={`absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full border border-${isDark ? 'zinc-900' : 'white'} group-hover:animate-ping`} />
+                </button>
+              </Dropdown>
 
-            {/* PROFILE DROPDOWN */}
-             <Dropdown
-              menu={{ items: moduleSwitcherItems, onClick: handleMenuClick }}
-              trigger={['click']}
-              placement="topRight"
-              classNames={{ root: "premium-dropdown" }}
-            >
-              <button className={`flex-1 h-12 flex items-center gap-3 px-2 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 hover:border-zinc-700' : 'bg-slate-50 border-slate-200 hover:border-slate-300'} border transition-all text-left group ${collapsed ? 'justify-center' : ''}`}>
-                <Avatar 
-                  src={user?.image} 
-                  shape="square" 
-                  size={32}
-                  className="bg-indigo-600 border border-white/10 shadow-md shrink-0"
-                  icon={<User size={18} />} 
-                />
-                {!collapsed && (
-                  <>
-                    <div className="flex-1 min-w-0">
-                      <div className={`text-[10px] font-black uppercase truncate tracking-tight leading-none mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>{user?.name || "Kullanıcı"}</div>
-                      <div className="text-[8px] font-bold text-slate-500 uppercase tracking-widest truncate leading-none">{((user as any)?.role || "USER")}</div>
-                    </div>
-                    <ChevronUp size={14} className={`${isDark ? 'text-slate-600' : 'text-slate-400'} group-hover:text-blue-500 transition-colors`} />
-                  </>
-                )}
+              {/* THEME */}
+              <button 
+                onClick={() => setTheme(isDark ? "light" : "dark")}
+                className={`w-8 h-8 rounded-[4px] ${isDark ? 'bg-zinc-900 hover:bg-zinc-800 text-slate-500' : 'bg-slate-50 hover:bg-slate-100 text-slate-500'} flex items-center justify-center transition-colors group`}
+              >
+                {isDark ? <Sun size={16} className="text-amber-500" /> : <Moon size={16} className="text-indigo-400" />}
               </button>
-            </Dropdown>
+
+              {/* MODULE SWITCHER (SETTINGS) */}
+              <Dropdown
+                menu={{ items: moduleSwitcherItems, onClick: handleMenuClick }}
+                trigger={['click']}
+                placement="topRight"
+                classNames={{ root: "premium-dropdown" }}
+              >
+                <button className={`w-8 h-8 rounded-[4px] ${isDark ? 'bg-zinc-900 hover:bg-zinc-800 text-slate-500' : 'bg-slate-50 hover:bg-slate-100 text-slate-500'} flex items-center justify-center transition-colors group`}>
+                  <Settings size={16} className="group-hover:rotate-45 transition-transform duration-300" />
+                </button>
+              </Dropdown>
+            </div>
           </div>
         </div>
       </div>

@@ -26,7 +26,7 @@ export default function CustomerDashboard() {
              <Statistic 
                title={<span className="text-white/70 text-[10px] font-black uppercase tracking-widest">Aktif Firmalar</span>}
                value={2} 
-               valueStyle={{ color: 'white', fontWeight: 900, fontSize: '32px' }}
+               styles={{ content: { color: 'white', fontWeight: 900, fontSize: '32px' } }}
                prefix={<Building2 className="text-white/50 mr-2" />}
              />
           </Card>
@@ -36,7 +36,7 @@ export default function CustomerDashboard() {
              <Statistic 
                title={<span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Toplam Raporlar</span>}
                value={48} 
-               valueStyle={{ color: '#4f46e5', fontWeight: 900, fontSize: '32px' }}
+               styles={{ content: { color: '#4f46e5', fontWeight: 900, fontSize: '32px' } }}
                prefix={<FileText className="text-slate-200 mr-2" />}
              />
           </Card>
@@ -46,7 +46,7 @@ export default function CustomerDashboard() {
              <Statistic 
                title={<span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Bekleyen İşlemler</span>}
                value={3} 
-               valueStyle={{ color: '#f59e0b', fontWeight: 900, fontSize: '32px' }}
+               styles={{ content: { color: '#f59e0b', fontWeight: 900, fontSize: '32px' } }}
                prefix={<Clock className="text-slate-200 mr-2" />}
              />
           </Card>
@@ -56,7 +56,7 @@ export default function CustomerDashboard() {
              <Statistic 
                title={<span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Sistem Durumu</span>}
                value="Aktif" 
-               valueStyle={{ color: '#10b981', fontWeight: 900, fontSize: '24px', textTransform: 'uppercase' }}
+               styles={{ content: { color: '#10b981', fontWeight: 900, fontSize: '24px', textTransform: 'uppercase' } }}
                prefix={<CheckCircle2 className="text-slate-200 mr-2" size={24} />}
              />
           </Card>

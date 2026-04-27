@@ -211,7 +211,7 @@ export default function ReportsTable({
         rowKey="id"
         pagination={{ 
           pageSize: 10, 
-          position: ["bottomCenter"],
+          placement: ["bottomCenter"],
           showSizeChanger: false,
           className: "premium-pagination"
         }}

@@ -33,17 +33,28 @@ export const authOptions: NextAuthOptions = {
               admin: "ADMIN",
               customer: "CUSTOMER",
               expert: "EXPERT",
+              uzman: "EXPERT",
               hr: "HR_MANAGER"
             };
             const assignedRole = roleMap[prefix] || "USER";
             
-            return {
-              id: `test-${prefix}-id`,
-              name: `Mercan Test ${prefix.toUpperCase()}`,
-              email: credentials.email,
-              role: assignedRole,
-              tenantId: "mercan",
-            } as any;
+            // Veritabanında bu test kullanıcısının var olduğundan emin ol (FK hatalarını önlemek için)
+            const testUser = await prisma.user.upsert({
+              where: { email: credentials.email },
+              update: { 
+                role: assignedRole as any,
+                tenantId: "mercan"
+              },
+              create: {
+                id: `test-${prefix}-id`,
+                email: credentials.email,
+                name: `Mercan Test ${prefix.toUpperCase()}`,
+                role: assignedRole as any,
+                tenantId: "mercan",
+              }
+            });
+
+            return testUser;
           }
 
           const user = await prisma.user.findUnique({

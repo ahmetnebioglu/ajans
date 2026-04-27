@@ -283,7 +283,7 @@ export default function MailManagementPage() {
           dataSource={filteredUsers} 
           loading={loading}
           rowKey="primaryEmail"
-          pagination={{ pageSize: 10, position: ['bottomRight'] }}
+          pagination={{ pageSize: 10, placement: 'bottomRight' }}
           className="mercan-table"
           locale={{ emptyText: <Empty description="Kullanıcı bulunamadı" /> }}
         />

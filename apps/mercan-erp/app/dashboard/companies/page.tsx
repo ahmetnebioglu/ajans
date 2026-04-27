@@ -67,10 +67,12 @@ export default function CompaniesPage() {
       name: newName, 
       driveFolderId: newFolderId 
     });
-    if (res && (res as any).id) {
+    if (res.success) {
       setNewName("");
       setNewFolderId("");
-      loadCompanies();
+      await loadCompanies();
+    } else {
+      alert(res.error || "Firma eklenirken bir hata oluştu.");
     }
     setIsSubmitting(false);
   };

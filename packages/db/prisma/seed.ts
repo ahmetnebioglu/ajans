@@ -7,20 +7,38 @@ async function main() {
   // 1. USERS
   const admin = await prisma.user.upsert({
     where: { email: "admin@mercan.test" },
-    update: {},
-    create: { email: "admin@mercan.test", name: "Mercan Admin", role: "ADMIN", tenantId: "mercan" },
+    update: { id: "test-admin-id" },
+    create: { 
+      id: "test-admin-id",
+      email: "admin@mercan.test", 
+      name: "Mercan Admin", 
+      role: "ADMIN", 
+      tenantId: "mercan" 
+    },
   });
 
   const expert = await prisma.user.upsert({
     where: { email: "uzman@mercan.test" },
-    update: {},
-    create: { email: "uzman@mercan.test", name: "İSG Uzmanı Ahmet", role: "EXPERT", tenantId: "mercan" },
+    update: { id: "test-uzman-id" },
+    create: { 
+      id: "test-uzman-id",
+      email: "uzman@mercan.test", 
+      name: "İSG Uzmanı Ahmet", 
+      role: "EXPERT", 
+      tenantId: "mercan" 
+    },
   });
 
   const hrManager = await prisma.user.upsert({
     where: { email: "hr@mercan.test" },
-    update: {},
-    create: { email: "hr@mercan.test", name: "İK Müdürü Selin", role: "HR_MANAGER", tenantId: "mercan" },
+    update: { id: "test-hr-id" },
+    create: { 
+      id: "test-hr-id",
+      email: "hr@mercan.test", 
+      name: "İK Müdürü Selin", 
+      role: "HR_MANAGER", 
+      tenantId: "mercan" 
+    },
   });
 
   // 2. COMPANIES (Pagination Test - 25 Companies)

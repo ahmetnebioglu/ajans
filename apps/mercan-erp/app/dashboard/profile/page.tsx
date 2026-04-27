@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { 
   User as UserIcon, 
@@ -13,13 +13,25 @@ import {
   Lock,
   History,
   LogOut,
-  BarChart3
+  X,
+  Loader2,
+  Save,
+  Camera,
+  Upload
 } from "lucide-react";
-import { getUserSessions, killSession, killOtherSessions } from "../../actions/system-actions";
+import { getUserSessions, killSession, killOtherSessions, updateProfile } from "../../actions/system-actions";
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
-  const [sessions, setSessions] = React.useState<any[]>([]);
+  const { data: session, update: updateSession } = useSession();
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Edit States
+  const [editName, setEditName] = useState("");
+  const [editFile, setEditFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+
   const user = session?.user;
   const role = (user as any)?.role || "USER";
 
@@ -28,13 +40,56 @@ export default function ProfilePage() {
      if (res.success) setSessions(res.data || []);
   };
 
-  React.useEffect(() => {
-     if (user) loadSessions();
+  useEffect(() => {
+     if (user) {
+        loadSessions();
+        setEditName(user.name || "");
+        setPreviewUrl(user.image || "");
+     }
   }, [user]);
 
   const handleKillSession = async (id: string) => {
      const res = await killSession(id);
      if (res.success) loadSessions();
+  };
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    const formData = new FormData();
+    formData.append("name", editName);
+    if (editFile) {
+      formData.append("image", editFile);
+    }
+
+    const res = await updateProfile(formData);
+    
+    if (res.success) {
+      const updatedUser = (res as any).data.user;
+      await updateSession({
+        ...session,
+        user: {
+          ...session?.user,
+          name: updatedUser.name,
+          image: updatedUser.image,
+        }
+      });
+      setShowEditModal(false);
+      setEditFile(null);
+    } else {
+      alert(res.error || "Profil güncellenirken bir hata oluştu.");
+    }
+    setIsSubmitting(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setEditFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
   };
 
   return (
@@ -83,7 +138,10 @@ export default function ProfilePage() {
                    </div>
                 </div>
 
-                <button className="bg-slate-900 dark:bg-blue-600 text-white px-6 py-2.5 rounded-[4px] text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-blue-700 transition-all shadow-xl shadow-slate-900/20 dark:shadow-blue-600/20 active:scale-95 flex items-center gap-2">
+                <button 
+                  onClick={() => setShowEditModal(true)}
+                  className="bg-slate-900 dark:bg-blue-600 text-white px-6 py-2.5 rounded-[4px] text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-blue-700 transition-all shadow-xl shadow-slate-900/20 dark:shadow-blue-600/20 active:scale-95 flex items-center gap-2"
+                >
                    <Settings size={14} /> PROFİLİ DÜZENLE
                 </button>
             </div>
@@ -131,7 +189,7 @@ export default function ProfilePage() {
             </h3>
             <button 
                onClick={async () => {
-                  const res = await killOtherSessions(""); // Token logic can be refined
+                  const res = await killOtherSessions(""); 
                   if (res.success) loadSessions();
                }}
                className="text-[8px] font-black text-rose-600 hover:text-rose-500 uppercase tracking-widest transition-colors"
@@ -177,17 +235,73 @@ export default function ProfilePage() {
          </div>
       </div>
 
-      {/* SETTINGS PREVIEW */}
-      <div className="bg-slate-50 dark:bg-zinc-800/30 p-8 rounded-[4px] border border-slate-100 dark:border-zinc-800/50 flex flex-col md:flex-row items-center justify-between gap-6 italic">
-         <div className="space-y-1 text-center md:text-left">
-            <h4 className="text-xl font-black uppercase tracking-tighter text-slate-900 dark:text-white leading-none">GÜVENLİK AYARLARI</h4>
-            <p className="text-[9px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest px-1">İki adımlı doğrulama ve şifre yönetimi</p>
-         </div>
-         <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-[4px] text-[9px] font-black uppercase text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-800 transition-all shadow-sm">
-            <Lock size={14} /> GÜVENLİK KONTROLÜ
-         </button>
-      </div>
+      {/* EDIT MODAL */}
+      {showEditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/70 backdrop-blur-md animate-in fade-in duration-300">
+           <div className="bg-white dark:bg-zinc-900 w-full max-w-md rounded-[4px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-100 dark:border-zinc-800">
+              <div className="p-8 space-y-6">
+                 <div className="flex justify-between items-center">
+                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-slate-900 dark:text-white leading-none">PROFİLİ DÜZENLE</h3>
+                    <button onClick={() => setShowEditModal(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+                       <X size={24} />
+                    </button>
+                 </div>
 
+                 <form onSubmit={handleUpdateProfile} className="space-y-6">
+                    {/* Image Preview / Upload Section */}
+                    <div className="flex flex-col items-center gap-4">
+                       <div className="relative group">
+                          {previewUrl ? (
+                            <img src={previewUrl} className="w-28 h-28 rounded-[4px] object-cover border-2 border-slate-100 dark:border-zinc-800 shadow-xl" alt="Preview" />
+                          ) : (
+                            <div className="w-28 h-28 bg-slate-100 dark:bg-zinc-950 rounded-[4px] flex items-center justify-center text-slate-300 border-2 border-dashed border-slate-200 dark:border-zinc-800">
+                               <UserIcon size={40} />
+                            </div>
+                          )}
+                          <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-[4px]">
+                             <Camera className="text-white" size={24} />
+                             <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                          </label>
+                       </div>
+                       <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Fotoğrafı değiştirmek için üzerine tıklayın</p>
+                    </div>
+
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-1">Ad Soyad</label>
+                       <div className="relative">
+                          <UserIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                          <input 
+                            type="text" 
+                            required
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-[4px] text-xs font-bold outline-none focus:border-blue-500 transition-all italic"
+                          />
+                       </div>
+                    </div>
+
+                    <div className="pt-4 flex gap-3">
+                       <button 
+                         type="button"
+                         onClick={() => setShowEditModal(false)}
+                         className="flex-1 px-6 py-3 bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-slate-400 rounded-[4px] text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-zinc-750 transition-all"
+                       >
+                          İPTAL
+                       </button>
+                       <button 
+                         type="submit"
+                         disabled={isSubmitting}
+                         className="flex-1 px-6 py-3 bg-zinc-950 dark:bg-blue-600 text-white rounded-[4px] text-[10px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-blue-700 transition-all shadow-xl flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                       >
+                          {isSubmitting ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
+                          KAYDET
+                       </button>
+                    </div>
+                 </form>
+              </div>
+           </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -7,8 +7,17 @@ import { unsecured_prisma } from "@ajans/db";
 // --- ŞİRKET YÖNETİMİ FONKSİYONLARI ---
 
 export async function getCompanies() {
-  return protectedAction(async ({ db }) => {
+  return protectedAction(async ({ db, user }) => {
+    const isExpert = user.role === "EXPERT";
+    
     return await db.company.findMany({
+      where: isExpert ? {
+        userAccess: {
+          some: {
+            userId: user.id
+          }
+        }
+      } : {},
       include: {
         experts: true,
         _count: {
@@ -200,13 +209,28 @@ export async function getReports(
   sort: string = "createdAt",
   dir: "asc" | "desc" = "desc",
 ) {
-  return protectedAction(async ({ db }) => {
+  return protectedAction(async ({ db, user }) => {
+    const isExpert = user.role === "EXPERT";
+
     return await db.report.findMany({
       where: {
-        OR: [
-          { title: { contains: query, mode: "insensitive" } },
-          { company: { name: { contains: query, mode: "insensitive" } } },
-        ],
+        AND: [
+          isExpert ? {
+            company: {
+              userAccess: {
+                some: {
+                  userId: user.id
+                }
+              }
+            }
+          } : {},
+          {
+            OR: [
+              { title: { contains: query, mode: "insensitive" } },
+              { company: { name: { contains: query, mode: "insensitive" } } },
+            ],
+          }
+        ]
       },
       include: {
         company: true,
@@ -350,7 +374,19 @@ export async function createFolder(
 ) {
   console.log(`>>> [Action:createFolder] Name: ${name}, CompanyId: ${companyId}`);
   return protectedAction(async ({ db, user, tenantId }) => {
-    console.log(`>>> [Action:createFolder] Inside protectedAction. TenantId: ${tenantId}`);
+    // Yetki Kontrolü (Uzmanlar için)
+    if (user.role === "EXPERT") {
+      const hasAccess = await db.companyAccess.findUnique({
+        where: {
+          userId_companyId: {
+            userId: user.id,
+            companyId: companyId
+          }
+        }
+      });
+      if (!hasAccess) throw new Error("Bu firmada işlem yapma yetkiniz bulunmamaktadır.");
+    }
+
     await db.$transaction(async (tx) => {
       await tx.folder.create({
         data: { 

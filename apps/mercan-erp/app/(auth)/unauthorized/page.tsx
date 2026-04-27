@@ -1,31 +1,42 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Result, Button, ConfigProvider, theme } from "antd";
 import { useRouter } from "next/navigation";
 import { ShieldAlert } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export default function UnauthorizedPage() {
   const router = useRouter();
+  const { theme: currentTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const isDark = currentTheme === "dark";
 
   return (
     <ConfigProvider
       theme={{
-        algorithm: theme.darkAlgorithm,
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
           colorPrimary: "#f43f5e",
           borderRadius: 4,
         },
       }}
     >
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4 font-medium italic">
-        <div className="max-w-xl w-full bg-zinc-900 border border-zinc-800 p-8 rounded-[4px] shadow-2xl animate-in fade-in zoom-in duration-500">
+      <div className={`min-h-screen flex items-center justify-center p-4 font-medium italic transition-colors duration-500 ${isDark ? 'bg-zinc-950' : 'bg-slate-50'}`}>
+        <div className={`max-w-xl w-full p-8 rounded-[4px] shadow-2xl animate-in fade-in zoom-in duration-500 border ${isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-slate-200'}`}>
           <Result
             icon={<ShieldAlert size={64} className="text-rose-500 mx-auto mb-4 animate-bounce" />}
             status="error"
-            title={<span className="text-2xl font-black uppercase tracking-tighter text-white">Erişim Yetkiniz Yok</span>}
+            title={<span className={`text-2xl font-black uppercase tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>Erişim Yetkiniz Yok</span>}
             subTitle={
-              <span className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] leading-relaxed block mt-2">
+              <span className={`${isDark ? 'text-zinc-400' : 'text-slate-500'} font-bold uppercase tracking-widest text-[10px] leading-relaxed block mt-2`}>
                 Bu modüle erişmek için gerekli yetkilere sahip değilsiniz. <br />
                 Lütfen sistem yöneticinizle iletişime geçin.
               </span>
@@ -43,7 +54,7 @@ export default function UnauthorizedPage() {
               <Button 
                 key="back" 
                 type="link"
-                className="text-zinc-500 hover:text-white text-[9px] font-bold uppercase tracking-widest mt-4"
+                className={`${isDark ? 'text-zinc-500 hover:text-white' : 'text-slate-400 hover:text-slate-600'} text-[9px] font-bold uppercase tracking-widest mt-4`}
                 onClick={() => router.back()}
               >
                 Geri Dön
