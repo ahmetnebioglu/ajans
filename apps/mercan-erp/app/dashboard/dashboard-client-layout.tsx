@@ -95,18 +95,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }
         
         /* Unified Theme Refinement */
-        .ant-layout { background: ${isDark ? "#020617" : "#f1f5f9"} !important; }
+        .ant-layout { background: ${isDark ? "#020617" : "#f8fafc"} !important; }
         .ant-card { 
           background: ${isDark ? "#0f172a" : "#ffffff"} !important; 
           border-color: ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} !important; 
+          border-radius: 12px !important;
         }
         .ant-table { 
           background: ${isDark ? "#0f172a" : "#ffffff"} !important; 
           color: ${isDark ? "#cbd5e1" : "#1e293b"} !important; 
         }
         .ant-table-thead > tr > th { 
-          background: ${isDark ? "#1e293b" : "#f8fafc"} !important; 
-          color: ${isDark ? "#fff" : "#000"} !important; 
+          background: ${isDark ? "#1e293b" : "#f1f5f9"} !important; 
+          color: ${isDark ? "#fff" : "#0f172a"} !important; 
           border-bottom: 1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} !important; 
         }
         .ant-table-cell { 
@@ -116,14 +117,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         .ant-typography-secondary { color: ${isDark ? "#94a3b8" : "#64748b"} !important; }
         h1, h2, h3, h4, h5, h6 { color: ${isDark ? "#fff" : "#0f172a"} !important; }
         
-        /* Force correct backgrounds for common classes */
-        .bg-white { 
-          background-color: ${isDark ? "#0f172a" : "#ffffff"} !important; 
-          color: ${isDark ? "#f8fafc" : "#0f172a"} !important; 
-        }
-        
         /* Specific Module Accents */
         .module-accent-text { color: ${config.color} !important; }
+        
+        /* Fix for potential text contrast issues */
+        .ant-btn-primary {
+          box-shadow: 0 4px 12px ${config.color}40 !important;
+        }
       `}</style>
     </ConfigProvider>
   );

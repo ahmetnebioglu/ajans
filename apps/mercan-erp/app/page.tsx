@@ -37,7 +37,7 @@ export default function HomePage() {
         </div>
 
         <div className="text-center pt-4 relative z-10">
-          <p className="text-[8px] font-black text-slate-300 dark:text-slate-700 uppercase tracking-widest">
+          <p className="text-[8px] font-black text-slate-400 dark:text-slate-700 uppercase tracking-widest">
             Powered by AJANS MONOREPO
           </p>
         </div>

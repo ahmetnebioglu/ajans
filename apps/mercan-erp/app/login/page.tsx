@@ -90,7 +90,7 @@ export default function LoginPage() {
            )}
 
            <div className="pt-4 text-center relative z-10">
-              <p className="text-[8px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest leading-loose">
+              <p className="text-[8px] font-black text-slate-500 dark:text-slate-600 uppercase tracking-widest leading-loose">
                 Bu sisteme sadece yetkili Mercan Grup personeli <br /> ve tanımlı müşteriler erişebilir.
               </p>
            </div>
@@ -98,7 +98,7 @@ export default function LoginPage() {
 
         {/* FOOTER */}
         <div className="text-center">
-           <p className="text-[9px] font-black text-slate-400 dark:text-slate-700 uppercase tracking-[0.4em] italic opacity-50">© 2026 MERCAN GRUP DIJITAL ARSIV SISTEMI</p>
+           <p className="text-[9px] font-black text-slate-500 dark:text-slate-700 uppercase tracking-[0.4em] italic opacity-50">© 2026 MERCAN GRUP DIJITAL ARSIV SISTEMI</p>
         </div>
 
       </div>
