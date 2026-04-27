@@ -90,14 +90,14 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
                      <FileWarning size={48} />
                   </div>
                   <div className="space-y-2">
-                     <h4 className="text-2xl font-black italic tracking-tighter text-slate-900 uppercase">DOSYAYA ERİŞİLEMİYOR</h4>
-                     <p className="text-xs text-slate-400 font-bold uppercase leading-relaxed tracking-widest">
+                     <h4 className="text-2xl font-black italic tracking-tighter text-slate-900 dark:text-white uppercase">DOSYAYA ERİŞİLEMİYOR</h4>
+                     <p className="text-xs text-slate-400 dark:text-zinc-600 font-bold uppercase leading-relaxed tracking-widest">
                         Bu raporun Google Drive bağlantısı bulunamadı veya dosya henüz oluşturulmadı.
                      </p>
                   </div>
                   <button 
                     onClick={onClose}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 shadow-2xl transition-all"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 dark:bg-zinc-800 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 shadow-2xl transition-all"
                   >
                      KAPAT <X size={18} />
                   </button>
@@ -144,13 +144,13 @@ export default function FilePreview({ isOpen, onClose, file }: FilePreviewProps)
                  <div className="w-24 h-24 bg-amber-50 text-amber-500 rounded-3xl flex items-center justify-center mx-auto shadow-inner">
                     <FileWarning size={48} />
                  </div>
-                 <div className="space-y-2">
-                    <h4 className="text-2xl font-black italic tracking-tighter text-slate-900 uppercase">ÖN İZLEME KAPALI</h4>
-                    <p className="text-xs text-slate-400 font-bold uppercase leading-relaxed tracking-widest">BU DOSYA TÜRÜ İÇİN ÖN İZLEME DESTEKLENMİYOR.</p>
-                 </div>
-                 <a href={file?.fileUrl} target="_blank" className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 shadow-2xl transition-all">
-                    DRIVE'DA GÖRÜNTÜLE <ExternalLink size={18} />
-                 </a>
+                  <div className="space-y-2">
+                     <h4 className="text-2xl font-black italic tracking-tighter text-slate-900 dark:text-white uppercase">ÖN İZLEME KAPALI</h4>
+                     <p className="text-xs text-slate-400 dark:text-zinc-500 font-bold uppercase leading-relaxed tracking-widest">BU DOSYA TÜRÜ İÇİN ÖN İZLEME DESTEKLENMİYOR.</p>
+                  </div>
+                  <a href={file?.fileUrl} target="_blank" className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 dark:bg-zinc-800 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 shadow-2xl transition-all">
+                     DRIVE'DA GÖRÜNTÜLE <ExternalLink size={18} />
+                  </a>
               </div>
            )}
         </div>

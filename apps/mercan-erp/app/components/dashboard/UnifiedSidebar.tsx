@@ -195,10 +195,10 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
             </div>
             {!collapsed && (
               <div className="overflow-hidden animate-in fade-in duration-700">
-                <div className="text-white font-black text-lg tracking-tighter uppercase leading-none italic whitespace-nowrap">
+                <div className={`${isDark ? 'text-white' : 'text-slate-900'} font-black text-lg tracking-tighter uppercase leading-none italic whitespace-nowrap`}>
                   MERCAN <span style={{ color: config.color }}>{config.name}</span>
                 </div>
-                <div className="text-[8px] text-slate-500 font-bold uppercase tracking-[0.3em] mt-1 italic">Unified OS</div>
+                <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} font-bold uppercase tracking-[0.3em] mt-1 italic`}>Unified OS</div>
               </div>
             )}
           </div>
@@ -227,7 +227,7 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
                  placement="topRight"
                  classNames={{ root: "premium-dropdown" }}
                >
-                 <button className={`w-12 h-12 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 text-slate-500' : 'bg-white border-slate-200 text-slate-400'} border flex items-center justify-center hover:text-blue-500 transition-colors relative group`}>
+                 <button className={`w-12 h-12 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-500'} border flex items-center justify-center hover:text-blue-500 transition-colors relative group`}>
                     <Bell size={20} />
                     <span className={`absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 ${isDark ? 'border-zinc-900' : 'border-white'} group-hover:animate-ping`} />
                  </button>
@@ -236,22 +236,22 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
 
             {/* THEME SWITCHER */}
             <div className="flex-shrink-0">
-              <button 
+               <button 
                 onClick={() => setTheme(isDark ? "light" : "dark")}
-                className={`w-12 h-12 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 text-slate-500' : 'bg-white border-slate-200 text-slate-400'} border flex items-center justify-center hover:text-blue-500 transition-colors group`}
+                className={`w-12 h-12 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-500'} border flex items-center justify-center hover:text-blue-500 transition-colors group`}
               >
                 {isDark ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} className="text-indigo-400" />}
               </button>
             </div>
 
             {/* PROFILE DROPDOWN */}
-            <Dropdown
+             <Dropdown
               menu={{ items: moduleSwitcherItems, onClick: handleMenuClick }}
               trigger={['click']}
               placement="topRight"
               classNames={{ root: "premium-dropdown" }}
             >
-              <button className={`flex-1 h-12 flex items-center gap-3 px-2 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 hover:border-zinc-700' : 'bg-white border-slate-200 hover:border-slate-300'} border transition-all text-left group ${collapsed ? 'justify-center' : ''}`}>
+              <button className={`flex-1 h-12 flex items-center gap-3 px-2 rounded-[4px] ${isDark ? 'bg-zinc-900 border-zinc-800 hover:border-zinc-700' : 'bg-slate-50 border-slate-200 hover:border-slate-300'} border transition-all text-left group ${collapsed ? 'justify-center' : ''}`}>
                 <Avatar 
                   src={user?.image} 
                   shape="square" 
@@ -314,24 +314,24 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
           border-radius: 0 4px 4px 0;
           border: none !important;
         }
-        .premium-dropdown .ant-dropdown-menu {
+         .premium-dropdown .ant-dropdown-menu {
           background: ${isDark ? "#0f172a" : "#ffffff"} !important;
-          border: 1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} !important;
+          border: 1px solid ${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.1)"} !important;
           padding: 8px !important;
-          box-shadow: 0 20px 50px ${isDark ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.1)"} !important;
+          box-shadow: 0 20px 50px ${isDark ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.05)"} !important;
         }
-        .premium-dropdown .ant-dropdown-menu-item {
+         .premium-dropdown .ant-dropdown-menu-item {
           font-size: 11px !important;
           font-weight: 700 !important;
           text-transform: uppercase !important;
           letter-spacing: 0.05em !important;
           padding: 10px 12px !important;
           border-radius: 4px !important;
-          color: #94a3b8 !important;
+          color: ${isDark ? '#94a3b8' : '#64748b'} !important;
         }
         .premium-dropdown .ant-dropdown-menu-item:hover {
-          background: rgba(255,255,255,0.05) !important;
-          color: #fff !important;
+          background: ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} !important;
+          color: ${isDark ? '#fff' : '#000'} !important;
         }
       `}</style>
     </Sider>

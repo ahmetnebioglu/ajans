@@ -58,7 +58,7 @@ export default function RecentActivityTimeline({ logs }: { logs: any[] }) {
                  <div className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-tight">
                     {log.user?.name || "Bilinmeyen Uzman"}
                  </div>
-                 <div className="text-[9px] font-bold text-slate-300 dark:text-slate-600 uppercase flex items-center gap-1 leading-none">
+                 <div className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-1 leading-none">
                     <Clock size={10} /> 
                     {isMounted ? new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "--:--"}
                  </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Table, Tag, Tooltip, Modal, Select, Button, message } from "antd";
+import { useTheme } from "next-themes";
 import { 
   ExternalLink, 
   Eye, 
@@ -31,6 +32,9 @@ export default function ReportsTable({
   currentSort,
   currentDir
 }: ReportsTableProps) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  
   const [reports, setReports] = useState(initialReports);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [previewFile, setPreviewFile] = useState<any>(null);
@@ -221,28 +225,25 @@ export default function ReportsTable({
         }
         .ant-table-premium .ant-table {
           background: transparent !important;
-          color: #94a3b8 !important;
+          color: ${isDark ? '#94a3b8' : '#475569'} !important;
         }
         .ant-table-premium .ant-table-thead > tr > th {
-          background: #09090b !important;
-          color: #52525b !important;
+          background: ${isDark ? '#09090b' : '#f8fafc'} !important;
+          color: ${isDark ? '#52525b' : '#64748b'} !important;
           font-size: 9px !important;
           font-weight: 900 !important;
           letter-spacing: 0.15em !important;
           text-transform: uppercase !important;
           padding: 20px 24px !important;
-          border-bottom: 1px solid #27272a !important;
+          border-bottom: 1px solid ${isDark ? '#27272a' : '#e2e8f0'} !important;
         }
         .ant-table-premium .ant-table-tbody > tr > td {
           padding: 20px 24px !important;
-          border-bottom: 1px solid #27272a !important;
+          border-bottom: 1px solid ${isDark ? '#27272a' : '#f1f5f9'} !important;
           transition: all 0.3s ease !important;
         }
         .ant-table-premium .ant-table-tbody > tr:hover > td {
-          background: #f8fafc !important;
-        }
-        .dark .ant-table-premium .ant-table-tbody > tr:hover > td {
-          background: #18181b !important;
+          background: ${isDark ? '#18181b' : '#f8fafc'} !important;
         }
         .status-select-mini {
           width: 32px !important;
@@ -256,15 +257,11 @@ export default function ReportsTable({
         }
         .premium-pagination .ant-pagination-item {
           border-radius: 4px !important;
-          border: 1px solid #e2e8f0 !important;
-          background: white !important;
+          border: 1px solid ${isDark ? '#18181b' : '#e2e8f0'} !important;
+          background: ${isDark ? '#09090b' : '#ffffff'} !important;
           font-family: inherit !important;
           font-weight: 900 !important;
           font-size: 11px !important;
-        }
-        .dark .premium-pagination .ant-pagination-item {
-          background: #09090b !important;
-          border-color: #18181b !important;
         }
         .premium-pagination .ant-pagination-item-active {
           background: #4f46e5 !important;
@@ -273,10 +270,10 @@ export default function ReportsTable({
         .premium-pagination .ant-pagination-item-active a {
           color: white !important;
         }
-        .dark .premium-pagination .ant-pagination-item a {
-          color: #3f3f46 !important;
+        .premium-pagination .ant-pagination-item a {
+          color: ${isDark ? '#3f3f46' : '#64748b'} !important;
         }
-        .dark .premium-pagination .ant-pagination-item-active a {
+        .premium-pagination .ant-pagination-item-active a {
           color: white !important;
         }
       `}</style>

@@ -66,7 +66,7 @@ export default function NotificationCenter({
         onClick={() => setIsOpen(!isOpen)}
         className="p-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-[4px] hover:border-blue-200 dark:hover:border-blue-700 hover:bg-slate-50 dark:hover:bg-zinc-800 shadow-sm transition-all relative group active:scale-95"
       >
-        <Bell className={`w-5 h-5 transition-colors ${unreadCount > 0 ? "text-blue-600 dark:text-blue-400 animate-swing" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600"}`} />
+        <Bell className={`w-5 h-5 transition-colors ${unreadCount > 0 ? "text-blue-600 dark:text-blue-400 animate-swing" : "text-slate-500 dark:text-slate-500 group-hover:text-slate-600"}`} />
         {unreadCount > 0 && (
           <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-rose-500 border-2 border-white dark:border-slate-900 rounded-full animate-ping" />
         )}
@@ -132,11 +132,11 @@ export default function NotificationCenter({
             </div>
 
             {/* Footer */}
-            <div className="p-3 bg-slate-50 dark:bg-zinc-800/50 border-t dark:border-zinc-800 text-center">
+            <div className="p-3 bg-slate-50 dark:bg-zinc-800/50 border-t border-slate-100 dark:border-zinc-800 text-center">
                <Link 
                  href="/dashboard/notifications" 
                  onClick={() => setIsOpen(false)}
-                 className="text-[8px] font-black uppercase text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors tracking-widest italic"
+                 className="text-[8px] font-black uppercase text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors tracking-widest italic"
                >
                   Tüm Bildirimleri Gör
                </Link>
