@@ -2,9 +2,8 @@ import React from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@ajans/auth";
 import { redirect } from "next/navigation";
-import HRDashboardClient from "./hr-client-page";
 
-export default async function HRDashboardPage() {
+export default async function HRLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   
   const allowedRoles = ["ADMIN", "HR_MANAGER"];
@@ -12,5 +11,5 @@ export default async function HRDashboardPage() {
     redirect("/dashboard");
   }
 
-  return <HRDashboardClient />;
+  return <>{children}</>;
 }

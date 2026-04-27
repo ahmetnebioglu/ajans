@@ -14,7 +14,8 @@ export const dynamic = "force-dynamic";
 
 export default async function CRMPage() {
   const session = await getServerSession(authOptions);
-  if (session?.user?.role !== "ADMIN") {
+  const allowedRoles = ["ADMIN", "EXPERT"];
+  if (!allowedRoles.includes(session?.user?.role || "")) {
     redirect("/dashboard");
   }
 

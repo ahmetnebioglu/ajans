@@ -50,8 +50,6 @@ const MODULE_CONFIG = {
       { key: "/dashboard", icon: <LayoutDashboard size={18} />, label: "Kokpit" },
       { key: "/dashboard/companies", icon: <Building2 size={18} />, label: "Firmalar" },
       { key: "/dashboard/reports", icon: <FileBox size={18} />, label: "Rapor Arşivi" },
-      { key: "/dashboard/admin/users", icon: <Shield size={18} />, label: "Kullanıcılar" },
-      { key: "/dashboard/logs", icon: <History size={18} />, label: "Sistem Günlüğü" },
     ]
   },
   cms: {
@@ -98,6 +96,7 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
   const { theme, setTheme } = useTheme();
   const config = MODULE_CONFIG[module];
   const user = session?.user;
+  const userRole = (user as any)?.role;
 
   const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
@@ -115,6 +114,7 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
     },
     { type: 'divider' as const },
     { key: '/dashboard/profile', label: 'Profil Ayarları', icon: <User size={14} /> },
+    { key: '/dashboard/profile/sessions', label: 'Oturum Yönetimi', icon: <History size={14} /> },
     { key: 'logout', label: 'Güvenli Çıkış', icon: <LogOut size={14} />, danger: true },
   ];
 
@@ -188,7 +188,7 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
         <div className="p-6">
           <div className={`flex items-center gap-3 transition-all duration-300 ${collapsed ? 'justify-center' : ''}`}>
             <div 
-              className="w-10 h-10 rounded-[4px] flex items-center justify-center shadow-lg transform rotate-3 shrink-0 transition-colors duration-500"
+              className="w-10 h-10 rounded-[4px] flex items-center justify-center shadow-lg transform rotate-3 shrink-0 transition-colors duration-500 text-white"
               style={{ background: config.color, boxShadow: `0 8px 20px ${config.color}40` }}
             >
               {config.icon}
@@ -210,7 +210,21 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
             theme={isDark ? "dark" : "light"}
             mode="inline"
             selectedKeys={[pathname]}
-            items={config.items}
+            items={[
+              ...config.items,
+              ...(userRole === "ADMIN" ? [
+                { type: 'divider' },
+                {
+                  key: 'system-group',
+                  label: <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sistem Yönetimi</span>,
+                  type: 'group',
+                  children: [
+                    { key: "/dashboard/system/users", icon: <Shield size={18} />, label: "Kullanıcılar" },
+                    { key: "/dashboard/system/logs", icon: <History size={18} />, label: "Sistem Günlüğü" },
+                  ]
+                }
+              ] : [])
+            ]}
             onClick={({ key }) => router.push(key)}
             className="border-none bg-transparent premium-unified-menu"
           />

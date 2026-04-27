@@ -11,13 +11,31 @@ import {
   Settings,
   Bell,
   Lock,
-  History
+  History,
+  LogOut,
+  BarChart3
 } from "lucide-react";
+import { getUserSessions, killSession, killOtherSessions } from "../../actions/system-actions";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
+  const [sessions, setSessions] = React.useState<any[]>([]);
   const user = session?.user;
   const role = (user as any)?.role || "USER";
+
+  const loadSessions = async () => {
+     const res = await getUserSessions();
+     if (res.success) setSessions(res.data || []);
+  };
+
+  React.useEffect(() => {
+     if (user) loadSessions();
+  }, [user]);
+
+  const handleKillSession = async (id: string) => {
+     const res = await killSession(id);
+     if (res.success) loadSessions();
+  };
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6 animate-in slide-in-from-bottom-4 duration-500 font-medium italic">
@@ -32,12 +50,20 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row items-end gap-4 -mt-10 relative z-10">
                 <div className="relative group">
                    {user?.image ? (
-                     <img src={user.image} alt="" className="w-24 h-24 rounded-[4px] border-2 border-white dark:border-zinc-800 shadow-2xl group-hover:scale-105 transition-transform" />
-                   ) : (
-                     <div className="w-24 h-24 bg-slate-100 dark:bg-zinc-800 rounded-[4px] border-2 border-white dark:border-zinc-800 shadow-2xl flex items-center justify-center text-slate-300">
-                        <UserIcon size={48} />
-                     </div>
-                   )}
+                     <img 
+                       src={user.image} 
+                       alt="" 
+                       className="w-24 h-24 rounded-[4px] border-2 border-white dark:border-zinc-800 shadow-2xl group-hover:scale-105 transition-transform object-cover" 
+                       onError={(e) => {
+                         (e.target as HTMLImageElement).style.display = 'none';
+                         const fallback = (e.target as HTMLImageElement).parentElement?.querySelector('.image-fallback');
+                         if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                       }}
+                     />
+                   ) : null}
+                   <div className={`image-fallback w-24 h-24 bg-slate-100 dark:bg-zinc-800 rounded-[4px] border-2 border-white dark:border-zinc-800 shadow-2xl flex items-center justify-center text-slate-300 ${user?.image ? 'hidden' : 'flex'}`}>
+                      <UserIcon size={48} />
+                   </div>
                    <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-emerald-500 border-2 border-white dark:border-zinc-800 rounded-[4px] flex items-center justify-center text-white shadow-lg">
                       <CheckCircle2 size={16} />
                    </div>
@@ -94,6 +120,60 @@ export default function ProfilePage() {
                 <div className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Bildirimler</div>
              </div>
              <p className="text-lg font-black text-slate-900 dark:text-white uppercase leading-none tracking-tight italic">3 YENİ MESAJ</p>
+         </div>
+      </div>
+
+      {/* SESSION MANAGEMENT */}
+      <div className="bg-white dark:bg-zinc-900 rounded-[4px] border border-slate-200 dark:border-zinc-800 shadow-2xl overflow-hidden relative group">
+         <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-zinc-900/30">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-2 text-slate-900 dark:text-slate-300">
+               <History className="text-blue-600" size={14} /> Aktif Oturumlar
+            </h3>
+            <button 
+               onClick={async () => {
+                  const res = await killOtherSessions(""); // Token logic can be refined
+                  if (res.success) loadSessions();
+               }}
+               className="text-[8px] font-black text-rose-600 hover:text-rose-500 uppercase tracking-widest transition-colors"
+            >
+               Tüm Diğer Oturumları Kapat
+            </button>
+         </div>
+
+         <div className="overflow-x-auto">
+            <table className="w-full text-left text-[11px]">
+               <thead>
+                  <tr className="bg-slate-50 dark:bg-zinc-950/50 border-b border-slate-100 dark:border-zinc-800">
+                     <th className="p-4 font-black uppercase text-slate-400 tracking-widest">Oturum ID</th>
+                     <th className="p-4 font-black uppercase text-slate-400 tracking-widest">Geçerlilik</th>
+                     <th className="p-4 font-black uppercase text-slate-400 tracking-widest text-right">İşlem</th>
+                  </tr>
+               </thead>
+               <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+                  {sessions.length > 0 ? sessions.map((s: any) => (
+                     <tr key={s.id} className="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-all italic">
+                        <td className="p-4 font-mono text-[9px] text-slate-500">{s.id}</td>
+                        <td className="p-4 text-slate-600 dark:text-slate-400">
+                           {new Date(s.expires).toLocaleString("tr-TR")}
+                        </td>
+                        <td className="p-4 text-right">
+                           <button 
+                              onClick={() => handleKillSession(s.id)}
+                              className="p-2 bg-rose-50 dark:bg-rose-900/20 text-rose-600 hover:bg-rose-600 hover:text-white rounded-[4px] transition-all"
+                           >
+                              <LogOut size={12} />
+                           </button>
+                        </td>
+                     </tr>
+                  )) : (
+                     <tr>
+                        <td colSpan={3} className="p-8 text-center text-slate-400 uppercase font-black tracking-widest text-[10px]">
+                           Aktif oturum kaydı bulunamadı
+                        </td>
+                     </tr>
+                  )}
+               </tbody>
+            </table>
          </div>
       </div>
 
