@@ -97,7 +97,7 @@ export default function CMSPage() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="space-y-1">
-          <h1 className="text-5xl font-black text-white tracking-tighter uppercase italic leading-none">
+          <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
             CMS <span className="text-emerald-600">HUB</span>
           </h1>
           <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">
@@ -109,7 +109,7 @@ export default function CMSPage() {
           <Link
             href="/"
             target="_blank"
-            className="px-8 py-4 bg-slate-900 border border-slate-800 rounded-[4px] text-[10px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-slate-800 transition-all shadow-sm active:scale-95 group"
+            className="px-8 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[4px] text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-widest flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm active:scale-95 group"
           >
             <Globe
               size={14}
@@ -121,11 +121,11 @@ export default function CMSPage() {
       </div>
 
       {/* System Status Header */}
-      <div className="bg-slate-900 text-white p-8 rounded-[4px] border border-slate-800 relative overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-8 rounded-[4px] border border-slate-200 dark:border-slate-800 relative overflow-hidden shadow-sm">
         <div className="absolute right-0 top-0 w-1/3 h-full bg-emerald-600/5 skew-x-12 translate-x-20" />
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-6">
-            <div className="w-14 h-14 bg-emerald-600/10 rounded-[4px] flex items-center justify-center border border-emerald-600/20 shadow-inner">
+            <div className="w-14 h-14 bg-emerald-50 dark:bg-emerald-600/10 rounded-[4px] flex items-center justify-center border border-emerald-100 dark:border-emerald-600/20 shadow-inner">
               <Settings
                 size={28}
                 className="text-emerald-500 animate-[spin_10s_linear_infinite]"
@@ -167,7 +167,7 @@ export default function CMSPage() {
           <Link
             key={module.title}
             href={module.href}
-            className="group bg-slate-900 border border-slate-800 p-8 rounded-[4px] shadow-sm hover:shadow-md hover:border-emerald-600/50 transition-all duration-500 relative overflow-hidden flex flex-col justify-between min-h-[220px]"
+            className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-[4px] shadow-sm hover:shadow-md hover:border-emerald-600/50 transition-all duration-500 relative overflow-hidden flex flex-col justify-between min-h-[220px]"
           >
             <div className="space-y-6 relative z-10">
               <div
@@ -178,7 +178,7 @@ export default function CMSPage() {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-black text-white uppercase tracking-tighter italic leading-none group-hover:text-emerald-600 transition-colors">
+                  <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tighter italic leading-none group-hover:text-emerald-600 transition-colors">
                     {module.title}
                   </h3>
                 </div>

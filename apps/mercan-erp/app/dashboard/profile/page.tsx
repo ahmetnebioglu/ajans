@@ -24,8 +24,8 @@ export default function ProfilePage() {
       
       {/* PROFILE HEADER / HERO */}
       <div className="bg-white dark:bg-zinc-900 rounded-[4px] border border-slate-200 dark:border-zinc-800 shadow-2xl overflow-hidden relative">
-         <div className="h-24 bg-gradient-to-r from-zinc-900 to-indigo-950 relative overflow-hidden">
-            <Shield className="absolute -right-5 -top-5 w-32 h-32 text-white/5 rotate-12" />
+         <div className="h-24 bg-gradient-to-r from-slate-100 to-indigo-100 dark:from-zinc-900 dark:to-indigo-950 relative overflow-hidden">
+            <Shield className="absolute -right-5 -top-5 w-32 h-32 text-indigo-600/5 dark:text-white/5 rotate-12" />
          </div>
          
          <div className="px-6 pb-6">
@@ -57,7 +57,7 @@ export default function ProfilePage() {
                    </div>
                 </div>
 
-                <button className="bg-zinc-900 dark:bg-blue-600 text-white px-6 py-2.5 rounded-[4px] text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 active:scale-95 flex items-center gap-2">
+                <button className="bg-slate-900 dark:bg-blue-600 text-white px-6 py-2.5 rounded-[4px] text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-blue-700 transition-all shadow-xl shadow-slate-900/20 dark:shadow-blue-600/20 active:scale-95 flex items-center gap-2">
                    <Settings size={14} /> PROFİLİ DÜZENLE
                 </button>
             </div>
@@ -98,12 +98,12 @@ export default function ProfilePage() {
       </div>
 
       {/* SETTINGS PREVIEW */}
-      <div className="bg-slate-50 dark:bg-zinc-800/30 p-8 rounded-[4px] border border-slate-200 dark:border-zinc-800/50 flex flex-col md:flex-row items-center justify-between gap-6 italic">
+      <div className="bg-slate-50 dark:bg-zinc-800/30 p-8 rounded-[4px] border border-slate-100 dark:border-zinc-800/50 flex flex-col md:flex-row items-center justify-between gap-6 italic">
          <div className="space-y-1 text-center md:text-left">
             <h4 className="text-xl font-black uppercase tracking-tighter text-slate-900 dark:text-white leading-none">GÜVENLİK AYARLARI</h4>
-            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-1">İki adımlı doğrulama ve şifre yönetimi</p>
+            <p className="text-[9px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest px-1">İki adımlı doğrulama ve şifre yönetimi</p>
          </div>
-         <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[4px] text-[9px] font-black uppercase text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-md">
+         <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-[4px] text-[9px] font-black uppercase text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-800 transition-all shadow-sm">
             <Lock size={14} /> GÜVENLİK KONTROLÜ
          </button>
       </div>

@@ -216,7 +216,7 @@ export default function CompaniesPage() {
                             {isAdmin && (
                               <button 
                                 onClick={() => openExpertManager(company)}
-                                className="p-2 text-slate-300 dark:text-zinc-700 hover:text-indigo-600 transition-colors"
+                                className="p-2 text-slate-400 dark:text-zinc-700 hover:text-indigo-600 transition-colors"
                                 title="Uzman Yönetimi"
                               >
                                 <Users size={16} />
@@ -225,7 +225,7 @@ export default function CompaniesPage() {
                             <a 
                               href={`https://drive.google.com/drive/folders/${company.driveFolderId}`} 
                               target="_blank" 
-                              className="p-2 text-slate-300 dark:text-zinc-700 hover:text-blue-600 transition-colors"
+                              className="p-2 text-slate-400 dark:text-zinc-700 hover:text-blue-600 transition-colors"
                               title="Drive Gözat"
                             >
                               <FolderOpen size={16} />
@@ -233,7 +233,7 @@ export default function CompaniesPage() {
                             {isAdmin && (
                               <button 
                                 onClick={() => handleDelete(company.id)} 
-                                className="p-2 text-slate-300 dark:text-zinc-700 hover:text-rose-600 transition-colors"
+                                className="p-2 text-slate-400 dark:text-zinc-700 hover:text-rose-600 transition-colors"
                                 title="Sil"
                               >
                                 <Trash2 size={16} />

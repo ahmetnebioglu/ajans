@@ -15,9 +15,13 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { useTheme } from "next-themes";
 import { getAllUsers, updateUserRole, getCompanies, toggleExpertAccess } from "../../../actions/admin-actions";
 
 export default function UserManagementPage() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
   const { data: session, status } = useSession();
   const [users, setUsers] = useState<any[]>([]);
   const [companies, setCompanies] = useState<any[]>([]);
@@ -128,7 +132,7 @@ export default function UserManagementPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-50/50 dark:bg-zinc-950/50">
+              <tr className="bg-slate-50 dark:bg-zinc-950/50 border-b border-slate-100 dark:border-zinc-800">
                 <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-600 tracking-widest">Kullanıcı Bilgileri</th>
                 <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-600 tracking-widest">Mevcut Rol</th>
                 <th className="p-4 text-[9px] font-black uppercase text-slate-400 dark:text-zinc-600 tracking-widest">Atanmış Firmalar</th>
@@ -208,10 +212,10 @@ export default function UserManagementPage() {
         </div>
       </div>
 
-      {/* ASSIGNMENT MODAL (Dynamic for any User) */}
+       {/* ASSIGNMENT MODAL (Dynamic for any User) */}
       {selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-           <div className="bg-white dark:bg-zinc-900 w-full max-w-lg rounded-[4px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border dark:border-zinc-800">
+           <div className="bg-white dark:bg-zinc-900 w-full max-w-lg rounded-[4px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-200 dark:border-zinc-800">
               <div className="bg-zinc-900 p-6 text-white flex justify-between items-center bg-gradient-to-br from-zinc-900 to-indigo-950">
                  <div className="space-y-1">
                     <h3 className="text-lg font-black tracking-tight uppercase italic">{selectedUser.name}</h3>

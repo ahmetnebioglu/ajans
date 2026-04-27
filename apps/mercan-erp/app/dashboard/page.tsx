@@ -115,7 +115,7 @@ export default async function DashboardPage() {
      return (
          <div className="p-6 max-w-7xl mx-auto space-y-6 animate-in fade-in duration-700 font-medium italic">
             {/* WELCOME BANNER */}
-            <div className="relative overflow-hidden bg-slate-900/50 rounded-[4px] p-8 text-white shadow-2xl border border-slate-900 transition-colors duration-500">
+            <div className="relative overflow-hidden bg-white dark:bg-slate-900/50 rounded-[4px] p-8 text-slate-900 dark:text-white shadow-2xl border border-slate-200 dark:border-slate-900 transition-colors duration-500">
                <div className="absolute top-0 right-0 p-6 opacity-5 dark:opacity-10 text-blue-600 dark:text-white">
                   <Building2 size={160} />
                </div>
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
 
             {/* STATUS CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-               <div className="bg-slate-900/50 p-6 rounded-[4px] border border-slate-900 shadow-xl space-y-4 hover:border-blue-500 transition-all">
+               <div className="bg-white dark:bg-slate-900/50 p-6 rounded-[4px] border border-slate-200 dark:border-slate-900 shadow-xl space-y-4 hover:border-blue-500 transition-all">
                   <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-[4px] flex items-center justify-center shadow-lg">
                      <FileBox size={24} />
                   </div>
@@ -158,7 +158,7 @@ export default async function DashboardPage() {
                   </div>
                </div>
 
-               <div className="bg-slate-900/50 p-6 rounded-[4px] border border-slate-900 shadow-xl space-y-4">
+               <div className="bg-white dark:bg-slate-900/50 p-6 rounded-[4px] border border-slate-200 dark:border-slate-900 shadow-xl space-y-4">
                   <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-[4px] flex items-center justify-center shadow-lg">
                      <Clock size={24} />
                   </div>
@@ -233,8 +233,8 @@ export default async function DashboardPage() {
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row justify-between items-end gap-3 border-b border-slate-200 dark:border-zinc-800 pb-6">
          <div className="space-y-1">
-            <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none italic">Yönetim <span className="text-blue-600">Kokpiti</span></h1>
-            <p className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest text-[9px]">Mercan ERP Analitik Veri Merkezi</p>
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none italic">Yönetim <span className="text-blue-600">Kokpiti</span></h1>
+            <p className="text-slate-500 dark:text-slate-500 font-bold uppercase tracking-widest text-[9px]">Mercan ERP Analitik Veri Merkezi</p>
          </div>
          <div className="flex items-center gap-2 text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 rounded-[4px] border border-slate-100 dark:border-zinc-800">
             <Clock size={12} className="text-blue-500" /> Son Güncelleme: {new Date().toLocaleTimeString()}
@@ -244,7 +244,7 @@ export default async function DashboardPage() {
       {/* METRIC CARDS GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => (
-          <div key={s.name} className="bg-slate-900/50 p-5 rounded-[4px] border border-slate-900 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative">
+          <div key={s.name} className="bg-white dark:bg-slate-900/50 p-5 rounded-[4px] border border-slate-100 dark:border-slate-900 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative">
             <div className={`absolute -right-3 -bottom-3 opacity-5 group-hover:scale-110 transition-transform ${s.color}`}>
                <s.icon size={64} />
             </div>
@@ -253,7 +253,7 @@ export default async function DashboardPage() {
                   <s.icon size={20} />
                </div>
                <div>
-                  <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-zinc-500 mb-0.5">{s.name}</div>
+                  <div className="text-[9px] font-black uppercase tracking-widest text-slate-500 dark:text-zinc-500 mb-0.5">{s.name}</div>
                   <div className="text-xl font-black text-slate-900 dark:text-white leading-none">{s.value}</div>
                </div>
             </div>
@@ -287,9 +287,9 @@ export default async function DashboardPage() {
             </div>
 
             {/* RECENT OPERATIONS TABLE */}
-            <div className="bg-zinc-900 rounded-[4px] border border-zinc-800 shadow-2xl overflow-hidden">
-               <div className="p-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/20">
-                  <h3 className="text-[9px] font-black uppercase tracking-[0.3em] flex items-center gap-2 text-slate-300">
+            <div className="bg-white dark:bg-zinc-900 rounded-[4px] border border-slate-200 dark:border-zinc-800 shadow-2xl overflow-hidden">
+               <div className="p-4 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-zinc-950/20">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.3em] flex items-center gap-2 text-slate-900 dark:text-slate-300">
                      <Clock className="text-indigo-400" size={14} /> Son Operasyonlar
                   </h3>
                   <Link href="/dashboard/reports" className="group flex items-center gap-2 text-[9px] font-black uppercase text-slate-500 hover:text-indigo-400 transition-colors">
@@ -298,20 +298,20 @@ export default async function DashboardPage() {
                </div>
                <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm italic">
-                     <thead className="bg-zinc-950/50 border-b border-zinc-800">
+                     <thead className="bg-slate-50 dark:bg-zinc-950/50 border-b border-slate-100 dark:border-zinc-800">
                         <tr>
-                           <th className="p-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest">Rapor & Firma</th>
-                           <th className="p-4 text-[9px] font-black text-zinc-600 uppercase tracking-widest text-right">Zaman</th>
+                           <th className="p-4 text-[9px] font-black text-slate-400 dark:text-zinc-600 uppercase tracking-widest">Rapor & Firma</th>
+                           <th className="p-4 text-[9px] font-black text-slate-400 dark:text-zinc-600 uppercase tracking-widest text-right">Zaman</th>
                         </tr>
                      </thead>
-                     <tbody className="divide-y divide-zinc-800">
+                     <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
                         {recentReports.map((report) => (
                            <tr key={report.id} className="group hover:bg-indigo-900/20 transition-colors">
                               <td className="p-4">
                                  <div className="font-black text-slate-900 dark:text-white uppercase text-[11px] tracking-tight">{report.title}</div>
                                  <div className="text-[8px] font-bold text-blue-500 dark:text-blue-400 uppercase mt-0.5 italic leading-none">{report.company.name}</div>
                               </td>
-                              <td className="p-4 text-right text-[9px] font-bold text-slate-300 italic uppercase">
+                              <td className="p-4 text-right text-[9px] font-bold text-slate-400 dark:text-slate-300 italic uppercase">
                                  {new Date(report.createdAt).toLocaleDateString()}
                               </td>
                            </tr>
@@ -326,9 +326,9 @@ export default async function DashboardPage() {
           <div className="space-y-4">
              <AiInsight />
              
-             <div className="bg-slate-900/50 p-6 rounded-[4px] border border-slate-900 shadow-2xl space-y-6 flex flex-col">
+             <div className="bg-white dark:bg-slate-900/50 p-6 rounded-[4px] border border-slate-200 dark:border-slate-900 shadow-2xl space-y-6 flex flex-col">
                 <div className="flex items-center justify-between">
-                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] italic flex items-center gap-2 dark:text-slate-300 leading-none">
+                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] italic flex items-center gap-2 text-slate-900 dark:text-slate-300 leading-none">
                       <History className="text-rose-600 dark:text-rose-400" size={14} /> Sistem Günlüğü
                    </h3>
                    <span className="text-[7px] font-black bg-rose-50 dark:bg-rose-900/30 text-rose-500 dark:text-rose-400 px-1.5 py-0.5 rounded-[4px] tracking-[0.2em] uppercase shadow-sm border border-rose-100 dark:border-zinc-800">Audit Trace</span>
