@@ -5,9 +5,13 @@ import React from "react";
 import { signIn } from "next-auth/react";
 import { Building2, ShieldCheck, Mail, ArrowRight } from "lucide-react";
 
+import { useSearchParams } from "next/navigation";
+
 export default function LoginPage() {
   const [mounted, setMounted] = React.useState(false);
   const [testEmail, setTestEmail] = React.useState("");
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const isDev = process.env.NODE_ENV === "development";
 
   React.useEffect(() => {
@@ -26,7 +30,7 @@ export default function LoginPage() {
     await signIn("credentials", { 
       email: testEmail, 
       password: "test", 
-      callbackUrl: "/dashboard",
+      callbackUrl,
       redirect: true
     });
   };
@@ -56,7 +60,7 @@ export default function LoginPage() {
            </div>
 
            <button 
-             onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+             onClick={() => signIn("google", { callbackUrl })}
              className="w-full relative z-10 flex items-center justify-between px-6 py-4 bg-zinc-900 dark:bg-zinc-800 text-white rounded-[2px] border border-zinc-700 font-black uppercase tracking-widest text-[10px] hover:bg-teal-600 dark:hover:bg-teal-500 active:scale-95 transition-all shadow-xl shadow-zinc-900/20"
            >
               Google ile Giriş Yap

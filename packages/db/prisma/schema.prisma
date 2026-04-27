@@ -78,6 +78,8 @@ model Company {
   updatedAt     DateTime        @updatedAt
   address       String?
   taxNumber     String?
+  taxOffice     String?
+  phone         String?
   driveFolderId String?         @unique
   createdById   String?
   tenantId      String          @default("mercan")
@@ -146,6 +148,7 @@ model AuditLog {
   action    String
   details   String?
   ipAddress String?
+  level     String   @default("INFO")
   createdAt DateTime @default(now())
   companyId String?
   tenantId  String   @default("mercan")
@@ -416,6 +419,7 @@ enum Role {
   EXPERT
   CLIENT
   HR_MANAGER
+  CUSTOMER
 }
 
 model Lead {

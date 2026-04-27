@@ -11,6 +11,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
     ...(process.env.NODE_ENV !== "production" ? [
       CredentialsProvider({
@@ -27,12 +28,18 @@ export const authOptions: NextAuthOptions = {
 
           // VIP Pass for E2E Tests: Guaranteed user object for test emails
           if (credentials.email.endsWith("@mercan.test")) {
-            const rolePrefix = credentials.email.split('@')[0].toUpperCase();
-            const assignedRole = rolePrefix === 'ADMIN' ? 'ADMIN' : 'USER';
+            const prefix = credentials.email.split('@')[0].toLowerCase();
+            const roleMap: Record<string, string> = {
+              admin: "ADMIN",
+              customer: "CUSTOMER",
+              expert: "EXPERT",
+              hr: "HR_MANAGER"
+            };
+            const assignedRole = roleMap[prefix] || "USER";
             
             return {
-              id: `test-${rolePrefix.toLowerCase()}-id`,
-              name: `Mercan Test ${rolePrefix}`,
+              id: `test-${prefix}-id`,
+              name: `Mercan Test ${prefix.toUpperCase()}`,
               email: credentials.email,
               role: assignedRole,
               tenantId: "mercan",
@@ -63,17 +70,14 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
-    async signIn({ user }) {
-      if (user && (user as any).role === "USER") {
-        return "/unauthorized";
-      }
+    async signIn({ user, account, profile }) {
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
-        token.tenantId = (user as any).tenantId;
+        token.role = (user as any).role || "USER";
+        token.tenantId = (user as any).tenantId || "mercan";
       }
       return token;
     },
@@ -84,6 +88,13 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).tenantId = token.tenantId;
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // url contains the callbackUrl
+      // But we need the role. NextAuth redirect callback doesn't have easy access to session.
+      // Usually, redirection is handled in the middleware or login page.
+      // But if we want to force it here based on some logic:
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
   },
   pages: {

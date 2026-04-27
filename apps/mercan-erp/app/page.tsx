@@ -1,6 +1,20 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@ajans/auth";
+import { redirect } from "next/navigation";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await getServerSession(authOptions);
+
+  if (session?.user) {
+    const role = (session.user as any).role;
+    if (role === "CUSTOMER") {
+      redirect("/customer-portal");
+    } else {
+      redirect("/dashboard");
+    }
+  }
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 transition-colors duration-500 font-medium italic">
       <div className="max-w-md w-full space-y-10 bg-white dark:bg-slate-900 p-12 rounded-[2rem] shadow-2xl border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-700 relative overflow-hidden">
