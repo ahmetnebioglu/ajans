@@ -93,12 +93,12 @@ export default function HRDashboardPage() {
   return (
     <div className="p-6 space-y-8 animate-in fade-in duration-700 italic font-medium">
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row justify-between items-end gap-3 border-b pb-6 border-slate-900">
+      <div className="flex flex-col md:flex-row justify-between items-end gap-3 border-b pb-6 border-slate-200 dark:border-slate-900">
          <div className="space-y-1">
-            <Title level={2} className="!m-0 !font-black !tracking-tighter uppercase italic text-white">İK <span className="text-[var(--color-purple-600)]">Özet Panosu</span></Title>
+            <Title level={2} className="!m-0 !font-black !tracking-tighter uppercase italic text-slate-900 dark:text-white">İK <span className="text-[var(--color-purple-600)]">Özet Panosu</span></Title>
             <Text className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">Sistem genelindeki güncel İK verileri</Text>
          </div>
-         <div className="flex items-center gap-2 text-[9px] font-black uppercase text-slate-500 bg-slate-900/50 px-3 py-1.5 rounded-[4px]">
+         <div className="flex items-center gap-2 text-[9px] font-black uppercase text-slate-500 bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-[4px] border border-slate-100 dark:border-slate-800">
             <TrendingUp size={12} className="text-[var(--color-purple-600)]" /> Verimlilik Takibi Aktif
          </div>
       </div>
@@ -126,10 +126,10 @@ export default function HRDashboardPage() {
         title={
           <div className="flex items-center gap-2 py-2">
             <FileText size={16} className="text-blue-600" />
-            <Text className="text-[11px] font-black uppercase tracking-[0.3em]">Son Başvurular</Text>
+            <Text className="text-[11px] font-black uppercase tracking-[0.3em] dark:text-slate-300">Son Başvurular</Text>
           </div>
         }
-        className="shadow-xl border-none"
+        className="shadow-xl border-none bg-white dark:bg-zinc-900"
         styles={{ body: { padding: 0 } }}
       >
         <Table
@@ -138,8 +138,28 @@ export default function HRDashboardPage() {
           pagination={false}
           loading={loading}
           rowKey="id"
+          className="ant-table-hr"
           locale={{ emptyText: "Henüz başvuru bulunmuyor" }}
         />
+        <style jsx global>{`
+          .ant-table-hr .ant-table-thead > tr > th {
+            background: #f8fafc !important;
+            color: #64748b !important;
+            font-size: 9px !important;
+            font-weight: 900 !important;
+            text-transform: uppercase !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+          }
+          .dark .ant-table-hr .ant-table-thead > tr > th {
+            background: #09090b !important;
+            color: #475569 !important;
+            border-bottom: 1px solid #18181b !important;
+          }
+          .dark .ant-table-hr .ant-table {
+            background: transparent !important;
+            color: #94a3b8 !important;
+          }
+        `}</style>
       </Card>
     </div>
   );

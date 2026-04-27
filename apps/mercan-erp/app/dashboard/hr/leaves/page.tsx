@@ -12,12 +12,16 @@ import {
   ArrowRight,
   ShieldCheck
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { getLeaveRequests, updateLeaveStatus } from "../../../hr/actions";
 import { LeaveStatus } from "@ajans/db";
 
 const { Title, Text } = Typography;
 
 export default function LeavesPage() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -140,13 +144,13 @@ export default function LeavesPage() {
   return (
     <div className="p-6 space-y-6 animate-in fade-in duration-500 italic font-medium">
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-900 pb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-200 dark:border-slate-900 pb-6">
         <div className="space-y-1">
-          <Title level={2} className="!m-0 !font-black !tracking-tighter uppercase italic text-white">İZİN <span className="text-[var(--color-purple-600)]">YÖNETİMİ</span></Title>
+          <Title level={2} className="!m-0 !font-black !tracking-tighter uppercase italic text-slate-900 dark:text-white">İZİN <span className="text-[var(--color-purple-600)]">YÖNETİMİ</span></Title>
           <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">Personel izin talepleri ve onay süreçleri</p>
         </div>
         <div className="flex gap-2">
-          <Button icon={<Filter size={14} />} className="text-[10px] font-black uppercase tracking-widest h-10 border-none bg-slate-900 text-slate-400">Filtrele</Button>
+          <Button icon={<Filter size={14} />} className="text-[10px] font-black uppercase tracking-widest h-10 border-none bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 shadow-sm">Filtrele</Button>
           <div className="flex items-center gap-2 px-4 bg-purple-600/10 rounded text-[9px] font-black text-purple-400 uppercase tracking-widest border border-purple-600/20">
             <Clock size={12} /> {requests.filter((r: any) => r.status === "PENDING").length} BEKLEYEN TALEP
           </div>
@@ -161,7 +165,7 @@ export default function LeavesPage() {
           loading={loading}
           rowKey="id"
           pagination={{ pageSize: 12 }}
-          className="premium-table dark-table"
+          className="premium-table"
           locale={{ emptyText: <div className="p-10 text-[10px] font-black uppercase tracking-widest text-slate-400">Herhangi bir izin talebi bulunmuyor</div> }}
         />
       </Card>
@@ -178,36 +182,39 @@ export default function LeavesPage() {
           </Text>
         </div>
       </div>
-      <style jsx global>{`
-        .dark-table .ant-table {
+       <style jsx global>{`
+        .premium-table .ant-table {
           background: transparent !important;
-          color: #94a3b8 !important;
+          color: ${isDark ? '#94a3b8' : '#475569'} !important;
         }
-        .dark-table .ant-table-thead > tr > th {
-          background: #09090b !important;
-          color: #475569 !important;
-          border-bottom: 1px solid #18181b !important;
+        .premium-table .ant-table-thead > tr > th {
+          background: ${isDark ? '#09090b' : '#f8fafc'} !important;
+          color: ${isDark ? '#475569' : '#64748b'} !important;
+          border-bottom: 1px solid ${isDark ? '#18181b' : '#e2e8f0'} !important;
           font-size: 9px !important;
           font-weight: 900 !important;
           letter-spacing: 0.1em !important;
           text-transform: uppercase !important;
           font-style: italic;
         }
-        .dark-table .ant-table-tbody > tr > td {
-          border-bottom: 1px solid #18181b !important;
+        .premium-table .ant-table-tbody > tr > td {
+          border-bottom: 1px solid ${isDark ? '#18181b' : '#f1f5f9'} !important;
           transition: all 0.3s !important;
         }
-        .dark-table .ant-table-tbody > tr:hover > td {
-          background: #0c0c0e !important;
+        .premium-table .ant-table-tbody > tr:hover > td {
+          background: ${isDark ? '#0c0c0e' : '#f8fafc'} !important;
         }
-        .dark-table .ant-pagination-item {
+        .premium-table .ant-pagination-item {
           background: transparent !important;
-          border-color: #27272a !important;
+          border-color: ${isDark ? '#27272a' : '#e2e8f0'} !important;
         }
-        .dark-table .ant-pagination-item-active {
+        .premium-table .ant-pagination-item a {
+          color: ${isDark ? '#94a3b8' : '#475569'} !important;
+        }
+        .premium-table .ant-pagination-item-active {
           border-color: #9333ea !important;
         }
-        .dark-table .ant-pagination-item-active a {
+        .premium-table .ant-pagination-item-active a {
           color: #9333ea !important;
         }
       `}</style>

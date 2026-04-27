@@ -13,6 +13,7 @@ import {
   Card,
   Badge
 } from "antd";
+import { useTheme } from "next-themes";
 import { 
   Plus, 
   Briefcase,
@@ -29,6 +30,9 @@ import {
 const { Title, Text } = Typography;
 
 export default function JobsPage() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -115,9 +119,9 @@ export default function JobsPage() {
 
   return (
     <div className="p-8 space-y-6 animate-in fade-in duration-500 italic font-medium">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-900 pb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-200 dark:border-slate-900 pb-8">
         <div className="space-y-1">
-          <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic leading-none">
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
             İş <span className="text-[var(--color-purple-600)]">İlanları</span>
           </h1>
           <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em]">Aktif Pozisyonlar ve İlan Yönetimi</p>
@@ -139,40 +143,43 @@ export default function JobsPage() {
           loading={loading}
           rowKey="id"
           pagination={{ pageSize: 10 }}
-          className="premium-table dark-table"
+          className="premium-table"
         />
       </Card>
 
-      <style jsx global>{`
-        .dark-table .ant-table {
+       <style jsx global>{`
+        .premium-table .ant-table {
           background: transparent !important;
-          color: #94a3b8 !important;
+          color: ${isDark ? '#94a3b8' : '#475569'} !important;
         }
-        .dark-table .ant-table-thead > tr > th {
-          background: #09090b !important;
-          color: #475569 !important;
-          border-bottom: 1px solid #18181b !important;
+        .premium-table .ant-table-thead > tr > th {
+          background: ${isDark ? '#09090b' : '#f8fafc'} !important;
+          color: ${isDark ? '#475569' : '#64748b'} !important;
+          border-bottom: 1px solid ${isDark ? '#18181b' : '#e2e8f0'} !important;
           font-size: 9px !important;
           font-weight: 900 !important;
           letter-spacing: 0.1em !important;
           text-transform: uppercase !important;
           font-style: italic;
         }
-        .dark-table .ant-table-tbody > tr > td {
-          border-bottom: 1px solid #18181b !important;
+        .premium-table .ant-table-tbody > tr > td {
+          border-bottom: 1px solid ${isDark ? '#18181b' : '#f1f5f9'} !important;
           transition: all 0.3s !important;
         }
-        .dark-table .ant-table-tbody > tr:hover > td {
-          background: #0c0c0e !important;
+        .premium-table .ant-table-tbody > tr:hover > td {
+          background: ${isDark ? '#0c0c0e' : '#f8fafc'} !important;
         }
-        .dark-table .ant-pagination-item {
+        .premium-table .ant-pagination-item {
           background: transparent !important;
-          border-color: #27272a !important;
+          border-color: ${isDark ? '#27272a' : '#e2e8f0'} !important;
         }
-        .dark-table .ant-pagination-item-active {
+        .premium-table .ant-pagination-item a {
+          color: ${isDark ? '#94a3b8' : '#475569'} !important;
+        }
+        .premium-table .ant-pagination-item-active {
           border-color: #9333ea !important;
         }
-        .dark-table .ant-pagination-item-active a {
+        .premium-table .ant-pagination-item-active a {
           color: #9333ea !important;
         }
       `}</style>

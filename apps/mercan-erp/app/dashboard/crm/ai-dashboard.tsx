@@ -37,47 +37,47 @@ export default function AiDashboard() {
     <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end">
       {/* Expanded Panel */}
       {isOpen && (
-        <div className="mb-4 w-[400px] bg-zinc-900 border border-zinc-800 rounded-[4px] overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="mb-4 w-[400px] bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-[4px] overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-bottom-4 duration-300">
           {/* Header */}
-          <div className="p-4 border-b border-zinc-800 flex items-center justify-between bg-black/40">
+          <div className="p-4 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-black/40">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-red-600 flex items-center justify-center text-white rounded-[4px]">
                 <Sparkles size={16} />
               </div>
               <div>
-                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-100">AI Analiz Paneli</h2>
-                <p className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">MERCAN GEN-AI CRM ENGINE</p>
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-zinc-100">AI Analiz Paneli</h2>
+                <p className="text-[8px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">MERCAN GEN-AI CRM ENGINE</p>
               </div>
             </div>
             <button 
               onClick={() => setIsOpen(false)}
-              className="p-2 hover:bg-white/5 rounded-full transition-colors text-zinc-500 hover:text-white"
+              className="p-2 hover:bg-slate-200 dark:hover:bg-white/5 rounded-full transition-colors text-slate-400 dark:text-zinc-500 hover:text-slate-900 dark:hover:text-white"
             >
               <BarChart3 size={18} />
             </button>
           </div>
 
           {/* Generation Area */}
-          <div className="flex-1 min-h-[300px] max-h-[500px] overflow-y-auto bg-zinc-950/80 p-4 scrollbar-hide">
+          <div className="flex-1 min-h-[300px] max-h-[500px] overflow-y-auto bg-white dark:bg-zinc-950/80 p-4 scrollbar-hide">
             {generation ? (
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                 {generation}
               </div>
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-center p-8 opacity-20 group">
-                 <Sparkles size={40} className="text-zinc-700 mb-4 group-hover:text-red-500 transition-colors" />
-                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 italic">Analiz başlatmak için bir soru sorun</p>
+                 <Sparkles size={40} className="text-slate-300 dark:text-zinc-700 mb-4 group-hover:text-red-500 transition-colors" />
+                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-zinc-600 italic">Analiz başlatmak için bir soru sorun</p>
               </div>
             )}
           </div>
 
           {/* Input Area */}
-          <form onSubmit={handleAsk} className="p-3 bg-black border-t border-zinc-800 flex gap-2">
+          <form onSubmit={handleAsk} className="p-3 bg-slate-50 dark:bg-black border-t border-slate-100 dark:border-zinc-800 flex gap-2">
             <input 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Örn: En çok lead gelen 3 kaynağı göster..." 
-              className="flex-1 bg-zinc-900 border border-zinc-800 rounded-[4px] px-4 py-3 text-[10px] font-bold text-zinc-300 outline-none focus:border-red-600/50 transition-all placeholder:text-zinc-700 uppercase italic"
+              className="flex-1 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-[4px] px-4 py-3 text-[10px] font-bold text-slate-900 dark:text-zinc-300 outline-none focus:border-red-600/50 transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700 uppercase italic"
             />
             <button 
               type="submit"
@@ -94,7 +94,7 @@ export default function AiDashboard() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 active:scale-90 group relative overflow-hidden ${
-          isOpen ? "bg-zinc-800 text-red-500 rotate-90" : "bg-red-600 text-white hover:scale-110"
+          isOpen ? "bg-white dark:bg-zinc-800 text-red-500 rotate-90 border border-slate-100 dark:border-zinc-700" : "bg-red-600 text-white hover:scale-110"
         }`}
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

@@ -57,21 +57,21 @@ export default function CrmKanbanClient({ initialLeads, tenantId, userId }: { in
   return (
     <KanbanBoard 
       onDragEnd={onDragEnd}
-      className="flex flex-col xl:flex-row gap-4 min-h-0 h-full overflow-x-auto scrollbar-hide bg-zinc-950"
+      className="flex flex-col xl:flex-row gap-4 min-h-0 h-full overflow-x-auto scrollbar-hide bg-white dark:bg-zinc-950"
     >
       {COLUMNS.map((col) => (
         <KanbanColumn 
           key={col.id} 
           id={col.id}
-          className="flex-1 min-w-[300px] max-w-[380px] h-full bg-zinc-900 border border-zinc-800 rounded-[4px] flex flex-col shadow-lg relative overflow-hidden"
+          className="flex-1 min-w-[300px] max-w-[380px] h-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 rounded-[4px] flex flex-col shadow-lg relative overflow-hidden"
         >
           {/* Column Header - STICKY & SHARP */}
-          <div className="sticky top-0 z-20 flex items-center justify-between border-b border-zinc-800 p-2.5 bg-zinc-900/95 backdrop-blur-sm shrink-0">
-            <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 italic flex items-center gap-2">
+          <div className="sticky top-0 z-20 flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 p-2.5 bg-slate-50/95 dark:bg-zinc-900/95 backdrop-blur-sm shrink-0">
+            <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-zinc-500 italic flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-red-600 rounded-[4px] animate-pulse" />
               {col.title}
             </h3>
-            <span className="text-[9px] font-mono text-zinc-600 bg-black px-2 py-0.5 border border-zinc-800 rounded-[4px]">
+            <span className="text-[9px] font-mono text-slate-400 dark:text-zinc-600 bg-white dark:bg-black px-2 py-0.5 border border-slate-100 dark:border-zinc-800 rounded-[4px]">
               {leads.filter(l => l.status === col.id).length}
             </span>
           </div>
@@ -83,34 +83,34 @@ export default function CrmKanbanClient({ initialLeads, tenantId, userId }: { in
                 key={lead.id} 
                 id={lead.id} 
                 item={lead}
-                className="bg-black border border-zinc-800 rounded-[4px] p-2.5 relative group cursor-grab active:cursor-grabbing hover:border-red-600/50 transition-all shadow-md shrink-0"
+                className="bg-white dark:bg-black border border-slate-200 dark:border-zinc-800 rounded-[4px] p-2.5 relative group cursor-grab active:cursor-grabbing hover:border-red-600/50 transition-all shadow-md shrink-0"
                 activeClassName="opacity-0"
               >
                 {/* Neon Accent Line - SHARP */}
-                <div className="absolute top-2.5 left-0 w-0.5 h-4 bg-zinc-800 group-hover:bg-red-600 transition-colors" />
+                <div className="absolute top-2.5 left-0 w-0.5 h-4 bg-slate-200 dark:bg-zinc-800 group-hover:bg-red-600 transition-colors" />
 
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[7px] font-black uppercase tracking-widest text-red-500 bg-red-500/5 px-1.5 py-0.5 border border-red-500/20 rounded-[4px]">
                       {lead.source}
                     </span>
-                    <span className="text-[7px] font-mono text-zinc-600">
+                    <span className="text-[7px] font-mono text-slate-300 dark:text-zinc-600">
                       #{lead.id.slice(-4)}
                     </span>
                   </div>
 
                   <div>
-                    <h4 className="text-[11px] font-black text-zinc-200 uppercase tracking-tighter italic flex items-center gap-1.5 leading-none">
-                      <User size={10} className="text-zinc-600" />
+                    <h4 className="text-[11px] font-black text-slate-900 dark:text-zinc-200 uppercase tracking-tighter italic flex items-center gap-1.5 leading-none">
+                      <User size={10} className="text-slate-400 dark:text-zinc-600" />
                       {lead.fullName}
                     </h4>
                     <div className="flex flex-col gap-0.5 mt-0.5">
-                      <div className="flex items-center gap-1.5 text-zinc-500">
+                      <div className="flex items-center gap-1.5 text-slate-500 dark:text-zinc-500">
                         <Mail size={8} />
                         <span className="text-[8px] font-bold truncate">{lead.email}</span>
                       </div>
                       {lead.phone && (
-                        <div className="flex items-center gap-1.5 text-zinc-500">
+                        <div className="flex items-center gap-1.5 text-slate-500 dark:text-zinc-500">
                           <Phone size={8} />
                           <span className="text-[8px] font-bold">{lead.phone}</span>
                         </div>
@@ -118,18 +118,18 @@ export default function CrmKanbanClient({ initialLeads, tenantId, userId }: { in
                     </div>
                   </div>
 
-                  <div className="p-1.5 bg-zinc-950 border border-zinc-800/50 rounded-[4px]">
-                    <p className="text-[8px] text-zinc-400 italic leading-tight line-clamp-1">
+                  <div className="p-1.5 bg-slate-50 dark:bg-zinc-950 border border-slate-100 dark:border-zinc-800/50 rounded-[4px]">
+                    <p className="text-[8px] text-slate-400 dark:text-zinc-400 italic leading-tight line-clamp-1">
                       {lead.message}
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-1 border-t border-zinc-800/50">
-                    <div className="flex items-center gap-1 text-zinc-600">
+                  <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-zinc-800/50">
+                    <div className="flex items-center gap-1 text-slate-400 dark:text-zinc-600">
                       <Calendar size={9} />
                       <span className="text-[7px] font-bold uppercase">{new Date(lead.createdAt).toLocaleDateString('tr-TR')}</span>
                     </div>
-                    <ArrowRight size={10} className="text-zinc-800 group-hover:text-red-600 transition-colors" />
+                    <ArrowRight size={10} className="text-slate-300 dark:text-zinc-800 group-hover:text-red-600 transition-colors" />
                   </div>
                 </div>
               </LeadCard>

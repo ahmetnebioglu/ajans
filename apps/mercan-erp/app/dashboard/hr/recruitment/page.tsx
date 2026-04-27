@@ -11,6 +11,7 @@ import {
   Input,
   Button
 } from "antd";
+import { useTheme } from "next-themes";
 import { 
   User, 
   Mail, 
@@ -28,6 +29,9 @@ import { CandidateStatus } from "@ajans/db";
 const { Title, Text } = Typography;
 
 export default function RecruitmentPage() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
@@ -130,23 +134,23 @@ export default function RecruitmentPage() {
   ];
 
   return (
-    <div className="p-8 space-y-6 animate-in fade-in duration-500 italic font-medium">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-900 pb-8">
+     <div className="p-8 space-y-6 animate-in fade-in duration-500 italic font-medium">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-200 dark:border-slate-900 pb-8">
         <div className="space-y-1">
-          <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic leading-none">
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase italic leading-none">
             Aday Takip <span className="text-[var(--color-purple-600)]">Sistemi</span>
           </h1>
           <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em]">ATS / Başvuru Yönetim Paneli</p>
         </div>
-        <div className="flex gap-3">
+         <div className="flex gap-3">
           <Input 
-            prefix={<Search size={14} className="text-slate-600" />}
+            prefix={<Search size={14} className="text-slate-400 dark:text-slate-600" />}
             placeholder="Aday Ara..."
-            className="w-64 h-12 bg-slate-900 border-slate-800 rounded-[4px] text-xs font-black uppercase tracking-widest text-white"
+            className="w-64 h-12 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-[4px] text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white shadow-sm"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <Button icon={<Filter size={14} />} className="h-12 border-slate-800 text-xs font-black uppercase tracking-widest bg-slate-900 text-slate-400">Filtrele</Button>
+          <Button icon={<Filter size={14} />} className="h-12 border-slate-200 dark:border-slate-800 text-xs font-black uppercase tracking-widest bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 shadow-sm">Filtrele</Button>
         </div>
       </div>
 
@@ -161,36 +165,39 @@ export default function RecruitmentPage() {
           locale={{ emptyText: <div className="p-16 text-center text-slate-400 uppercase font-black text-[10px] tracking-[0.5em]">Aday kaydı bulunamadı</div> }}
         />
       </Card>
-      <style jsx global>{`
-        .dark-table .ant-table {
+       <style jsx global>{`
+        .premium-table .ant-table {
           background: transparent !important;
-          color: #94a3b8 !important;
+          color: ${isDark ? '#94a3b8' : '#475569'} !important;
         }
-        .dark-table .ant-table-thead > tr > th {
-          background: #09090b !important;
-          color: #475569 !important;
-          border-bottom: 1px solid #18181b !important;
+        .premium-table .ant-table-thead > tr > th {
+          background: ${isDark ? '#09090b' : '#f8fafc'} !important;
+          color: ${isDark ? '#475569' : '#64748b'} !important;
+          border-bottom: 1px solid ${isDark ? '#18181b' : '#e2e8f0'} !important;
           font-size: 9px !important;
           font-weight: 900 !important;
           letter-spacing: 0.1em !important;
           text-transform: uppercase !important;
           font-style: italic;
         }
-        .dark-table .ant-table-tbody > tr > td {
-          border-bottom: 1px solid #18181b !important;
+        .premium-table .ant-table-tbody > tr > td {
+          border-bottom: 1px solid ${isDark ? '#18181b' : '#f1f5f9'} !important;
           transition: all 0.3s !important;
         }
-        .dark-table .ant-table-tbody > tr:hover > td {
-          background: #0c0c0e !important;
+        .premium-table .ant-table-tbody > tr:hover > td {
+          background: ${isDark ? '#0c0c0e' : '#f8fafc'} !important;
         }
-        .dark-table .ant-pagination-item {
+        .premium-table .ant-pagination-item {
           background: transparent !important;
-          border-color: #27272a !important;
+          border-color: ${isDark ? '#27272a' : '#e2e8f0'} !important;
         }
-        .dark-table .ant-pagination-item-active {
+        .premium-table .ant-pagination-item a {
+           color: ${isDark ? '#94a3b8' : '#475569'} !important;
+        }
+        .premium-table .ant-pagination-item-active {
           border-color: #9333ea !important;
         }
-        .dark-table .ant-pagination-item-active a {
+        .premium-table .ant-pagination-item-active a {
           color: #9333ea !important;
         }
       `}</style>

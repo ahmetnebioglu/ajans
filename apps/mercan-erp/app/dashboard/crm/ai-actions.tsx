@@ -19,13 +19,13 @@ export async function streamCrmInsights(userInput: string) {
   const result = await streamUI({
     model: openai("gpt-4o"),
     prompt: userInput,
-    text: ({ content }) => <div className="text-sm text-zinc-400 italic p-4">{content}</div>,
+    text: ({ content }) => <div className="text-sm text-slate-500 dark:text-zinc-400 italic p-4">{content}</div>,
     tools: {
       getLeadsBySource: {
         description: "En çok lead gelen kaynakları analiz eder ve grafik olarak gösterir.",
         inputSchema: z.object({}),
         generate: async function* () {
-          yield <div className="p-4 text-[10px] font-black uppercase text-zinc-500 animate-pulse">Veriler analiz ediliyor...</div>;
+          yield <div className="p-4 text-[10px] font-black uppercase text-slate-400 dark:text-zinc-500 animate-pulse">Veriler analiz ediliyor...</div>;
           
           const leadsRes = await getLeads(tenantId);
           const leads = leadsRes.success ? leadsRes.data : [];
@@ -38,8 +38,8 @@ export async function streamCrmInsights(userInput: string) {
           const data = Object.entries(sourceMap).map(([name, count]) => ({ name, count }));
 
           return (
-            <div className="bg-black border border-zinc-800 p-6 rounded-none space-y-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-500 italic">Kaynak Analizi (Leads)</h3>
+            <div className="bg-white dark:bg-black border border-slate-100 dark:border-zinc-800 p-6 rounded-none space-y-4 shadow-sm">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-600 dark:text-teal-500 italic">Kaynak Analizi (Leads)</h3>
               <BarChart 
                 data={data} 
                 index="name" 
@@ -54,7 +54,7 @@ export async function streamCrmInsights(userInput: string) {
         description: "Leadlerin durum dağılımını (New, Contacted vb.) gösterir.",
         inputSchema: z.object({}),
         generate: async function* () {
-          yield <div className="p-4 text-[10px] font-black uppercase text-zinc-500 animate-pulse">Durumlar hesaplanıyor...</div>;
+          yield <div className="p-4 text-[10px] font-black uppercase text-slate-400 dark:text-zinc-500 animate-pulse">Durumlar hesaplanıyor...</div>;
           
           const leadsRes = await getLeads(tenantId);
           const leads = leadsRes.success ? leadsRes.data : [];
@@ -67,8 +67,8 @@ export async function streamCrmInsights(userInput: string) {
           const data = Object.entries(statusMap).map(([name, value]) => ({ name, value }));
 
           return (
-            <div className="bg-black border border-zinc-800 p-6 rounded-none space-y-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-500 italic">Durum Dağılımı</h3>
+            <div className="bg-white dark:bg-black border border-slate-100 dark:border-zinc-800 p-6 rounded-none space-y-4 shadow-sm">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-600 dark:text-teal-500 italic">Durum Dağılımı</h3>
               <PieChart 
                 data={data} 
                 index="name" 
