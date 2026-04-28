@@ -63,3 +63,4 @@ export const getGoogleAuth = () => {
 export * from "./drive";
 export * from "./admin";
 export * from "./WorkspaceAdminService";
+export * from './services/places';
