@@ -18,6 +18,12 @@ export const CardHeader = ({ className, children }: { className?: string; childr
   </div>
 );
 
+export const CardTitle = ({ className, children }: { className?: string; children: React.ReactNode }) => (
+  <h3 className={cn("text-lg font-semibold leading-none tracking-tight", className)}>
+    {children}
+  </h3>
+);
+
 export const CardContent = ({ className, children }: { className?: string; children: React.ReactNode }) => (
   <div className={cn("p-3", className)}>
     {children}
