@@ -46,6 +46,16 @@ export default function ProfilePage() {
 
   const user = session?.user;
 
+  // Form verilerini oturum açıldığında ilklendir
+  React.useEffect(() => {
+    if (user) {
+      form.setFieldsValue({
+        name: user.name,
+        email: user.email,
+      });
+    }
+  }, [user, form]);
+
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
@@ -100,27 +110,38 @@ export default function ProfilePage() {
         <Col xs={24} lg={8}>
           <Card className="shadow-sm border-slate-100 dark:border-zinc-800 dark:bg-slate-900/50 text-center py-6 h-full">
             <div className="relative inline-block mb-6 group">
-              <Avatar 
-                size={120} 
-                src={avatarFile ? URL.createObjectURL(avatarFile) : user?.image} 
-                icon={<UserOutlined />} 
-                className="border-4 border-white dark:border-zinc-800 shadow-xl bg-primary"
-              />
-              <Upload 
-                showUploadList={false} 
-                beforeUpload={(file) => {
-                  setAvatarFile(file);
-                  return false; // Prevent automatic upload
-                }}
-                className="absolute bottom-1 right-1"
-              >
+              <div className="w-[120px] h-[120px] rounded-full overflow-hidden border-4 border-white dark:border-zinc-800 shadow-xl bg-slate-100 flex items-center justify-center relative">
+                {avatarFile || user?.image ? (
+                  <img 
+                    src={avatarFile ? URL.createObjectURL(avatarFile) : user?.image} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <UserOutlined className="text-4xl text-slate-300" />
+                )}
+                
+                <Upload 
+                  showUploadList={false} 
+                  beforeUpload={(file) => {
+                    setAvatarFile(file);
+                    return false;
+                  }}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  <div className="w-full h-full" />
+                </Upload>
+              </div>
+              
+              <div className="absolute bottom-1 right-1 pointer-events-none">
                 <Button 
                   shape="circle" 
                   icon={<CameraOutlined />} 
                   size="small" 
-                  className="bg-primary text-white border-none shadow-lg hover:scale-110 transition-transform"
+                  className="bg-primary text-white border-none shadow-lg"
                 />
-              </Upload>
+              </div>
             </div>
             
             <Title level={4} className="mb-1 !font-black uppercase italic tracking-tighter">

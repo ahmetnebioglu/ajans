@@ -23,35 +23,48 @@ export async function updateProfile(formData: FormData) {
 
     // Eğer yeni bir dosya yüklendiyse
     if (file && file.size > 0 && file.name !== "undefined") {
+      console.log(`[ProfileAction] Uploading new avatar: ${file.name}, size: ${file.size}`);
       const buffer = Buffer.from(await file.arrayBuffer());
       
       // Google Drive'a yükle
-      const driveFile = await uploadToDrive(
-        buffer,
-        `profile_${session.user.email.split('@')[0]}_${Date.now()}.jpg`,
-        file.type,
-        process.env.GOOGLE_DRIVE_FOLDER_ID
-      );
+      try {
+        const driveFile = await uploadToDrive(
+          buffer,
+          `profile_${session.user.email.split('@')[0]}_${Date.now()}.jpg`,
+          file.type,
+          process.env.GOOGLE_DRIVE_FOLDER_ID
+        );
 
-      if (driveFile && driveFile.id) {
-        // Direct link format for Google Drive (publicly shared)
-        imageUrl = `https://lh3.google.com/u/0/d/${driveFile.id}`;
-        // Alternatif: https://drive.google.com/thumbnail?id=${driveFile.id}&sz=w1000
-        imageUrl = `https://drive.google.com/thumbnail?id=${driveFile.id}&sz=w800`;
+        if (driveFile && driveFile.id) {
+          console.log(`[ProfileAction] File uploaded to Drive, ID: ${driveFile.id}`);
+          // Google Drive kısıtlamalarını aşmak için yerel Proxy API kullan
+          imageUrl = `/api/drive-image?id=${driveFile.id}`;
+        } else {
+          console.error("[ProfileAction] Drive upload failed: No ID returned");
+        }
+      } catch (uploadError: any) {
+        console.error("[ProfileAction] Drive upload exception:", uploadError);
+        return { success: false, error: "Resim yükleme sırasında teknik bir hata oluştu: " + uploadError.message };
       }
     }
 
-    // Veritabanını güncelle
-    await db.user.update({
-      where: { email: session.user.email },
-      data: {
-        name: name || session.user.name,
-        image: imageUrl
-      }
+    // Veritabanını güncelle (SQL Transaction kullanarak - Kalıcı Senkronizasyon)
+    await db.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { email: session.user.email }, 
+        data: {
+          name: name || session.user.name,
+          image: imageUrl
+        }
+      });
     });
 
+    console.log(`[ProfileAction] Profile updated for ${session.user.email}`);
+
+    // Next.js Cache Patlatma
     revalidatePath("/profile");
-    revalidatePath("/");
+    revalidatePath("/settings");
+    revalidatePath("/", "layout");
     
     return { success: true, imageUrl };
   } catch (error: any) {

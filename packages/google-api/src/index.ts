@@ -2,9 +2,9 @@ import { google } from "googleapis";
 import path from "path";
 import fs from "fs";
 
-// Google Cloud Authentication (Supports OAuth2 Refresh Token or Service Account)
+// Google Cloud Authentication (Hybrid: Supports Service Account & OAuth2 Refresh Token)
 export const getGoogleAuth = () => {
-  // Option 1: User OAuth2 Refresh Token (Best for Personal Accounts & Quota)
+  // 1. Yol: OAuth2 Refresh Token (Bireysel hesap kotasını kullanmak için en iyisi)
   if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_REFRESH_TOKEN) {
     console.log("[Google Auth] Using personal account OAuth2 Refresh Token.");
     const oauth2Client = new google.auth.OAuth2(
@@ -18,46 +18,32 @@ export const getGoogleAuth = () => {
     return oauth2Client;
   }
 
-  // Option 2: Service Account (Previous method)
-  let credentials;
-  let absolutePath;
+  // 2. Yol: Service Account (google-credentials.json dosyası varsa)
+  const keyPath = path.join(process.cwd(), "google-credentials.json");
+  if (fs.existsSync(keyPath)) {
+    console.log(`[Google Auth] Using Service Account from: ${keyPath}`);
+    return new google.auth.GoogleAuth({
+      keyFile: keyPath,
+      scopes: ["https://www.googleapis.com/auth/drive.file"]
+    });
+  }
 
-  const serviceAccountPath = process.env.GOOGLE_SERVICE_ACCOUNT_PATH;
-  if (serviceAccountPath) {
-    const attemptedPath = path.isAbsolute(serviceAccountPath) 
-      ? serviceAccountPath 
-      : path.join(process.cwd(), serviceAccountPath);
+  // 3. Yol: Çevresel değişkenlerden gelen Service Account yolu
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_PATH) {
+    const envPath = path.isAbsolute(process.env.GOOGLE_SERVICE_ACCOUNT_PATH) 
+      ? process.env.GOOGLE_SERVICE_ACCOUNT_PATH 
+      : path.join(process.cwd(), process.env.GOOGLE_SERVICE_ACCOUNT_PATH);
     
-    if (fs.existsSync(attemptedPath)) {
-        absolutePath = attemptedPath;
-        console.log(`[Google Auth] Using Service Account from: ${absolutePath}`);
-    } else {
-        const rootPath = path.join(process.cwd(), "..", "..", serviceAccountPath);
-        if (fs.existsSync(rootPath)) {
-            absolutePath = rootPath;
-            console.log(`[Google Auth] Using Service Account from root: ${absolutePath}`);
-        }
+    if (fs.existsSync(envPath)) {
+      console.log(`[Google Auth] Using Service Account from ENV path: ${envPath}`);
+      return new google.auth.GoogleAuth({
+        keyFile: envPath,
+        scopes: ["https://www.googleapis.com/auth/drive.file"]
+      });
     }
   }
 
-  if (!absolutePath && process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
-    console.log("[Google Auth] Using Service Account from GOOGLE_SERVICE_ACCOUNT_JSON env.");
-    credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-  }
-
-  if (!absolutePath && !credentials) {
-    throw new Error("No valid Google Authentication found (OAuth2 or Service Account)");
-  }
-
-  return new google.auth.GoogleAuth({
-    keyFile: absolutePath || undefined,
-    credentials: !absolutePath ? credentials : undefined,
-    scopes: [
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/admin.directory.user"
-    ]
-  });
+  throw new Error("No valid Google Authentication found (OAuth2 or Service Account)");
 };
 
 export * from "./drive";

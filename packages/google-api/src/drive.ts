@@ -9,7 +9,9 @@ export async function uploadToDrive(
   folderId?: string
 ) {
   const auth = getGoogleAuth();
-  const drive = google.drive({ version: "v3", auth });
+  // Service Account (GoogleAuth) veya OAuth2 desteği için istemciyi al
+  const authClient = "getClient" in auth ? await (auth as any).getClient() : auth;
+  const drive = google.drive({ version: "v3", auth: authClient });
 
   console.log(`[Drive] Attempting RESUMABLE upload for ${fileName} to folder ${folderId}`);
   

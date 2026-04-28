@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logApiUsage } from '@ajans/db';
 
 export interface BusinessResult {
   name: string;
@@ -34,6 +35,9 @@ export async function searchBusinesses(query: string, location?: string): Promis
         }
       }
     );
+
+    // API kullanımını logla (Tahmini maliyet: 0.017 $)
+    logApiUsage("GOOGLE_PLACES", "SEARCH_TEXT", 0.017);
 
     if (!response.data || !response.data.places) {
       console.warn('Google Places API: Sonuç bulunamadı veya geçersiz yanıt.', response.data);

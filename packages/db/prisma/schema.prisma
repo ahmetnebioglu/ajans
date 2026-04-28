@@ -539,3 +539,11 @@ model LeaveRequest {
 
   @@index([tenantId])
 }
+
+model ApiUsage {
+  id        String   @id @default(cuid())
+  service   String   // Örn: "GOOGLE_PLACES", "RESEND"
+  endpoint  String   // Örn: "AUTOCOMPLETE", "SEND_EMAIL"
+  cost      Float    // Tahmini dolar maliyeti (Örn: 0.017)
+  createdAt DateTime @default(now())
+}

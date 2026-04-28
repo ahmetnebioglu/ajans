@@ -76,3 +76,5 @@ Thumbs.db
 # =========================================
 .vercel/
 scratch/
+
+google-credentials.json

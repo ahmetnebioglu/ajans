@@ -1,17 +1,17 @@
 "use client";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import React, { useState, useEffect } from "react";
-import { 
-  Table, 
-  Tag, 
-  Space, 
-  Button, 
-  Input, 
-  Badge, 
-  Progress, 
-  Modal, 
+import {
+  Table,
+  Tag,
+  Space,
+  Button,
+  Input,
+  Badge,
+  Progress,
+  Modal,
   Typography,
   Avatar,
   message as antdMessage,
@@ -20,16 +20,16 @@ import {
   Spin,
   Statistic,
   Timeline,
-  Skeleton
+  Skeleton,
 } from "antd";
-import { 
-  SearchOutlined, 
-  PhoneOutlined, 
-  EyeOutlined, 
+import {
+  SearchOutlined,
+  PhoneOutlined,
+  EyeOutlined,
   StarOutlined,
-  StarFilled
+  StarFilled,
 } from "@ant-design/icons";
-import { 
+import {
   Radar,
   ScanSearch,
   MapPin,
@@ -46,7 +46,7 @@ import {
   UserPlus,
   ShieldCheck,
   Phone,
-  Link
+  Link,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { scheduleCall, toggleVipStatus } from "./actions";
@@ -83,7 +83,7 @@ export default function LeadsPage() {
   const loadLeads = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/leads', { cache: 'no-store' });
+      const response = await fetch("/api/leads", { cache: "no-store" });
       const result = await response.json();
       if (result.success) {
         setData(result.data || []);
@@ -101,7 +101,9 @@ export default function LeadsPage() {
   const fetchInteractions = async (id: string) => {
     setInteractionsLoading(true);
     try {
-      const response = await fetch(`/api/leads/${id}/interactions`, { cache: 'no-store' });
+      const response = await fetch(`/api/leads/${id}/interactions`, {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.success) {
         setInteractions(result.data.interactions || []);
@@ -128,9 +130,9 @@ export default function LeadsPage() {
       router.refresh();
       api.success({
         // @ts-ignore
-        title: 'Tablo Güncellendi',
-        description: 'Veritabanındaki en güncel veriler başarıyla yüklendi.',
-        placement: 'topRight',
+        title: "Tablo Güncellendi",
+        description: "Veritabanındaki en güncel veriler başarıyla yüklendi.",
+        placement: "topRight",
         icon: <RotateCw className="text-blue-500" size={18} />,
       } as any);
     } finally {
@@ -145,35 +147,37 @@ export default function LeadsPage() {
   };
 
   const handleCall = async (id: string) => {
-    const hide = antdMessage.loading('Arama planlanıyor...', 0);
+    const hide = antdMessage.loading("Arama planlanıyor...", 0);
     const res = await scheduleCall(id);
     hide();
     if (res.success) {
-      antdMessage.success('Arama başarıyla planlandı.');
+      antdMessage.success("Arama başarıyla planlandı.");
       setIsModalOpen(false);
     } else {
-      antdMessage.error('Hata: ' + res.error);
+      antdMessage.error("Hata: " + res.error);
     }
   };
 
   const handleToggleVip = async (id: string, currentStatus: string) => {
-    const hide = antdMessage.loading('Güncelleniyor...', 0);
+    const hide = antdMessage.loading("Güncelleniyor...", 0);
     const res = await toggleVipStatus(id, currentStatus);
     hide();
     if (res.success) {
-      antdMessage.success(`Kayıt ${res.newStatus === 'VIP' ? 'VIP yapıldı' : 'Normal statüye alındı'}.`);
+      antdMessage.success(
+        `Kayıt ${res.newStatus === "VIP" ? "VIP yapıldı" : "Normal statüye alındı"}.`,
+      );
       loadLeads();
     } else {
-      antdMessage.error('Hata: ' + res.error);
+      antdMessage.error("Hata: " + res.error);
     }
   };
 
   const handleStartScrape = async (values: any) => {
     setIsScraping(true);
     try {
-      const response = await fetch('/api/leads/scrape', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/leads/scrape", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
@@ -184,9 +188,9 @@ export default function LeadsPage() {
         await loadLeads();
         api.success({
           // @ts-ignore
-          title: 'Tarama Başarılı',
+          title: "Tarama Başarılı",
           description: `${result.count || 0} yeni lead bulundu ve sisteme eklendi.`,
-          placement: 'topRight',
+          placement: "topRight",
           icon: <CheckCircle2 className="text-emerald-500" />,
         } as any);
         setIsScannerOpen(false);
@@ -195,16 +199,18 @@ export default function LeadsPage() {
       } else {
         api.error({
           // @ts-ignore
-          title: 'Tarama Hatası',
-          description: result.error || 'Google Places verileri çekilirken bir sorun oluştu.',
+          title: "Tarama Hatası",
+          description:
+            result.error ||
+            "Google Places verileri çekilirken bir sorun oluştu.",
           icon: <AlertCircle className="text-rose-500" />,
         } as any);
       }
     } catch (error) {
       api.error({
         // @ts-ignore
-        title: 'Bağlantı Hatası',
-        description: 'Sunucuya ulaşılamadı.',
+        title: "Bağlantı Hatası",
+        description: "Sunucuya ulaşılamadı.",
       } as any);
     } finally {
       setIsScraping(false);
@@ -218,71 +224,84 @@ export default function LeadsPage() {
 
     // Veritabanından gelen etkileşimleri işle ve özet/mükerrer logları filtrele
     interactions
-      .filter(int => 
-        int.type !== 'PROFILE_COMPLETION' && 
-        !(int.description && int.description.includes('Sistem güncellenerek'))
+      .filter(
+        (int) =>
+          int.type !== "PROFILE_COMPLETION" &&
+          !(
+            int.description && int.description.includes("Sistem güncellenerek")
+          ),
       )
-      .forEach(int => {
-      let icon = <Eye size={14} className="text-orange-400" />;
-      let title = "Etkileşim";
-      let color = "orange";
-      let displayScore = int.scoreAdded > 0 ? `[+${int.scoreAdded} Puan]` : "";
+      .forEach((int) => {
+        let icon = <Eye size={14} className="text-orange-400" />;
+        let title = "Etkileşim";
+        let color = "orange";
+        let displayScore =
+          int.scoreAdded > 0 ? `[+${int.scoreAdded} Puan]` : "";
 
-      if (int.type === 'CREATED') {
-        icon = <UserPlus size={14} className="text-slate-400" />;
-        title = "Sisteme Eklendi";
-        color = "gray";
-      } else if (int.type === 'PROFILE_PHONE') {
-        icon = <Phone size={14} className="text-blue-500" />;
-        title = "İletişim: Telefon";
-        color = "blue";
-      } else if (int.type === 'PROFILE_WEB') {
-        icon = <Link size={14} className="text-indigo-500" />;
-        title = "İletişim: Web";
-        color = "indigo";
-      } else if (int.type === 'PROFILE_COMPLETION') {
-        icon = <ShieldCheck size={14} className="text-blue-500" />;
-        title = "Profil Analizi";
-        color = "blue";
-      } else if (int.type === 'CLICK') {
-        icon = <MousePointerClick size={14} className="text-emerald-500" />;
-        title = "Katalog Tıklaması";
-        color = "green";
-      } else if (int.type === 'OPEN') {
-        icon = <Eye size={14} className="text-orange-400" />;
-        title = "Mail Açıldı";
-        color = "orange";
-      }
+        if (int.type === "CREATED") {
+          icon = <UserPlus size={14} className="text-slate-400" />;
+          title = "Sisteme Eklendi";
+          color = "gray";
+        } else if (int.type === "PROFILE_PHONE") {
+          icon = <Phone size={14} className="text-blue-500" />;
+          title = "İletişim: Telefon";
+          color = "blue";
+        } else if (int.type === "PROFILE_WEB") {
+          icon = <Link size={14} className="text-indigo-500" />;
+          title = "İletişim: Web";
+          color = "indigo";
+        } else if (int.type === "PROFILE_COMPLETION") {
+          icon = <ShieldCheck size={14} className="text-blue-500" />;
+          title = "Profil Analizi";
+          color = "blue";
+        } else if (int.type === "CLICK") {
+          icon = <MousePointerClick size={14} className="text-emerald-500" />;
+          title = "Katalog Tıklaması";
+          color = "green";
+        } else if (int.type === "OPEN") {
+          icon = <Eye size={14} className="text-orange-400" />;
+          title = "Mail Açıldı";
+          color = "orange";
+        }
 
-      items.push({
-        color: color,
-        dot: icon,
-        children: (
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <Text className={`text-[11px] font-bold uppercase ${
-                color === 'green' ? 'text-emerald-600' : 
-                color === 'blue' ? 'text-blue-600' : 
-                color === 'indigo' ? 'text-indigo-600' : 
-                color === 'orange' ? 'text-orange-500' : 
-                'text-slate-500'
-              }`}>
-                {title}
+        items.push({
+          color: color,
+          dot: icon,
+          children: (
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <Text
+                  className={`text-[11px] font-bold uppercase ${
+                    color === "green"
+                      ? "text-emerald-600"
+                      : color === "blue"
+                        ? "text-blue-600"
+                        : color === "indigo"
+                          ? "text-indigo-600"
+                          : color === "orange"
+                            ? "text-orange-500"
+                            : "text-slate-500"
+                  }`}
+                >
+                  {title}
+                </Text>
+                {int.scoreAdded > 0 && (
+                  <span className="text-[11px] font-bold text-emerald-500">
+                    {displayScore}
+                  </span>
+                )}
+              </div>
+              <Text className="text-[12px] text-slate-600 dark:text-slate-300 leading-tight">
+                {int.description || "İşlem detay bilgisi yok."}
               </Text>
-              {int.scoreAdded > 0 && (
-                <span className="text-[11px] font-bold text-emerald-500">{displayScore}</span>
-              )}
+              <Text className="text-[10px] text-slate-400 mt-1">
+                {new Date(int.lastSeen).toLocaleDateString("tr-TR")}{" "}
+                {new Date(int.lastSeen).toLocaleTimeString("tr-TR")}
+              </Text>
             </div>
-            <Text className="text-[12px] text-slate-600 dark:text-slate-300 leading-tight">
-              {int.description || 'İşlem detay bilgisi yok.'}
-            </Text>
-            <Text className="text-[10px] text-slate-400 mt-1">
-              {new Date(int.lastSeen).toLocaleDateString('tr-TR')} {new Date(int.lastSeen).toLocaleTimeString('tr-TR')}
-            </Text>
-          </div>
-        )
+          ),
+        });
       });
-    });
 
     return items;
   };
@@ -292,18 +311,22 @@ export default function LeadsPage() {
       title: "Firma & Yetkili",
       dataIndex: "companyName",
       key: "companyName",
-      sorter: (a: any, b: any) => (a.companyName || "").localeCompare(b.companyName || ""),
+      sorter: (a: any, b: any) =>
+        (a.companyName || "").localeCompare(b.companyName || ""),
       render: (text: string, record: any) => (
         <div className="flex items-center gap-3">
-          <Avatar size={32} className="bg-slate-100 dark:bg-blue-900/30 text-blue-600 font-bold shrink-0 rounded">
-            {text ? text[0] : 'L'}
+          <Avatar
+            size={32}
+            className="bg-slate-100 dark:bg-blue-900/30 text-blue-600 font-bold shrink-0 rounded"
+          >
+            {text ? text[0] : "L"}
           </Avatar>
           <div className="flex flex-col">
             <Text className="text-[13px] font-semibold text-slate-800 dark:text-white leading-tight">
-              {text || 'İsimsiz Firma'}
+              {text || "İsimsiz Firma"}
             </Text>
             <Text className="text-[11px] text-slate-400 dark:text-slate-500">
-              {record.name || 'Bilinmiyor'}
+              {record.name || "Bilinmiyor"}
             </Text>
           </div>
         </div>
@@ -326,8 +349,8 @@ export default function LeadsPage() {
       sorter: (a: any, b: any) => a.score - b.score,
       render: (score: number) => (
         <div className="w-24">
-          <Progress 
-            percent={score} 
+          <Progress
+            percent={score}
             size="small"
             strokeColor="hsl(var(--primary))"
           />
@@ -338,7 +361,8 @@ export default function LeadsPage() {
       title: "Durum",
       dataIndex: "status",
       key: "status",
-      sorter: (a: any, b: any) => (a.status || "").localeCompare(b.status || ""),
+      sorter: (a: any, b: any) =>
+        (a.status || "").localeCompare(b.status || ""),
       render: (status: string) => (
         <Tag color="error" className="text-[10px] font-bold uppercase rounded">
           {status}
@@ -350,22 +374,28 @@ export default function LeadsPage() {
       key: "action",
       render: (_: any, record: any) => (
         <Space size="small">
-          <Button 
+          <Button
             size="small"
-            type="text" 
-            icon={record.status === 'VIP' ? <StarFilled className="text-amber-500" /> : <StarOutlined className="text-slate-400" />} 
+            type="text"
+            icon={
+              record.status === "VIP" ? (
+                <StarFilled className="text-amber-500" />
+              ) : (
+                <StarOutlined className="text-slate-400" />
+              )
+            }
             onClick={() => handleToggleVip(record.id, record.status)}
           />
-          <Button 
+          <Button
             size="small"
-            type="text" 
-            icon={<EyeOutlined size={14} className="text-slate-400" />} 
+            type="text"
+            icon={<EyeOutlined size={14} className="text-slate-400" />}
             onClick={() => handleOpenModal(record)}
           />
-          <Button 
+          <Button
             size="small"
-            type="primary" 
-            icon={<PhoneOutlined size={14} />} 
+            type="primary"
+            icon={<PhoneOutlined size={14} />}
             onClick={() => handleCall(record.id)}
             className="bg-primary"
           />
@@ -376,24 +406,33 @@ export default function LeadsPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto flex flex-col gap-6 animate-in fade-in duration-700">
-        {contextHolder}
+      {contextHolder}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-800 dark:text-white">Potansiyel Leadler</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Google Places üzerinden kazınan firma verileri</p>
+          <h1 className="text-xl font-bold text-slate-800 dark:text-white">
+            Potansiyel Müşteriler
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Google Places üzerinden kazınan firma verileri
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <Input 
+          <Input
             size="small"
-            prefix={<SearchOutlined size={14} className="text-slate-400" />} 
-            placeholder="Ara..." 
+            prefix={<SearchOutlined size={14} className="text-slate-400" />}
+            placeholder="Ara..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             allowClear
             className="w-40 dark:bg-slate-900 dark:border-slate-800"
           />
-          <Button 
-            icon={<RotateCw size={14} className={refreshing ? "animate-spin" : ""} />} 
+          <Button
+            icon={
+              <RotateCw
+                size={14}
+                className={refreshing ? "animate-spin" : ""}
+              />
+            }
             size="small"
             onClick={handleRefresh}
             loading={refreshing}
@@ -401,9 +440,9 @@ export default function LeadsPage() {
           >
             Tabloyu Güncelle
           </Button>
-          <Button 
-            type="primary" 
-            icon={<Radar size={14} />} 
+          <Button
+            type="primary"
+            icon={<Radar size={14} />}
             size="small"
             className="bg-primary shadow-md hover:shadow-lg transition-all"
             onClick={() => setIsScannerOpen(true)}
@@ -414,10 +453,10 @@ export default function LeadsPage() {
       </div>
 
       <div className="bg-white dark:bg-slate-900/50 rounded-md border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-        <Table 
+        <Table
           size="small"
-          columns={columns} 
-          dataSource={filteredData} 
+          columns={columns}
+          dataSource={filteredData}
           loading={loading}
           rowKey="id"
           pagination={{ pageSize: 10 }}
@@ -431,24 +470,33 @@ export default function LeadsPage() {
             <div className="w-8 h-8 bg-primary/10 dark:bg-primary/20 text-primary rounded flex items-center justify-center">
               <ScanSearch size={18} />
             </div>
-            <span className="text-[14px] font-bold">Google Places Lead Tarayıcı</span>
+            <span className="text-[14px] font-bold">
+              Google Places Lead Tarayıcı
+            </span>
           </div>
         }
         open={isScannerOpen}
         onCancel={() => !isScraping && setIsScannerOpen(false)}
         footer={[
-          <Button key="cancel" size="small" onClick={() => setIsScannerOpen(false)} disabled={isScraping}>İptal</Button>,
-          <Button 
-            key="submit" 
-            size="small" 
-            type="primary" 
+          <Button
+            key="cancel"
+            size="small"
+            onClick={() => setIsScannerOpen(false)}
+            disabled={isScraping}
+          >
+            İptal
+          </Button>,
+          <Button
+            key="submit"
+            size="small"
+            type="primary"
             loading={isScraping}
             icon={<Radar size={14} />}
             onClick={() => scannerForm.submit()}
             className="bg-primary"
           >
             Taramayı Başlat
-          </Button>
+          </Button>,
         ]}
         centered
         width={450}
@@ -461,28 +509,43 @@ export default function LeadsPage() {
             disabled={isScraping}
           >
             <Form.Item
-              label={<span className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">Anahtar Kelime (Sektör)</span>}
+              label={
+                <span className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">
+                  Anahtar Kelime (Sektör)
+                </span>
+              }
               name="query"
-              rules={[{ required: true, message: 'Lütfen bir sektör girin' }]}
+              rules={[{ required: true, message: "Lütfen bir sektör girin" }]}
             >
-              <Input prefix={<SearchOutlined size={14} className="text-slate-400" />} placeholder="Örn: Kombi Servisi, Tesisatçı..." />
+              <Input
+                prefix={<SearchOutlined size={14} className="text-slate-400" />}
+                placeholder="Örn: Kombi Servisi, Tesisatçı..."
+              />
             </Form.Item>
-            
+
             <Form.Item
-              label={<span className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">Lokasyon (İlçe/İl)</span>}
+              label={
+                <span className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">
+                  Lokasyon (İlçe/İl)
+                </span>
+              }
               name="location"
-              rules={[{ required: true, message: 'Lütfen bir lokasyon girin' }]}
+              rules={[{ required: true, message: "Lütfen bir lokasyon girin" }]}
             >
-              <Input prefix={<MapPin size={14} className="text-slate-400" />} placeholder="Örn: Kadıköy, İstanbul..." />
+              <Input
+                prefix={<MapPin size={14} className="text-slate-400" />}
+                placeholder="Örn: Kadıköy, İstanbul..."
+              />
             </Form.Item>
           </Form>
 
           {isScraping && (
             <div className="mt-4 p-4 bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 rounded-md flex items-center gap-4 animate-pulse">
-               <Spin size="small" />
-               <div className="text-[12px] text-primary dark:text-primary/80 font-medium">
-                  Google üzerinden firmalar taranıyor, bu işlem birkaç saniye sürebilir...
-               </div>
+              <Spin size="small" />
+              <div className="text-[12px] text-primary dark:text-primary/80 font-medium">
+                Google üzerinden firmalar taranıyor, bu işlem birkaç saniye
+                sürebilir...
+              </div>
             </div>
           )}
         </div>
@@ -495,14 +558,26 @@ export default function LeadsPage() {
             <div className="w-8 h-8 bg-primary/10 dark:bg-primary/20 text-primary rounded flex items-center justify-center">
               <TrendingUp size={18} />
             </div>
-            <span className="text-[14px] font-bold">Müşteri Analizi ve Puan Geçmişi</span>
+            <span className="text-[14px] font-bold">
+              Müşteri Analizi ve Puan Geçmişi
+            </span>
           </div>
         }
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={[
-          <Button key="back" size="small" onClick={() => setIsModalOpen(false)}>Kapat</Button>,
-          <Button key="submit" size="small" type="primary" icon={<PhoneOutlined size={14} />} onClick={() => handleCall(selectedLead?.id)}>Şimdi Ara</Button>,
+          <Button key="back" size="small" onClick={() => setIsModalOpen(false)}>
+            Kapat
+          </Button>,
+          <Button
+            key="submit"
+            size="small"
+            type="primary"
+            icon={<PhoneOutlined size={14} />}
+            onClick={() => handleCall(selectedLead?.id)}
+          >
+            Şimdi Ara
+          </Button>,
         ]}
         width={850}
         centered
@@ -513,59 +588,101 @@ export default function LeadsPage() {
             <div className="lg:col-span-2 space-y-4">
               <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-md border border-slate-100 dark:border-slate-800">
                 <div className="mb-4">
-                  <Statistic 
-                    title={<span className="text-[11px] font-bold text-slate-400 uppercase">Toplam Skor</span>} 
-                    value={selectedLead.score} 
+                  <Statistic
+                    title={
+                      <span className="text-[11px] font-bold text-slate-400 uppercase">
+                        Toplam Skor
+                      </span>
+                    }
+                    value={selectedLead.score}
                     precision={0}
-                    valueStyle={{ color: selectedLead.score > 80 ? '#f43f5e' : 'hsl(var(--primary))', fontWeight: '800', fontSize: '32px' }}
+                    styles={{
+                      content: {
+                        color:
+                          selectedLead.score > 80
+                            ? "#f43f5e"
+                            : "hsl(var(--primary))",
+                        fontWeight: "800",
+                        fontSize: "32px",
+                      }
+                    }}
                     prefix={<TrendingUp size={24} className="mb-1" />}
-                    suffix={<span className="text-xs text-slate-400 font-medium">/ 100</span>}
+                    suffix={
+                      <span className="text-xs text-slate-400 font-medium">
+                        / 100
+                      </span>
+                    }
                   />
-                  <Progress 
-                    percent={selectedLead.score} 
-                    size="small" 
-                    showInfo={false} 
-                    strokeColor={selectedLead.score > 80 ? '#f43f5e' : 'hsl(var(--primary))'}
+                  <Progress
+                    percent={selectedLead.score}
+                    size="small"
+                    showInfo={false}
+                    strokeColor={
+                      selectedLead.score > 80
+                        ? "#f43f5e"
+                        : "hsl(var(--primary))"
+                    }
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div className="space-y-3">
-                   <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase">Firma</p>
-                      <p className="text-[13px] font-bold text-slate-800 dark:text-white leading-tight">{selectedLead.companyName}</p>
-                   </div>
-                   <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase">Yetkili</p>
-                      <p className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">{selectedLead.name || 'Bilinmiyor'}</p>
-                   </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase">
+                      Firma
+                    </p>
+                    <p className="text-[13px] font-bold text-slate-800 dark:text-white leading-tight">
+                      {selectedLead.companyName}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase">
+                      Yetkili
+                    </p>
+                    <p className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">
+                      {selectedLead.name || "Bilinmiyor"}
+                    </p>
+                  </div>
                 </div>
               </div>
 
               <div className="p-4 bg-primary/5 dark:bg-primary/10 rounded-md border border-primary/20 dark:border-primary/30 text-[12px]">
-                 <p className="text-[10px] font-bold text-primary uppercase mb-2 flex items-center gap-1">
-                   <Globe size={10} /> İletişim Bilgileri
-                 </p>
-                 <div className="space-y-1.5">
-                    <p className="flex justify-between">
-                      <span className="text-slate-500">Telefon:</span>
-                      <span className="font-bold text-slate-700 dark:text-slate-300">{selectedLead.phone || 'Yok'}</span>
-                    </p>
-                    <p className="flex justify-between items-start gap-4">
-                      <span className="text-slate-500">Web:</span>
-                      <span className="font-bold text-right truncate max-w-[150px]">
-                        {selectedLead.website ? (
-                          <a href={selectedLead.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                            {selectedLead.website.replace('https://', '').replace('http://', '')}
-                          </a>
-                        ) : 'Yok'}
-                      </span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span className="text-slate-500">Kaynak:</span>
-                      <Tag color="blue" className="text-[10px] m-0 leading-tight">{selectedLead.source}</Tag>
-                    </p>
-                 </div>
+                <p className="text-[10px] font-bold text-primary uppercase mb-2 flex items-center gap-1">
+                  <Globe size={10} /> İletişim Bilgileri
+                </p>
+                <div className="space-y-1.5">
+                  <p className="flex justify-between">
+                    <span className="text-slate-500">Telefon:</span>
+                    <span className="font-bold text-slate-700 dark:text-slate-300">
+                      {selectedLead.phone || "Yok"}
+                    </span>
+                  </p>
+                  <p className="flex justify-between items-start gap-4">
+                    <span className="text-slate-500">Web:</span>
+                    <span className="font-bold text-right truncate max-w-[150px]">
+                      {selectedLead.website ? (
+                        <a
+                          href={selectedLead.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          {selectedLead.website
+                            .replace("https://", "")
+                            .replace("http://", "")}
+                        </a>
+                      ) : (
+                        "Yok"
+                      )}
+                    </span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-slate-500">Kaynak:</span>
+                    <Tag color="blue" className="text-[10px] m-0 leading-tight">
+                      {selectedLead.source}
+                    </Tag>
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -573,7 +690,9 @@ export default function LeadsPage() {
             <div className="lg:col-span-3">
               <div className="flex items-center gap-2 mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
                 <History size={16} className="text-slate-400" />
-                <span className="text-[13px] font-bold text-slate-700 dark:text-slate-300">Etkileşim ve Puan Analizi</span>
+                <span className="text-[13px] font-bold text-slate-700 dark:text-slate-300">
+                  Etkileşim ve Puan Analizi
+                </span>
               </div>
 
               <div className="max-h-[400px] overflow-y-auto pr-2 hide-those-scrollbars">
@@ -583,16 +702,18 @@ export default function LeadsPage() {
                     <Skeleton active paragraph={{ rows: 2 }} />
                   </div>
                 ) : (
-                  <Timeline 
+                  <Timeline
                     mode="left"
                     items={getTimelineItems()}
                     className="mt-4 custom-lead-timeline"
                   />
                 )}
-                
+
                 {!interactionsLoading && interactions.length === 0 && (
                   <div className="py-10 text-center">
-                    <Text className="text-[12px] text-slate-400">Henüz bir etkileşim kaydı bulunmuyor.</Text>
+                    <Text className="text-[12px] text-slate-400">
+                      Henüz bir etkileşim kaydı bulunmuyor.
+                    </Text>
                   </div>
                 )}
               </div>

@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { logApiUsage } from '@ajans/db';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -33,6 +34,9 @@ export async function sendOutreachEmail(lead: { id: string, email: string, name:
     console.error('Email Send Error:', error);
     return { success: false, error };
   }
+
+  // API kullanımını logla (Tahmini maliyet: 0.001 $)
+  logApiUsage("RESEND", "SEND_EMAIL", 0.001);
 
   return { success: true, data };
 }

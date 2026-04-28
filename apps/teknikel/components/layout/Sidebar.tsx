@@ -32,7 +32,7 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
 
   const menuItems: MenuProps['items'] = [
     { key: "/", icon: <LayoutDashboard size={18} />, label: "Dashboard" },
-    { key: "/leads", icon: <Search size={18} />, label: "Potansiyel Leadler" },
+    { key: "/leads", icon: <Search size={18} />, label: "Potansiyel Müşteriler" },
     { key: "/vip", icon: <Crown size={18} />, label: "VIP Müşteriler" },
     { type: "divider" },
     { key: "/settings", icon: <Settings size={18} />, label: "Ayarlar" },
