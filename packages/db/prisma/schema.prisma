@@ -423,20 +423,35 @@ enum Role {
 }
 
 model Lead {
-  id         String         @id @default(cuid())
-  fullName   String
-  email      String
-  phone      String?
-  source     String // MERCAN_WEBSITE, OKUL_LANDING etc.
-  message    String         @db.Text
-  status     String         @default("NEW") // NEW, CONTACTED, PROPOSAL_SENT, CLOSED_WON, CLOSED_LOST
-  tenantId   String
-  activities LeadActivity[]
-  deletedAt  DateTime?
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  id           String         @id @default(cuid())
+  name         String?
+  companyName  String?
+  email        String?
+  phone        String?
+  website      String?
+  source       String         // MERCAN_WEBSITE, GOOGLE_PLACES etc.
+  message      String?        @db.Text
+  status       String         @default("NEW")
+  score        Int            @default(0)
+  tenantId     String?
+  activities   LeadActivity[]
+  interactions Interaction[]
+  deletedAt    DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
   @@index([tenantId])
+}
+
+model Interaction {
+  id          String   @id @default(cuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type        String   // OPEN, CLICK, CREATED, PROFILE_COMPLETION etc.
+  scoreAdded  Int      @default(0)
+  description String?  @db.Text
+  count       Int      @default(0)
+  lastSeen    DateTime @default(now())
 }
 
 model LeadActivity {

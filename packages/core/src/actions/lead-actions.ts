@@ -25,7 +25,7 @@ export async function submitContactForm(
     const result = await db.$transaction(async (tx) => {
       const lead = await tx.lead.create({
         data: {
-          fullName: data.fullName,
+          name: data.fullName,
           email: data.email,
           phone: data.phone,
           message: data.message,
