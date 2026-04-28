@@ -7,9 +7,9 @@ import { SectionRenderer } from "@/components/cms/SectionRenderer";
 export const revalidate = 60;
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function DynamicPage(props: PageProps) {

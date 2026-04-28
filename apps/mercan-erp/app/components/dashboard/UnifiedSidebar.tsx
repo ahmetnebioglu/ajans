@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Layout, Menu, Dropdown, Avatar, Tag, Divider, ConfigProvider, Switch, theme as antdTheme } from "antd";
+import { Layout, Menu, Dropdown, Avatar, Tag, Divider, ConfigProvider, Switch, theme as antdTheme, type MenuProps } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
@@ -213,7 +213,7 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
             items={[
               ...config.items,
               ...(userRole === "ADMIN" ? [
-                { type: 'divider' },
+                { type: 'divider' } as const,
                 {
                   key: 'system-group',
                   label: <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sistem Yönetimi</span>,
@@ -222,10 +222,10 @@ export default function UnifiedSidebar({ module, collapsed, onCollapse }: Unifie
                     { key: "/dashboard/system/users", icon: <Shield size={18} />, label: "Kullanıcılar" },
                     { key: "/dashboard/logs", icon: <History size={18} />, label: "Sistem Günlüğü" },
                   ]
-                }
+                } as any
               ] : [])
-            ]}
-            onClick={({ key }) => router.push(key)}
+            ] as MenuProps['items']}
+            onClick={({ key }) => router.push(key as string)}
             className="border-none bg-transparent premium-unified-menu"
           />
         </div>

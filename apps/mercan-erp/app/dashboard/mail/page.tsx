@@ -279,11 +279,11 @@ export default function MailManagementPage() {
         </div>
 
         <Table 
-          columns={columns} 
+          columns={columns as any} 
           dataSource={filteredUsers} 
           loading={loading}
           rowKey="primaryEmail"
-          pagination={{ pageSize: 10, placement: 'bottomRight' }}
+          pagination={{ pageSize: 10, position: ['bottomRight'] }}
           className="mercan-table"
           locale={{ emptyText: <Empty description="Kullanıcı bulunamadı" /> }}
         />

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Layout, Menu, Avatar, Dropdown, theme as antdTheme, ConfigProvider } from "antd";
+import { Layout, Menu, Avatar, Dropdown, theme as antdTheme, ConfigProvider, type MenuProps } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
@@ -77,7 +77,7 @@ export default function CustomerSidebar({ collapsed, onCollapse }: { collapsed: 
             mode="inline"
             selectedKeys={[pathname]}
             items={menuItems}
-            onClick={({ key }) => router.push(key)}
+            onClick={({ key }) => router.push(key as string)}
             className="border-none bg-transparent"
           />
         </div>

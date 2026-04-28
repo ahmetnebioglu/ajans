@@ -6,13 +6,13 @@ import { signIn } from "next-auth/react";
 import { Building2, ShieldCheck, Mail, ArrowRight } from "lucide-react";
 
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginContent() {
   const [mounted, setMounted] = React.useState(false);
   const [testEmail, setTestEmail] = React.useState("");
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
-  const isDev = process.env.NODE_ENV === "development";
 
   React.useEffect(() => {
     setMounted(true);
@@ -26,7 +26,6 @@ export default function LoginPage() {
     e.preventDefault();
     if (!testEmail) return;
     
-    // VIP Pass: redirect: true kullanarak NextAuth'un yönlendirmeyi yönetmesini sağlıyoruz
     await signIn("credentials", { 
       email: testEmail, 
       password: "test", 
@@ -107,5 +106,13 @@ export default function LoginPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginContent />
+    </Suspense>
   );
 }
