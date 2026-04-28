@@ -84,12 +84,37 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = (user as any).role || "USER";
         token.tenantId = (user as any).tenantId || "mercan";
+        token.picture = user.image;
       }
+
+      // MANUEL SESSION TRACKING (For "Oturum Yönetimi" Page)
+      // Eğer token içinde sessionToken yoksa (eski oturum veya yeni giriş), DB'ye kaydet.
+      if (!token.sessionToken && token.id) {
+        try {
+          const sessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+          await prisma.session.create({
+            data: {
+              sessionToken,
+              userId: token.id as string,
+              expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 Gün
+            }
+          });
+          token.sessionToken = sessionToken;
+        } catch (e) {
+          console.error("Session creation error:", e);
+        }
+      }
+
+      // Profil resmi güncellendiğinde token'ı da güncelle
+      if (trigger === "update" && session?.image) {
+        token.picture = session.image;
+      }
+      
       return token;
     },
     async session({ session, token }) {
@@ -97,6 +122,8 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role;
         (session.user as any).tenantId = token.tenantId;
+        (session.user as any).sessionToken = token.sessionToken;
+        if (token.picture) session.user.image = token.picture as string;
       }
       return session;
     },
