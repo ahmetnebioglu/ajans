@@ -71,7 +71,7 @@ export async function updateLeadStatus(
     await db.$transaction(async (tx) => {
       await tx.lead.update({
         where: { id: leadId },
-        data: { status: newStatus },
+        data: { status: newStatus as any },
       });
 
       await tx.leadActivity.create({
