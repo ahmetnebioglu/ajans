@@ -139,7 +139,7 @@ export async function checkChurnStatus(id: string) {
 
     if (daysSinceLastInteraction > 60) {
       // CHURN ALERT!
-      if (lead.phone && lead.communicationEnabled) {
+      if (lead.phone && lead.communicationOptIn) {
         await sendSms(lead.phone, `Teknikel: Sizi özledik! Bir sonraki kart tamirinizde %10 indirim kazandınız. Kod: OZLEDIK10`);
       }
       
