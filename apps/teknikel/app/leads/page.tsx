@@ -49,7 +49,7 @@ import {
   Link,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { scheduleCall, toggleVipStatus } from "./actions";
+import { scheduleCall, toggleVipStatus, toggleCommunication, calculateLeadScore, checkChurnStatus } from "./actions";
 import { revalidateLeads } from "../actions/revalidate";
 
 const { Text } = Typography;
@@ -92,7 +92,7 @@ export default function LeadsPage() {
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      antdMessage.error("Sunucu bağlantı hatası.");
+      antdMessage.error("Sunucuya ulaşılamadı, lütfen internetinizi kontrol edin.");
     } finally {
       setLoading(false);
     }
@@ -154,7 +154,7 @@ export default function LeadsPage() {
       antdMessage.success("Arama başarıyla planlandı.");
       setIsModalOpen(false);
     } else {
-      antdMessage.error("Hata: " + res.error);
+      antdMessage.error("Bir sorun çıktı: " + res.error);
     }
   };
 
@@ -168,7 +168,41 @@ export default function LeadsPage() {
       );
       loadLeads();
     } else {
-      antdMessage.error("Hata: " + res.error);
+      antdMessage.error("Bir sorun çıktı: " + res.error);
+    }
+  };
+
+  const handleToggleCommunication = async (id: string) => {
+    const res = await toggleCommunication(id);
+    if (res.success) {
+      antdMessage.success("İletişim izni güncellendi.");
+      loadLeads();
+      if (selectedLead) setSelectedLead({ ...selectedLead, communicationOptIn: res.enabled });
+    }
+  };
+
+  const handleChurnCheck = async (id: string) => {
+    const hide = antdMessage.loading("Churn analizi yapılıyor...", 0);
+    const res = await checkChurnStatus(id);
+    hide();
+    if (res.churn) {
+      api.warning({
+        // @ts-ignore
+        title: "Kayıp Müşteri Riski!",
+        description: `Bu müşteri ${res.days} gündür pasif. Otomatik geri kazanım SMS'i gönderildi.`,
+        icon: <AlertCircle className="text-amber-500" />
+      } as any);
+      loadLeads();
+    } else {
+      antdMessage.success("Müşteri aktif durumda.");
+    }
+  };
+
+  const handleCalculateScore = async (id: string) => {
+    const res = await calculateLeadScore(id);
+    if (res.success) {
+      antdMessage.success(`Yeni skor hesaplandı: ${res.score}`);
+      loadLeads();
     }
   };
 
@@ -210,7 +244,7 @@ export default function LeadsPage() {
       api.error({
         // @ts-ignore
         title: "Bağlantı Hatası",
-        description: "Sunucuya ulaşılamadı.",
+        description: "Sunucuya ulaşılamadı, lütfen internetinizi kontrol edin.",
       } as any);
     } finally {
       setIsScraping(false);
@@ -308,7 +342,7 @@ export default function LeadsPage() {
 
   const columns = [
     {
-      title: "Firma & Yetkili",
+      title: "Dükkan & Usta Adı",
       dataIndex: "companyName",
       key: "companyName",
       sorter: (a: any, b: any) =>
@@ -333,17 +367,24 @@ export default function LeadsPage() {
       ),
     },
     {
-      title: "Kaynak",
+      title: "Nereden Geldi",
       dataIndex: "source",
       key: "source",
-      render: (source: string) => (
-        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700">
-          {source}
-        </span>
+      render: (source: string, record: any) => (
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 w-fit">
+            {source}
+          </span>
+          {record.tags?.map((tag: string) => (
+            <Tag key={tag} className="text-[9px] font-black border-none bg-emerald-500/10 text-emerald-600 m-0 w-fit px-1">
+              {tag}
+            </Tag>
+          ))}
+        </div>
       ),
     },
     {
-      title: "Skor",
+      title: "Güven Puanı",
       dataIndex: "score",
       key: "score",
       sorter: (a: any, b: any) => a.score - b.score,
@@ -358,16 +399,26 @@ export default function LeadsPage() {
       ),
     },
     {
-      title: "Durum",
+      title: "Mevcut Durum",
       dataIndex: "status",
       key: "status",
       sorter: (a: any, b: any) =>
         (a.status || "").localeCompare(b.status || ""),
-      render: (status: string) => (
-        <Tag color="error" className="text-[10px] font-bold uppercase rounded">
-          {status}
-        </Tag>
-      ),
+      render: (status: string, record: any) => {
+        const displayStatus = status || 'PROSPECT';
+        return (
+          <div className="flex flex-col gap-1">
+            <Tag color={displayStatus === 'CHURN_ALARM' ? 'warning' : 'blue'} className="text-[10px] font-bold uppercase rounded m-0 w-fit">
+              {displayStatus === 'PROSPECT' ? 'Yeni Aday' : displayStatus === 'ACTIVE' ? 'Aktif Müşteri' : displayStatus === 'CHURN_ALARM' ? 'Pasifleşmiş' : displayStatus}
+            </Tag>
+            {record.communicationOptIn === false && (
+              <Tag color="default" className="text-[9px] font-bold uppercase rounded m-0 w-fit opacity-60">
+                MESAJ İSTEMİYOR
+              </Tag>
+            )}
+          </div>
+        );
+      },
     },
     {
       title: "İşlem",
@@ -410,10 +461,10 @@ export default function LeadsPage() {
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
         <div>
           <h1 className="text-xl font-bold text-slate-800 dark:text-white">
-            Potansiyel Müşteriler
+            Yeni Adaylar (Potansiyel Müşteriler)
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Google Places üzerinden kazınan firma verileri
+            Google üzerinden taranan usta ve dükkan listesi
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -438,7 +489,7 @@ export default function LeadsPage() {
             loading={refreshing}
             className="flex items-center justify-center"
           >
-            Tabloyu Güncelle
+            Listeyi Güncelle
           </Button>
           <Button
             type="primary"
@@ -447,7 +498,7 @@ export default function LeadsPage() {
             className="bg-primary shadow-md hover:shadow-lg transition-all"
             onClick={() => setIsScannerOpen(true)}
           >
-            Yeni Lead Tara (Google)
+            Google'dan Usta Tara
           </Button>
         </div>
       </div>
@@ -471,7 +522,7 @@ export default function LeadsPage() {
               <ScanSearch size={18} />
             </div>
             <span className="text-[14px] font-bold">
-              Google Places Lead Tarayıcı
+              Google'dan Yeni Usta ve Dükkan Bul
             </span>
           </div>
         }
@@ -559,7 +610,7 @@ export default function LeadsPage() {
               <TrendingUp size={18} />
             </div>
             <span className="text-[14px] font-bold">
-              Müşteri Analizi ve Puan Geçmişi
+              Dükkan Analizi ve Güven Geçmişi
             </span>
           </div>
         }
@@ -570,11 +621,29 @@ export default function LeadsPage() {
             Kapat
           </Button>,
           <Button
+            key="churn"
+            size="small"
+            icon={<AlertCircle size={14} />}
+            onClick={() => handleChurnCheck(selectedLead?.id)}
+          >
+            Hareketsiz mi?
+          </Button>,
+          <Button
+            key="score"
+            size="small"
+            icon={<TrendingUp size={14} />}
+            onClick={() => handleCalculateScore(selectedLead?.id)}
+          >
+            Skor Yenile
+          </Button>,
+          <Button
             key="submit"
             size="small"
             type="primary"
             icon={<PhoneOutlined size={14} />}
             onClick={() => handleCall(selectedLead?.id)}
+            disabled={!selectedLead?.communicationOptIn}
+            className="bg-primary"
           >
             Şimdi Ara
           </Button>,
@@ -648,16 +717,31 @@ export default function LeadsPage() {
 
               <div className="p-4 bg-primary/5 dark:bg-primary/10 rounded-md border border-primary/20 dark:border-primary/30 text-[12px]">
                 <p className="text-[10px] font-bold text-primary uppercase mb-2 flex items-center gap-1">
-                  <Globe size={10} /> İletişim Bilgileri
+                  <Globe size={10} /> İletişim & Güvenlik
                 </p>
                 <div className="space-y-1.5">
-                  <p className="flex justify-between">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500">İletişim İzni:</span>
+                    <Space size={4}>
+                      <Tag color={selectedLead.communicationOptIn ? "success" : "default"}>
+                        {selectedLead.communicationOptIn ? "AKTİF" : "İPTAL"}
+                      </Tag>
+                      <Button 
+                        size="small" 
+                        type="text" 
+                        icon={<RotateCw size={10} />} 
+                        className="h-6 w-6 p-0 flex items-center justify-center"
+                        onClick={() => handleToggleCommunication(selectedLead.id)}
+                      />
+                    </Space>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-slate-500">Telefon:</span>
                     <span className="font-bold text-slate-700 dark:text-slate-300">
                       {selectedLead.phone || "Yok"}
                     </span>
-                  </p>
-                  <p className="flex justify-between items-start gap-4">
+                  </div>
+                  <div className="flex justify-between items-start gap-4">
                     <span className="text-slate-500">Web:</span>
                     <span className="font-bold text-right truncate max-w-[150px]">
                       {selectedLead.website ? (
@@ -675,13 +759,7 @@ export default function LeadsPage() {
                         "Yok"
                       )}
                     </span>
-                  </p>
-                  <p className="flex justify-between">
-                    <span className="text-slate-500">Kaynak:</span>
-                    <Tag color="blue" className="text-[10px] m-0 leading-tight">
-                      {selectedLead.source}
-                    </Tag>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -10,5 +10,6 @@ export async function getIntegrationStatuses() {
     googleDrive: !!process.env.GOOGLE_REFRESH_TOKEN || !!process.env.GOOGLE_SERVICE_ACCOUNT_PATH,
     googlePlaces: !!process.env.GOOGLE_PLACES_API_KEY,
     database: !!process.env.DATABASE_URL,
+    netgsm: !!process.env.NETGSM_USERCODE && !!process.env.NETGSM_PASSWORD,
   };
 }

@@ -71,6 +71,15 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+enum CompanyStatus {
+  PROSPECT
+  ACTIVE
+  PASSIVE
+  BLACKLISTED
+  VIP
+  CHURN_ALARM
+}
+
 model Company {
   id            String          @id @default(cuid())
   name          String
@@ -83,6 +92,11 @@ model Company {
   driveFolderId String?         @unique
   createdById   String?
   tenantId      String          @default("mercan")
+  
+  // CRM & Compliance
+  status             CompanyStatus @default(PROSPECT)
+  communicationOptIn Boolean       @default(true)
+
   auditLogs     AuditLog[]
   createdBy     User?           @relation("CompanyCreatedBy", fields: [createdById], references: [id])
   userAccess    CompanyAccess[]
@@ -422,6 +436,15 @@ enum Role {
   CUSTOMER
 }
 
+enum LeadStatus {
+  PROSPECT
+  ACTIVE
+  PASSIVE
+  BLACKLISTED
+  VIP
+  CHURN_ALARM
+}
+
 model Lead {
   id           String         @id @default(cuid())
   name         String?
@@ -431,8 +454,20 @@ model Lead {
   website      String?
   source       String         // MERCAN_WEBSITE, GOOGLE_PLACES etc.
   message      String?        @db.Text
-  status       String         @default("NEW")
+  status       LeadStatus     @default(PROSPECT)
   score        Int            @default(0)
+  
+  // KVKK & Compliance
+  communicationOptIn Boolean  @default(true)
+  
+  // Advanced CRM Data
+  googleRating       Float?     @default(0)
+  userRatingsTotal   Int?       @default(0)
+  city               String?
+  district           String?
+  tags               String[]   @default([])
+  lastInteractionDate DateTime  @default(now())
+  
   tenantId     String?
   activities   LeadActivity[]
   interactions Interaction[]
@@ -546,4 +581,16 @@ model ApiUsage {
   endpoint  String   // Örn: "AUTOCOMPLETE", "SEND_EMAIL"
   cost      Float    // Tahmini dolar maliyeti (Örn: 0.017)
   createdAt DateTime @default(now())
+}
+
+model NetgsmConfig {
+  id              String    @id @default(cuid())
+  tenantId        String    @unique @default("teknikel") // Proje bazlı tek satır ayar için
+  packageStartDate DateTime?
+  packageEndDate   DateTime?
+  lastTopupDate    DateTime?
+  lastTopupAmount  Int?
+  senderNames      String[]  // Örn: ["TEKNIKELKMB"]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }

@@ -50,10 +50,10 @@ export default function Dashboard() {
       <div className="flex flex-col md:flex-row justify-between items-center gap-3 border-b border-slate-100 dark:border-zinc-800 pb-4">
         <div className="space-y-0.5">
           <h1 className="text-xl font-bold text-slate-800 dark:text-white leading-tight">
-            Yönetim Kokpiti
+            Ana Ekran (Durum Özeti)
           </h1>
           <p className="text-xs text-slate-500 font-medium">
-            Lead Gen & CRM Analiz Paneli
+            Dükkan ve Müşteri Analiz Paneli
           </p>
         </div>
         <div className="flex items-center gap-2 text-[12px] font-medium text-slate-400 dark:text-slate-500 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-md border border-slate-100 dark:border-slate-800 shadow-sm">
@@ -64,10 +64,10 @@ export default function Dashboard() {
       {/* METRIC CARDS GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { name: "Toplam Lead", value: stats.totalLeads, icon: TeamOutlined, color: "text-primary", bg: "bg-red-50" },
-          { name: "Bekleyen Aramalar", value: stats.pendingCalls, icon: ClockCircleOutlined, color: "text-orange-600", bg: "bg-orange-50" },
-          { name: "VIP Fırsatlar", value: stats.vipLeads, icon: FireOutlined, color: "text-rose-600", bg: "bg-rose-50" },
-          { name: "Gönderilen SMS", value: stats.smsSent, icon: SendOutlined, color: "text-emerald-600", bg: "bg-emerald-50" },
+          { name: "Toplam Kayıtlı Usta", value: stats.totalLeads, icon: TeamOutlined, color: "text-primary", bg: "bg-red-50" },
+          { name: "Aranacak Ustalar", value: stats.pendingCalls, icon: ClockCircleOutlined, color: "text-orange-600", bg: "bg-orange-50" },
+          { name: "En Değerli Ustalar", value: stats.vipLeads, icon: FireOutlined, color: "text-rose-600", bg: "bg-rose-50" },
+          { name: "Giden Mesaj Sayısı", value: stats.smsSent, icon: SendOutlined, color: "text-emerald-600", bg: "bg-emerald-50" },
         ].map((s) => (
           <div key={s.name} className="bg-white dark:bg-slate-900/50 p-4 rounded-md border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-md transition-all relative overflow-hidden">
             <div className={`absolute -right-2 -bottom-2 opacity-5 group-hover:scale-110 transition-transform ${s.color}`}>
@@ -91,7 +91,7 @@ export default function Dashboard() {
         <div className="lg:col-span-2 bg-white dark:bg-slate-900/50 rounded-md border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-zinc-950/20">
             <h3 className="text-[13px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-              <FireOutlined className="text-rose-500" /> VIP Radar
+              <FireOutlined className="text-rose-500" /> Özel Müşteri Takibi
             </h3>
             <Badge status="processing" text={<span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase">Canlı</span>} />
           </div>
@@ -117,7 +117,7 @@ export default function Dashboard() {
                 
                 <div className="flex items-center gap-4">
                   <div className="bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded text-[11px] font-bold border border-rose-100 dark:border-zinc-800">
-                    Skor: {item.score}
+                    Güven Puanı: {item.score}
                   </div>
                   <ArrowRightOutlined className="text-slate-300 group-hover:text-primary transition-all" />
                 </div>
@@ -130,7 +130,7 @@ export default function Dashboard() {
         <div className="bg-white dark:bg-slate-900/50 p-6 rounded-md border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col space-y-5">
           <div className="flex items-center justify-between">
             <h3 className="text-[13px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-               <RiseOutlined className="text-indigo-600" /> Sistem Günlüğü
+               <RiseOutlined className="text-indigo-600" /> Son İşlemler (Sistem Günlüğü)
             </h3>
           </div>
           

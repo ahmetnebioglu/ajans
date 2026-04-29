@@ -31,11 +31,11 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
   const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const menuItems: MenuProps['items'] = [
-    { key: "/", icon: <LayoutDashboard size={18} />, label: "Dashboard" },
-    { key: "/leads", icon: <Search size={18} />, label: "Potansiyel Müşteriler" },
-    { key: "/vip", icon: <Crown size={18} />, label: "VIP Müşteriler" },
+    { key: "/", icon: <LayoutDashboard size={18} />, label: "Durum Özeti" },
+    { key: "/leads", icon: <Search size={18} />, label: "Yeni Adaylar" },
+    { key: "/vip", icon: <Crown size={18} />, label: "Özel Müşteriler" },
     { type: "divider" },
-    { key: "/settings", icon: <Settings size={18} />, label: "Ayarlar" },
+    { key: "/settings", icon: <Settings size={18} />, label: "Sistem Ayarları" },
   ];
 
   return (
