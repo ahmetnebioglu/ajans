@@ -15,6 +15,7 @@ import {
 
 interface EmailProps {
   customerName?: string;
+  messageTitle?: string;
   deviceModel: string;
   warrantyPeriod?: string;
   actionUrl: string;
@@ -25,6 +26,7 @@ const TEKNIKEL_RED_DARK = "#b91c1c";
 
 export const ServiceNotificationEmail = ({
   customerName,
+  messageTitle,
   deviceModel,
   warrantyPeriod = "6 Ay",
   actionUrl,
@@ -97,7 +99,7 @@ export const ServiceNotificationEmail = ({
                 lineHeight: "1.4",
               }}
             >
-              Cihazınızın Servis İşlemleri Başarıyla Tamamlandı
+              {messageTitle || "Cihazınızın Servis İşlemleri Başarıyla Tamamlandı"}
             </Heading>
 
             <Text
