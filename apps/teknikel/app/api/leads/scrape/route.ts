@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
               phone: biz.phone,
               website: biz.website,
               source: 'GOOGLE_PLACES',
-              status: 'NEW',
+              status: 'PROSPECT',
               score: calculatedScore,
               tenantId: 'teknikel',
               interactions: {
