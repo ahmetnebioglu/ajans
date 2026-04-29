@@ -30,7 +30,7 @@ export async function submitContactForm(
           phone: data.phone,
           message: data.message,
           source: source,
-          status: 'NEW',
+          status: 'PROSPECT',
           tenantId: tenantId,
         },
       });

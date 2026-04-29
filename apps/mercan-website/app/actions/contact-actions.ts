@@ -3,6 +3,7 @@
 import { prisma as db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
+import { submitContactForm as coreSubmitContactForm } from "@ajans/core";
 
 // Resend'i sadece API key varsa ve ihtiyaç duyulduğunda başlatmak daha güvenlidir
 const getResend = () => {
@@ -153,5 +154,14 @@ export async function verifyRequest(token: string, type: "contact" | "reference"
     console.error("VERIFY_ERROR:", error);
     return { success: false, error: "Doğrulama yapılamadı." };
   }
+}
+
+export async function submitContactAction(data: {
+  fullName: string;
+  email: string;
+  phone?: string;
+  message: string;
+}) {
+  return await coreSubmitContactForm(data, 'MERCAN_WEBSITE', 'mercan');
 }
 

@@ -2,7 +2,7 @@
 
 import React, { useTransition, useRef, useState } from "react";
 import { Send, Loader2, CheckCircle2 } from "lucide-react";
-import { submitContactForm } from "@ajans/core";
+import { submitContactAction } from "@/app/actions/contact-actions";
 import { toast } from "sonner";
 
 export default function ContactForm() {
@@ -23,7 +23,7 @@ export default function ContactForm() {
 
     startTransition(async () => {
       try {
-        const result = await submitContactForm(data, 'MERCAN_WEBSITE', 'mercan');
+        const result = await submitContactAction(data);
         
         if (result.success) {
           setIsSuccess(true);
