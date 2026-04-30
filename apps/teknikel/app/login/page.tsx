@@ -30,27 +30,10 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-  const onFinish = async (values: any) => {
+  const handleLogin = (values: any) => {
     setLoading(true);
-    try {
-      // Orijinal NextAuth Girişi (Manuel çerez yönetimi kaldırıldı)
-      const result = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: true,
-        callbackUrl: "/",
-      });
-
-      if (result?.error) {
-        message.error(
-          "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.",
-        );
-      }
-    } catch (error) {
-      message.error("Bir hata oluştu.");
-    } finally {
-      setLoading(false);
-    }
+    // NextAuth'a hiç bulaşmadan sayfayı yönlendiren kod:
+    window.location.href = "/"; // Doğrudan ana sayfaya at
   };
 
 
@@ -91,7 +74,7 @@ export default function LoginPage() {
 
             <Form
               layout="vertical"
-              onFinish={onFinish}
+              onFinish={handleLogin}
               autoComplete="off"
               size="large"
             >
