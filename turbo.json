@@ -19,7 +19,11 @@
         "NETGSM_SENDER",
         "NETGSM_BASE_URL",
         "POSTGRES_PRISMA_URL",
-        "POSTGRES_URL_NON_POOLING"
+        "POSTGRES_URL_NON_POOLING",
+        "DATABASE_URL",
+        "CUSTOM_PRISMA_URL",
+        "DATABASE_POSTGRES_PRISMA_URL",
+        "DATABASE_POSTGRES_URL_NON_POOLING"
       ]
     },
     "lint": {
