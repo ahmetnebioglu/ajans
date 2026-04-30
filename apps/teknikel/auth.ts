@@ -3,7 +3,7 @@ import { authOptions as commonAuthOptions } from "@ajans/auth";
 
 export const authOptions: NextAuthOptions = {
   ...commonAuthOptions,
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET as string,
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user }) {
