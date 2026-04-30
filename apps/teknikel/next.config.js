@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@ajans/ui", "@ajans/db", "@ajans/crm", "@ajans/google-api", "@ajans/core"],
+  transpilePackages: ["@ajans/auth", "@ajans/ui", "@ajans/db", "@ajans/crm", "@ajans/google-api", "@ajans/core"],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'drive.google.com' },
