@@ -1,3 +1,1 @@
-import { authOptions } from "@ajans/auth";
-
-export { authOptions };
+export { authOptions } from "../auth";

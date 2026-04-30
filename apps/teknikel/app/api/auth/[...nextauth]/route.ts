@@ -1,14 +1,6 @@
 import NextAuth from "next-auth/next";
-import { authOptions } from "@ajans/auth";
+import { authOptions } from "../../../auth";
 
-// Credentials stratejisinde adapter kullanımı token üretimini bozduğu için 
-// Teknikel projesinde adapter devre dışı bırakıldı.
-const handler = NextAuth({
-  ...authOptions,
-  adapter: undefined,
-  session: {
-    strategy: "jwt",
-  },
-});
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
