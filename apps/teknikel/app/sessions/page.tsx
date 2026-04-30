@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import {
   Table,
   Tag,
-  Space,
   Button,
   Badge,
   Typography,
@@ -13,14 +12,10 @@ import {
   Card,
   Popconfirm,
   Result,
-  Tooltip,
   Breadcrumb,
 } from "antd";
 import {
-  HistoryOutlined,
-  LogoutOutlined,
   SafetyOutlined,
-  DesktopOutlined,
   SafetyCertificateOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
@@ -34,7 +29,7 @@ import {
 } from "../actions/system-actions";
 import { useAuth } from "../../context/AuthContext";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 export default function SessionsPage() {
   const { message } = App.useApp();
@@ -174,23 +169,9 @@ export default function SessionsPage() {
   const { status } = useSession();
 
   if (status === "loading" || authLoading) {
-    return <div className="h-[60vh] flex items-center justify-center"><Badge status="processing" text="Oturum doğrulanıyor..." /></div>;
-  }
-
-  if (!user && !authUser) {
-    console.log("Eksik Session Tespit Edildi (Sessions Page):", { sessionUser: user, authContextUser: authUser });
     return (
       <div className="h-[60vh] flex items-center justify-center">
-        <Result
-          status="403"
-          title="Erişim Engellendi"
-          subTitle="Oturum yönetimi için giriş yapmalısınız."
-          extra={
-            <Button type="primary" onClick={() => router.push("/login")}>
-              Giriş Yap
-            </Button>
-          }
-        />
+        <Badge status="processing" text="Oturum doğrulanıyor..." />
       </div>
     );
   }
