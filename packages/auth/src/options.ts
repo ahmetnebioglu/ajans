@@ -1,70 +1,70 @@
 import { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { unsecured_prisma as prisma } from "@ajans/db";
+import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma as any),
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      allowDangerousEmailAccountLinking: true,
-    }),
-    ...(process.env.NODE_ENV !== "production" ? [
-      CredentialsProvider({
-        id: "credentials",
-        name: "VIP Test Pass",
-        credentials: {
-          email: { label: "E-posta", type: "email" },
-          password: { label: "Şifre", type: "password" },
-          role: { label: "Role", type: "text" },
-          tenantId: { label: "Tenant ID", type: "text" }
-        },
-        async authorize(credentials) {
-          if (!credentials?.email) return null;
-
-          // VIP Pass for E2E Tests: Guaranteed user object for test emails
-          if (credentials.email.endsWith("@mercan.test")) {
-            const prefix = credentials.email.split('@')[0].toLowerCase();
-            const roleMap: Record<string, string> = {
-              admin: "ADMIN",
-              customer: "CUSTOMER",
-              expert: "EXPERT",
-              uzman: "EXPERT",
-              hr: "HR_MANAGER"
-            };
-            const assignedRole = roleMap[prefix] || "USER";
-            
-            // Veritabanında bu test kullanıcısının var olduğundan emin ol (FK hatalarını önlemek için)
-            const testUser = await prisma.user.upsert({
-              where: { email: credentials.email },
-              update: { 
-                role: assignedRole as any,
-                tenantId: "mercan"
-              },
-              create: {
-                id: `test-${prefix}-id`,
-                email: credentials.email,
-                name: `Mercan Test ${prefix.toUpperCase()}`,
-                role: assignedRole as any,
-                tenantId: "mercan",
-              }
-            });
-
-            return testUser;
-          }
-
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email }
-          });
-          return user ? user : null;
+    CredentialsProvider({
+      id: "credentials",
+      name: "E-posta ve Şifre",
+      credentials: {
+        email: { label: "E-posta", type: "email" },
+        password: { label: "Şifre", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("E-posta ve şifre gereklidir.");
         }
-      })
-    ] : [])
+
+        // VIP Pass for E2E Tests: Guaranteed user object for test emails
+        if (credentials.email.endsWith("@mercan.test")) {
+          const prefix = credentials.email.split('@')[0].toLowerCase();
+          const roleMap: Record<string, string> = {
+            admin: "ADMIN",
+            customer: "CUSTOMER",
+            expert: "EXPERT",
+            uzman: "EXPERT",
+            hr: "HR_MANAGER"
+          };
+          const assignedRole = roleMap[prefix] || "USER";
+          
+          return await prisma.user.upsert({
+            where: { email: credentials.email },
+            update: { 
+              role: assignedRole as any,
+              tenantId: "mercan"
+            },
+            create: {
+              id: `test-${prefix}-id`,
+              email: credentials.email,
+              name: `Mercan Test ${prefix.toUpperCase()}`,
+              role: assignedRole as any,
+              tenantId: "mercan",
+            }
+          });
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email }
+        });
+
+        if (!user || !user.password) {
+          throw new Error("Kullanıcı bulunamadı veya şifre atanmamış.");
+        }
+
+        const isValid = await bcrypt.compare(credentials.password, user.password);
+        if (!isValid) {
+          throw new Error("Hatalı şifre.");
+        }
+
+        return user;
+      }
+    })
   ],
   session: {
     strategy: 'jwt',

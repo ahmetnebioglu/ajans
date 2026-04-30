@@ -13,7 +13,6 @@ import {
 import {
   UserOutlined,
   LockOutlined,
-  GoogleOutlined,
   ArrowRightOutlined,
 } from "@ant-design/icons";
 import { signIn } from "next-auth/react";
@@ -66,9 +65,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl });
-  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-zinc-950 p-4">
@@ -164,18 +161,7 @@ export default function LoginPage() {
               </Form.Item>
             </Form>
 
-            <Divider className="text-[10px] text-slate-300 font-bold uppercase tracking-widest my-8">
-              veya
-            </Divider>
 
-            <Button
-              block
-              icon={<GoogleOutlined />}
-              onClick={handleGoogleSignIn}
-              className="h-12 rounded-xl border-slate-200 font-bold text-slate-600 dark:text-slate-300 hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2"
-            >
-              Google ile Devam Et
-            </Button>
           </div>
 
           <div className="bg-slate-50 dark:bg-zinc-800/50 p-6 text-center border-t border-slate-100 dark:border-zinc-800">
