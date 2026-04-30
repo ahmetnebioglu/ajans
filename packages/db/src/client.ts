@@ -13,7 +13,12 @@ if (!rawUrl) {
 }
 
 // Windows'ta 'localhost' yerine '127.0.0.1' kullanımı daha stabildir (IPv6 çakışmalarını önler)
-const connectionString = (rawUrl || "postgresql://root:rootpassword@127.0.0.1:5433/agency_master_db?schema=public").replace("localhost", "127.0.0.1");
+let connectionString = (rawUrl || "postgresql://root:rootpassword@127.0.0.1:5433/agency_master_db?schema=public").replace("localhost", "127.0.0.1");
+
+// pg v8.12+ 'require' alias uyarısını susturmak ve mevcut davranışı (verify-full) korumak için
+if (connectionString.includes("sslmode=require") && !connectionString.includes("verify-full")) {
+  connectionString = connectionString.replace("sslmode=require", "sslmode=verify-full");
+}
 
 const pool = new pg.Pool({
   connectionString,
