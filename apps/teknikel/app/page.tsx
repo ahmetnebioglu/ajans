@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const allRawCookies = cookieStore.getAll();
 
   return (
