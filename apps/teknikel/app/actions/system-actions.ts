@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { unsecured_prisma as db } from "@ajans/db";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/auth";
 
 /**
  * Güvenli aksiyon sarmalayıcısı (Teknikel özel basitleştirilmiş sürüm)
