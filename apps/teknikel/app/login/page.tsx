@@ -56,6 +56,7 @@ export default function LoginPage() {
         document.cookie = "auth_session=true; path=/; max-age=86400";
         
         message.success("Giriş başarılı! Yönlendiriliyorsunuz...");
+        window.location.href = '/';
         router.push(callbackUrl);
       }
     } catch (error) {
