@@ -1,23 +1,21 @@
-import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(req: NextRequest) {
-  // 1. NextAuth'un kendi çözücüsünü dene
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  
-  // 2. Vercel'in ve lokal ortamın oluşturduğu fiziksel çerezleri manuel kontrol et (Balyoz yöntemi)
-  const hasSessionCookie = req.cookies.has("next-auth.session-token") || req.cookies.has("__Secure-next-auth.session-token");
+export function middleware(req: NextRequest) {
+  // Gelen tüm çerezleri al ve isminde "session-token" geçen HERHANGİ BİR çerez var mı bak.
+  // Bu yöntem Vercel'in __Secure ön eklerini ve .0 / .1 gibi parçalanmış çerezlerini (chunking) %100 yakalar.
+  const cookies = req.cookies.getAll();
+  const hasSession = cookies.some(c => c.name.includes("session-token"));
   
   const isLoginPage = req.nextUrl.pathname.startsWith('/login');
 
-  // Hem token çözülemediyse hem de fiziksel çerez yoksa logine at
-  if (!token && !hasSessionCookie && !isLoginPage) {
+  // Çerez yoksa ve loginde değilse, logine at
+  if (!hasSession && !isLoginPage) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  // Bilet varsa ve logine girmeye çalışıyorsa ana sayfaya yolla
-  if ((token || hasSessionCookie) && isLoginPage) {
+  // Çerez varsa ve logine girmeye çalışıyorsa, ana sayfaya al
+  if (hasSession && isLoginPage) {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
