@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { unsecured_prisma as prisma } from "@ajans/db";
 
 export const authOptions: NextAuthOptions = {
+  debug: true,
   secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma as any),
   providers: [
