@@ -178,6 +178,7 @@ export default function SessionsPage() {
   }
 
   if (!user && !authUser) {
+    console.log("Eksik Session Tespit Edildi (Sessions Page):", { sessionUser: user, authContextUser: authUser });
     return (
       <div className="h-[60vh] flex items-center justify-center">
         <Result

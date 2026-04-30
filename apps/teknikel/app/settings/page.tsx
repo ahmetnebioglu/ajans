@@ -11,6 +11,7 @@ export default async function SettingsPage() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
+    console.log("Eksik Session Tespit Edildi:", session);
     redirect("/login");
   }
 
