@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
     ] : [])
   ],
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   cookies: {
     sessionToken: {
