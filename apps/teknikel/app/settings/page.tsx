@@ -3,6 +3,8 @@ import { authOptions } from "@/auth";
 import { redirect } from "next/navigation";
 import SettingsClient from "./settings-client";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Sistem Ayarları | Teknikel CRM",
 };
