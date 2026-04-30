@@ -12,7 +12,7 @@
     "db:seed": "turbo db:seed",
     "start": "turbo start",
     "stop": "taskkill /f /im node.exe 2>nul || exit 0",
-    "postinstall": "prisma generate --schema=./packages/db/prisma/schema.prisma && prisma db push --schema=./packages/db/prisma/schema.prisma --accept-data-loss"
+    "postinstall": "prisma generate --schema=./packages/db/prisma/schema.prisma && prisma db push"
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
