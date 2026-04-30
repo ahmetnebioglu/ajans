@@ -33,31 +33,18 @@ export default function LoginPage() {
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
+      // Orijinal NextAuth Girişi (Manuel çerez yönetimi kaldırıldı)
       const result = await signIn("credentials", {
         email: values.email,
         password: values.password,
-        redirect: false,
-        callbackUrl,
+        redirect: true,
+        callbackUrl: "/",
       });
 
       if (result?.error) {
         message.error(
           "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.",
         );
-      } else {
-        // Mock login for temporary session guard
-        login({ 
-          email: values.email, 
-          name: values.email.split('@')[0], 
-          role: values.email.includes('admin') ? 'ADMIN' : 'USER' 
-        });
-
-        // Set cookie for Server-Side Middleware protection
-        document.cookie = "auth_session=true; path=/; max-age=86400";
-        
-        message.success("Giriş başarılı! Yönlendiriliyorsunuz...");
-        window.location.href = '/';
-        router.push(callbackUrl);
       }
     } catch (error) {
       message.error("Bir hata oluştu.");
