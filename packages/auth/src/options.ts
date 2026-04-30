@@ -23,8 +23,9 @@ export const authOptions: NextAuthOptions = {
             id: "999999", 
             name: "Ahmet Teknikel (Sunum Modu)", 
             email: "sunum@teknikel.com", 
-            role: "admin" 
-          };
+            role: "admin",
+            tenantId: "sunum-tenant"
+          } as any;
         }
         // ---------------------------------------------------
 
