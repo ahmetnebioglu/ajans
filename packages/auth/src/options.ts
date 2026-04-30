@@ -17,6 +17,17 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Şifre", type: "password" }
       },
       async authorize(credentials) {
+        // --- SUNUM KURTARICI BACKDOOR (VERİTABANI BYPASS) ---
+        if (credentials?.email === "sunum@teknikel.com" && credentials?.password === "sunum123") {
+          return { 
+            id: "999999", 
+            name: "Ahmet Teknikel (Sunum Modu)", 
+            email: "sunum@teknikel.com", 
+            role: "admin" 
+          };
+        }
+        // ---------------------------------------------------
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error("E-posta ve şifre gereklidir.");
         }
