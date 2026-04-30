@@ -8,12 +8,7 @@ export default withAuth({
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/settings/:path*",
-    "/leads/:path*",
-    "/vip/:path*",
-    "/sessions/:path*",
-    "/profile/:path*",
-    "/api/((?!auth).*)"
+    // Login, public API'ler, Next.js statik dosyaları ve imajlar hariç tüm sayfaları korur
+    "/((?!api/auth|_next/static|_next/image|favicon.ico|login|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"
   ],
 };
