@@ -4,7 +4,7 @@ import { authOptions as commonAuthOptions } from "@ajans/auth";
 export const authOptions: NextAuthOptions = {
   ...commonAuthOptions,
   secret: process.env.NEXTAUTH_SECRET || "teknikel-kombi-super-gizli-sifre-2026-asdf",
-  trustHost: true,
+
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user }) {
