@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@ajans/auth/options";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import SettingsClient from "./settings-client";
 

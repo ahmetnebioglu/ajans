@@ -3,7 +3,7 @@
 import { uploadToDrive } from "@ajans/google-api";
 import { unsecured_prisma as db } from "@ajans/db";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@ajans/auth/options";
+import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 /**
