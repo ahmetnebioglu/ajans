@@ -15,33 +15,20 @@ export default async function UsersPage() {
     redirect("/");
   }
 
-  // Prisma'dan sadece güvenli string verilerini (Select) çekiyoruz, gereksiz Date objelerini hiç almıyoruz.
+  // Prisma'dan veriyi çekiyoruz
   const users = await db.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      createdAt: true,
-    },
     orderBy: {
       createdAt: 'desc'
     }
   });
 
-  // Son güvenlik katmanı: Date'i string'e zorla
-  const safeUsers = users.map((u) => ({
-    id: u.id,
-    name: u.name || "İsimsiz Kullanıcı",
-    email: u.email,
-    role: u.role || "USER",
-    createdAt: u.createdAt ? u.createdAt.toISOString() : null,
-  }));
+  // Prisma'dan gelen veriyi (tarihler ve gizli fonksiyonlar dahil) %100 saf JSON'a çeviriyoruz
+  const safeUsers = JSON.parse(JSON.stringify(users));
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6 text-white">Kullanıcı Yönetimi</h1>
-      <UserTable data={safeUsers as any} />
+      <UserTable data={safeUsers} />
     </div>
   );
 }

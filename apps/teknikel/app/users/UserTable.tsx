@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Table, Tag, Card, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
