@@ -17,18 +17,6 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Şifre", type: "password" }
       },
       async authorize(credentials) {
-        // --- SUNUM KURTARICI BACKDOOR (VERİTABANI BYPASS) ---
-        if (credentials?.email === "sunum@teknikel.com" && credentials?.password === "sunum123") {
-          return { 
-            id: "999999", 
-            name: "Ahmet Teknikel (Sunum Modu)", 
-            email: "sunum@teknikel.com", 
-            role: "admin",
-            tenantId: "sunum-tenant"
-          } as any;
-        }
-        // ---------------------------------------------------
-
         if (!credentials?.email || !credentials?.password) {
           throw new Error("E-posta ve şifre gereklidir.");
         }
@@ -45,19 +33,21 @@ export const authOptions: NextAuthOptions = {
           };
           const assignedRole = roleMap[prefix] || "USER";
           
-          return await prisma.user.upsert({
-            where: { email: credentials.email },
-            update: { 
-              role: assignedRole as any,
-              tenantId: "mercan"
-            },
-            create: {
-              id: `test-${prefix}-id`,
-              email: credentials.email,
-              name: `Mercan Test ${prefix.toUpperCase()}`,
-              role: assignedRole as any,
-              tenantId: "mercan",
-            }
+          return await prisma.$transaction(async (tx) => {
+            return await tx.user.upsert({
+              where: { email: credentials.email },
+              update: { 
+                role: assignedRole as any,
+                tenantId: "mercan"
+              },
+              create: {
+                id: `test-${prefix}-id`,
+                email: credentials.email,
+                name: `Mercan Test ${prefix.toUpperCase()}`,
+                role: assignedRole as any,
+                tenantId: "mercan",
+              }
+            });
           });
         }
 
@@ -74,7 +64,14 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Hatalı şifre.");
         }
 
-        return user;
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          tenantId: user.tenantId,
+          image: user.image
+        } as any;
       }
     })
   ],
@@ -110,13 +107,16 @@ export const authOptions: NextAuthOptions = {
       if (!token.sessionToken && token.id) {
         try {
           const sessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
-          await prisma.session.create({
-            data: {
-              sessionToken,
-              userId: token.id as string,
-              expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-            }
+          await prisma.$transaction(async (tx) => {
+            await tx.session.create({
+              data: {
+                sessionToken,
+                userId: token.id as string,
+                expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+              }
+            });
           });
+
           token.sessionToken = sessionToken;
         } catch (e) {
           console.error("Session creation error:", e);
