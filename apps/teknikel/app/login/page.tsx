@@ -30,10 +30,25 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-  const handleLogin = (values: any) => {
+  const handleLogin = async (values: any) => {
     setLoading(true);
-    // NextAuth'a hiç bulaşmadan sayfayı yönlendiren kod:
-    window.location.href = "/"; // Doğrudan ana sayfaya at
+    try {
+      const res = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
+
+      if (res?.ok) {
+        window.location.href = "/";
+      } else {
+        setLoading(false);
+        message.error("Giriş başarısız: " + (res?.error || "Bilgilerinizi kontrol edin."));
+      }
+    } catch (error) {
+      setLoading(false);
+      message.error("Bir hata oluştu, lütfen tekrar deneyin.");
+    }
   };
 
 
