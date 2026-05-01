@@ -17,11 +17,13 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Şifre", type: "password" }
       },
       async authorize(credentials) {
+        console.log("Login Denemesi:", credentials?.email);
+        
         if (!credentials?.email || !credentials?.password) {
           throw new Error("E-posta ve şifre gereklidir.");
         }
 
-        // VIP Pass for E2E Tests: Guaranteed user object for test emails
+        // VIP Pass for E2E Tests
         if (credentials.email.endsWith("@mercan.test")) {
           const prefix = credentials.email.split('@')[0].toLowerCase();
           const roleMap: Record<string, string> = {
@@ -51,9 +53,24 @@ export const authOptions: NextAuthOptions = {
           });
         }
 
-        const user = await prisma.user.findUnique({
+        let user = await prisma.user.findUnique({
           where: { email: credentials.email }
         });
+
+        // AUTO-SEED MANTIĞI: Admin kullanıcısı yoksa anında oluştur
+        if (!user && credentials.email === "admin@teknikel.com") {
+          console.log("Auto-Seed: Admin kullanıcısı oluşturuluyor...");
+          const hashedPassword = await bcrypt.hash(credentials.password, 10);
+          user = await prisma.user.create({
+            data: {
+              email: credentials.email,
+              name: "Admin Teknikel",
+              password: hashedPassword,
+              role: "ADMIN" as any,
+              tenantId: "mercan",
+            }
+          });
+        }
 
         if (!user || !user.password) {
           throw new Error("Kullanıcı bulunamadı veya şifre atanmamış.");
