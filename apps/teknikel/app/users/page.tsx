@@ -26,9 +26,15 @@ export default async function UsersPage() {
     },
   });
 
+  // Date objelerini serileştirilebilir hale getir (Serialization Fix)
+  const safeUsers = users.map(user => ({
+    ...user,
+    createdAt: user.createdAt ? user.createdAt.toISOString() : null,
+  }));
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-      <UserTable users={users as any} />
+      <UserTable users={safeUsers as any} />
     </div>
   );
 }
