@@ -4,7 +4,7 @@ import React from "react";
 import { Layout, Menu, Avatar, Dropdown, Badge, type MenuProps } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { 
   LayoutDashboard, 
   Search, 
@@ -16,13 +16,15 @@ import {
   Zap,
   Moon,
   Sun,
-  ShieldCheck
+  ShieldCheck,
+  Users
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const { Sider } = Layout;
 
 export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean; onCollapse: (val: boolean) => void }) {
+  const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
@@ -101,10 +103,10 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
               {!collapsed && (
                 <div className="flex-1 min-w-0">
                   <div className={`text-[11px] font-bold truncate leading-none mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                    Ahmet Teknikel
+                    {session?.user?.name || session?.user?.email || "Ahmet Teknikel"}
                   </div>
                   <div className="text-[10px] font-medium text-slate-500 truncate leading-none">
-                    Yönetici
+                    {(session?.user as any)?.role || "Kullanıcı"}
                   </div>
                 </div>
               )}
@@ -188,6 +190,13 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
                       label: <span className="text-[12px] font-medium">Oturum Kontrolü</span>,
                       icon: <ShieldCheck size={14} />
                     },
+                    ...((session?.user as any)?.role === 'ADMIN' ? [
+                      {
+                        key: 'users',
+                        label: <span className="text-[12px] font-medium">Kullanıcı Yönetimi</span>,
+                        icon: <Users size={14} />
+                      }
+                    ] : []),
                     { type: 'divider' },
                     {
                       key: 'logout',
@@ -198,6 +207,7 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
                   onClick: ({ key }) => {
                     if (key === 'profile') router.push('/profile');
                     if (key === 'sessions') router.push('/sessions');
+                    if (key === 'users') router.push('/users');
                     if (key === 'logout') {
                       console.log("Logging out...");
                       // 1. Clear custom cookie for middleware
