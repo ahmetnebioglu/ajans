@@ -10,10 +10,10 @@ interface UserType {
   name: string | null;
   email: string | null;
   role: string;
-  createdAt: Date;
+  createdAt: string | null;
 }
 
-export default function UserTable({ users }: { users: UserType[] }) {
+export default function UserTable({ data }: { data: UserType[] }) {
   const columns: ColumnsType<UserType> = [
     {
       title: "Ad / Soyad",
@@ -58,7 +58,7 @@ export default function UserTable({ users }: { users: UserType[] }) {
       </div>
       <Table 
         columns={columns} 
-        dataSource={users} 
+        dataSource={data} 
         rowKey="id" 
         pagination={{ pageSize: 10 }}
         scroll={{ x: 'max-content' }}
