@@ -98,9 +98,9 @@ export default function CariTable({ initialData }: CariTableProps) {
   return (
     <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
       <div className="mb-4">
-        <Input
+        <Input.Search
           placeholder="Ünvan veya yetkili ismine göre ara..."
-          prefix={<SearchOutlined className="text-slate-400" />}
+          onSearch={value => setSearchText(value)}
           onChange={e => setSearchText(e.target.value)}
           allowClear
           className="max-w-md dark:bg-slate-800 dark:border-slate-700"
