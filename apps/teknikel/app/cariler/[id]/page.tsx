@@ -6,14 +6,15 @@ import { Card, Descriptions, Tag, Button, Divider, Row, Col } from "antd";
 import { ArrowLeftOutlined, UserOutlined, PhoneOutlined, MailOutlined, HomeOutlined, BankOutlined, InfoCircleOutlined, WalletOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
-export default async function CariDetailPage({ params }: { params: { id: string } }) {
+export default async function CariDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/login");
   }
 
-  const cari = await getBilsoftCariById(params.id);
+  const cari = await getBilsoftCariById(id);
 
   if (!cari) {
     notFound();

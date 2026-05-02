@@ -21,6 +21,7 @@ import {
   Statistic,
   Timeline,
   Skeleton,
+  Switch,
 } from "antd";
 import {
   SearchOutlined,
@@ -752,18 +753,11 @@ export default function LeadsPage() {
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-500">İletişim İzni:</span>
-                    <Space size={4}>
-                      <Tag color={selectedLead.communicationOptIn ? "success" : "default"}>
-                        {selectedLead.communicationOptIn ? "AKTİF" : "İPTAL"}
-                      </Tag>
-                      <Button 
-                        size="small" 
-                        type="text" 
-                        icon={<RotateCw size={10} />} 
-                        className="h-6 w-6 p-0 flex items-center justify-center"
-                        onClick={() => handleToggleCommunication(selectedLead.id)}
-                      />
-                    </Space>
+                    <Switch 
+                      size="small" 
+                      checked={selectedLead.communicationOptIn}
+                      onChange={() => handleToggleCommunication(selectedLead.id)}
+                    />
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Telefon:</span>
