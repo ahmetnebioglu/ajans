@@ -60,7 +60,7 @@ export default function LeadsPage() {
   const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [syncing, setSyncing] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
@@ -209,25 +209,20 @@ export default function LeadsPage() {
   };
 
   const handleBilsoftSync = async () => {
-    setSyncing(true);
+    setIsSyncing(true);
     try {
       const res = await syncAndScoreLeads();
       if (res.success) {
-        api.success({
-          // @ts-ignore
-          title: "Muhasebe Senkronizasyonu",
-          description: res.message,
-          placement: "topRight",
-          icon: <ShieldCheck className="text-emerald-500" />,
-        } as any);
+        antdMessage.success(`Eşleştirme tamamlandı: ${res.matchedCount} müşteri Bilsoft ile eşleşti.`);
         await loadLeads();
+        router.refresh();
       } else {
         antdMessage.error(res.message);
       }
     } catch (error) {
       antdMessage.error("Senkronizasyon sırasında hata oluştu.");
     } finally {
-      setSyncing(false);
+      setIsSyncing(false);
     }
   };
 
@@ -527,10 +522,10 @@ export default function LeadsPage() {
           </Button>
           <Button
             type="default"
-            icon={<ShieldCheck size={14} className={syncing ? "animate-pulse" : ""} />}
+            icon={<ShieldCheck size={14} className={isSyncing ? "animate-pulse" : ""} />}
             size="small"
             onClick={handleBilsoftSync}
-            loading={syncing}
+            loading={isSyncing}
             className="border-blue-200 text-blue-600 hover:bg-blue-50"
           >
             Muhasebe Senkronizasyon
