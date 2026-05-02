@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { logApiUsage } from '@ajans/db';
+import { getGoogleSettings } from '../settings';
 
 export interface BusinessResult {
   name: string;
@@ -11,7 +12,8 @@ export interface BusinessResult {
 }
 
 export async function searchBusinesses(query: string, location?: string): Promise<BusinessResult[]> {
-  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+  const settings = await getGoogleSettings();
+  const apiKey = settings?.googlePlacesApiKey || process.env.GOOGLE_PLACES_API_KEY;
 
   if (!apiKey) {
     throw new Error('Google Places API anahtarı (GOOGLE_PLACES_API_KEY) bulunamadı.');

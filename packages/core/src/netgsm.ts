@@ -1,4 +1,5 @@
 import { logApiUsage } from '@ajans/db';
+import { getCachedSettings } from './settings';
 
 /**
  * NetGSM SMS gönderme servisi
@@ -7,12 +8,13 @@ import { logApiUsage } from '@ajans/db';
  * @returns Başarı durumunda true, hata durumunda false döner
  */
 export async function sendSms(phone: string, message: string): Promise<boolean> {
-  const usercode = process.env.NETGSM_USERCODE;
-  const password = process.env.NETGSM_PASSWORD;
-  const sender = process.env.NETGSM_SENDER || process.env.NETGSM_HEADER;
+  const settings = await getCachedSettings();
+  const usercode = settings?.netgsmUsercode || process.env.NETGSM_USERCODE;
+  const password = settings?.netgsmPassword || process.env.NETGSM_PASSWORD;
+  const sender = process.env.NETGSM_SENDER || process.env.NETGSM_HEADER || 'TEKNIKEL';
   const baseUrl = process.env.NETGSM_BASE_URL || 'https://api.netgsm.com.tr';
 
-  if (!usercode || !password || !sender) {
+  if (!usercode || !password) {
     console.error('NetGSM credentials or sender info is missing.');
     return false;
   }
@@ -52,8 +54,9 @@ export async function sendSms(phone: string, message: string): Promise<boolean> 
  * @returns Kalan SMS kredi miktarı veya hata durumunda null
  */
 export async function getBalance(): Promise<{ amount: number; expiryDate?: string } | null> {
-  const usercode = process.env.NETGSM_USERCODE;
-  const password = process.env.NETGSM_PASSWORD;
+  const settings = await getCachedSettings();
+  const usercode = settings?.netgsmUsercode || process.env.NETGSM_USERCODE;
+  const password = settings?.netgsmPassword || process.env.NETGSM_PASSWORD;
   const baseUrl = process.env.NETGSM_BASE_URL || 'https://api.netgsm.com.tr';
 
   if (!usercode || !password) return null;
@@ -85,8 +88,9 @@ export async function getBalance(): Promise<{ amount: number; expiryDate?: strin
  * NetGSM onaylı gönderici adlarını (header) sorgulama servisi
  */
 export async function getSenders(): Promise<string[]> {
-  const usercode = process.env.NETGSM_USERCODE;
-  const password = process.env.NETGSM_PASSWORD;
+  const settings = await getCachedSettings();
+  const usercode = settings?.netgsmUsercode || process.env.NETGSM_USERCODE;
+  const password = settings?.netgsmPassword || process.env.NETGSM_PASSWORD;
   const baseUrl = process.env.NETGSM_BASE_URL || 'https://api.netgsm.com.tr';
 
   if (!usercode || !password) return [];

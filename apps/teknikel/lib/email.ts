@@ -1,12 +1,14 @@
 import { Resend } from 'resend';
 import { logApiUsage } from '@ajans/db';
+import { getCachedSettings } from '@ajans/core';
 import { render } from '@react-email/render';
 import { ServiceNotificationEmail } from '../emails/ServiceNotificationEmail';
 import React from 'react';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendOutreachEmail(lead: { id: string, email: string, name: string | null }) {
+  const settings = await getCachedSettings();
+  const resend = new Resend(settings?.resendApiKey || process.env.RESEND_API_KEY);
+  
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3006';
   const catalogUrl = `${baseUrl}/api/track/link?id=${lead.id}&url=https://teknikelkombi.com/katalog.pdf`;
 

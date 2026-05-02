@@ -114,10 +114,17 @@ export default function SettingsPage() {
 
   const [netgsmModalOpen, setNetgsmModalOpen] = React.useState(false);
   const [netgsmConfigLoading, setNetgsmConfigLoading] = React.useState(false);
-  const [netgsmForm] = Form.useForm();
   const [bilsoftModalOpen, setBilsoftModalOpen] = React.useState(false);
   const [bilsoftConfigLoading, setBilsoftConfigLoading] = React.useState(false);
+
+  // Genel Entegrasyon Modalı (Google, Resend, NetGSM)
+  const [integrationModalOpen, setIntegrationModalOpen] = React.useState(false);
+  const [integrationConfigLoading, setIntegrationConfigLoading] = React.useState(false);
+  const [activeIntegration, setActiveIntegration] = React.useState<"google" | "resend" | "netgsm" | null>(null);
+
+  const [netgsmForm] = Form.useForm();
   const [bilsoftForm] = Form.useForm();
+  const [integrationForm] = Form.useForm();
 
   const handleOpenNetgsmModal = () => {
     if (usageStats?.netgsmDetails) {
@@ -188,6 +195,40 @@ export default function SettingsPage() {
       antdMessage.error("Bir hata oluştu.");
     } finally {
       setBilsoftConfigLoading(false);
+    }
+  };
+
+  const handleOpenIntegrationModal = async (type: "google" | "resend" | "netgsm") => {
+    setLoading(true);
+    setActiveIntegration(type);
+    try {
+      const res = await getIntegrationSettings();
+      if (res) {
+        integrationForm.setFieldsValue(res);
+      }
+    } finally {
+      setLoading(false);
+      setIntegrationModalOpen(true);
+    }
+  };
+
+  const handleSaveIntegrationConfig = async (values: any) => {
+    setIntegrationConfigLoading(true);
+    try {
+      const result = await updateIntegrationSettings(values);
+      if (result.success) {
+        antdMessage.success("Yapılandırma başarıyla kaydedildi.");
+        setIntegrationModalOpen(false);
+        // Durumları yenile
+        const s = await getIntegrationStatuses();
+        setStatuses(s);
+      } else {
+        antdMessage.error("Hata: " + result.error);
+      }
+    } catch (e: any) {
+      antdMessage.error("Bir hata oluştu.");
+    } finally {
+      setIntegrationConfigLoading(false);
     }
   };
 
@@ -548,12 +589,21 @@ export default function SettingsPage() {
                 <div className="text-[10px] text-slate-400 font-medium">
                   {api.details || "Detay bilgisi yok"}
                 </div>
-                {api.name === "Bilsoft Ön Muhasebe API" && (
+                {(api.name === "Bilsoft Ön Muhasebe API" || 
+                  api.name === "Google Places API" || 
+                  api.name === "Google Drive API" || 
+                  api.name === "Resend Email API" || 
+                  api.name === "NetGSM SMS API") && (
                   <Button 
                     size="small" 
                     type="link" 
                     className="p-0 h-auto text-[10px]"
-                    onClick={handleOpenBilsoftModal}
+                    onClick={() => {
+                      if (api.name === "Bilsoft Ön Muhasebe API") handleOpenBilsoftModal();
+                      else if (api.name === "Google Places API" || api.name === "Google Drive API") handleOpenIntegrationModal("google");
+                      else if (api.name === "Resend Email API") handleOpenIntegrationModal("resend");
+                      else if (api.name === "NetGSM SMS API") handleOpenIntegrationModal("netgsm");
+                    }}
                   >
                     Yapılandır
                   </Button>
@@ -923,6 +973,77 @@ export default function SettingsPage() {
           <div className="col-span-2 mt-4 flex justify-end gap-2">
             <Button onClick={() => setBilsoftModalOpen(false)}>İptal</Button>
             <Button type="primary" htmlType="submit" loading={bilsoftConfigLoading}>
+              Kaydet
+            </Button>
+          </div>
+        </Form>
+      </Modal>
+
+      <Modal
+        title={`${activeIntegration?.toUpperCase()} Yapılandırması`}
+        open={integrationModalOpen}
+        onCancel={() => setIntegrationModalOpen(false)}
+        footer={null}
+        destroyOnClose
+        width={500}
+      >
+        <Form
+          form={integrationForm}
+          layout="vertical"
+          onFinish={handleSaveIntegrationConfig}
+          className="mt-4"
+        >
+          {activeIntegration === "google" && (
+            <>
+              <Form.Item name="googlePlacesApiKey" label="Google Places API Key">
+                <Input.Password placeholder="AIza..." />
+              </Form.Item>
+              <Form.Item name="googleDriveApiKey" label="Google Drive API Key (Opsiyonel)">
+                <Input.Password placeholder="AIza..." />
+              </Form.Item>
+              <Alert 
+                type="info" 
+                showIcon 
+                message="Google Cloud Console üzerinden 'Places API (New)' ve 'Drive API' servislerinin etkinleştirildiğinden emin olun."
+                className="mb-4"
+              />
+            </>
+          )}
+
+          {activeIntegration === "resend" && (
+            <>
+              <Form.Item name="resendApiKey" label="Resend API Key">
+                <Input.Password placeholder="re_..." />
+              </Form.Item>
+              <Alert 
+                type="info" 
+                showIcon 
+                message="Resend panelinden aldığınız API anahtarını buraya girin. Gönderim yapabilmek için domain doğrulaması yapmanız önerilir."
+                className="mb-4"
+              />
+            </>
+          )}
+
+          {activeIntegration === "netgsm" && (
+            <>
+              <Form.Item name="netgsmUsercode" label="NetGSM Kullanıcı Kodu">
+                <Input placeholder="Örn: 850308..." />
+              </Form.Item>
+              <Form.Item name="netgsmPassword" label="NetGSM Şifre">
+                <Input.Password placeholder="****" />
+              </Form.Item>
+              <Alert 
+                type="info" 
+                showIcon 
+                message="NetGSM API erişim şifrenizi girin. Bu şifre panel giriş şifresinden farklı olabilir."
+                className="mb-4"
+              />
+            </>
+          )}
+
+          <div className="flex justify-end gap-2 mt-6">
+            <Button onClick={() => setIntegrationModalOpen(false)}>İptal</Button>
+            <Button type="primary" htmlType="submit" loading={integrationConfigLoading}>
               Kaydet
             </Button>
           </div>

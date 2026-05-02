@@ -6,7 +6,8 @@
   "license": "MIT",
   "dependencies": {
     "googleapis": "latest",
-    "google-auth-library": "latest"
+    "google-auth-library": "latest",
+    "@ajans/db": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5"

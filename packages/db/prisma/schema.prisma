@@ -342,13 +342,18 @@ model PageSection {
 }
 
 model SiteSettings {
-  id        String   @id @default("global")
-  logo      String?
-  title     String?
-  email     String?
-  phone     String?
-  address   String?
-  updatedAt DateTime @updatedAt
+  id                 String   @id @default("global")
+  logo               String?
+  title              String?
+  email              String?
+  phone              String?
+  address            String?
+  googlePlacesApiKey String?
+  googleDriveApiKey  String?
+  resendApiKey       String?
+  netgsmUsercode     String?
+  netgsmPassword     String?
+  updatedAt          DateTime @updatedAt
 }
 
 model Newsletter {
