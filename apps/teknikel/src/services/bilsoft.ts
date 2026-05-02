@@ -167,20 +167,33 @@ export async function getBilsoftCariById(id: string | number): Promise<any> {
   try {
     const token = await getValidToken();
     
-    const response = await fetch(`https://apiv3.bilsoft.com/api/CariKart/getbyid?id=${id}`, {
-      method: 'GET',
+    const response = await fetch('https://apiv3.bilsoft.com/api/CariKart/getall', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({
+        aranacakKelime: '',
+        searchType: ['Contains'],
+        subeAdi: 'Merkez',
+        veri: {
+          id: typeof id === 'string' ? parseInt(id) : id,
+        },
+        pagingOptions: {
+          pageSize: 1, 
+          pageNumber: 0,
+        },
+      }),
     });
 
     const result = await response.json();
-    if (!result.success) {
+    if (!result.success || !result.data || !Array.isArray(result.data)) {
       throw new Error(result.message || 'Failed to fetch cari detail');
     }
 
-    return result.data;
+    // ID'ye göre filtrelediğimiz için ilk elemanı döndürüyoruz
+    return result.data.length > 0 ? result.data[0] : null;
   } catch (error) {
     console.error('[BilsoftService] Fetch Cari Detail Error:', error);
     return null;
