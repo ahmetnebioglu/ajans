@@ -2,7 +2,7 @@
 
 import { unsecured_prisma as db } from '@ajans/db';
 import { revalidatePath } from 'next/cache';
-import { fetchBilsoftCurrents, normalizePhone, normalizeString, BilsoftCari } from '@/src/services/bilsoft';
+import { fetchBilsoftCurrents, normalizePhone, normalizeString, BilsoftCari, getBilsoftTokenStatus } from '@/src/services/bilsoft';
 
 interface SyncResult {
   success: boolean;
@@ -120,6 +120,24 @@ export async function syncAndScoreLeads(): Promise<SyncResult> {
       message: `Senkronizasyon hatası: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}`,
       processedCount: 0,
       matchedCount: 0,
+    };
+  }
+}
+
+/**
+ * Bilsoft API bağlantı durumunu döner.
+ */
+export async function getBilsoftStatus() {
+  try {
+    const status = getBilsoftTokenStatus();
+    return {
+      success: true,
+      ...status
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Durum bilgisi alınamadı."
     };
   }
 }

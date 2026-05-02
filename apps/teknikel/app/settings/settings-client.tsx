@@ -37,6 +37,7 @@ import {
 } from "@ant-design/icons";
 import { syncAllLeads } from "../actions/sync-leads";
 import { getIntegrationStatuses } from "../actions/settings-actions";
+import { getBilsoftStatus } from "../actions/bilsoft-actions";
 import { getApiUsageStats, updateNetgsmConfig } from "../actions/api-usage";
 import { sendTestSms } from "../actions/sms";
 import { sendTestEmail } from "../actions/email-actions";
@@ -61,7 +62,9 @@ export default function SettingsPage() {
     googleDrive: false,
     database: false,
     netgsm: false,
+    bilsoft: false,
   });
+  const [bilsoftDetails, setBilsoftDetails] = React.useState<any>(null);
   const [usageStats, setUsageStats] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -69,11 +72,16 @@ export default function SettingsPage() {
     async function loadData() {
       setLoading(true);
       try {
-        const [s, u] = await Promise.all([
+        const [s, u, b] = await Promise.all([
           getIntegrationStatuses(),
           getApiUsageStats(),
+          getBilsoftStatus(),
         ]);
         setStatuses(s as any);
+        if (b.success) {
+          setBilsoftDetails(b);
+          setStatuses(prev => ({ ...prev, bilsoft: b.isConnected }));
+        }
         if (u.success) {
           setUsageStats(u);
         } else {
@@ -463,27 +471,42 @@ export default function SettingsPage() {
             status: statuses.database ? "CONNECTED" : "DISCONNECTED",
             icon: <SettingOutlined />,
           },
+          {
+            name: "Bilsoft Ön Muhasebe API",
+            status: statuses.bilsoft ? "CONNECTED" : "DISCONNECTED",
+            icon: <CloudServerOutlined />,
+            details: bilsoftDetails?.expiry 
+              ? `Geçerlilik: ${dayjs(bilsoftDetails.expiry).format("DD/MM/YYYY HH:mm")}`
+              : "Token bilgisi henüz alınmadı"
+          },
         ].map((api) => (
           <Card
             key={api.name}
             size="small"
             className="border-slate-100 dark:border-slate-800 shadow-sm bg-transparent"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-slate-400">{api.icon}</span>
-                <span className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">
-                  {api.name}
-                </span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-400">{api.icon}</span>
+                  <span className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">
+                    {api.name}
+                  </span>
+                </div>
+                {api.status === "CONNECTED" ? (
+                  <Tag color="success" icon={<CheckCircleFilled />}>
+                    Bağlı
+                  </Tag>
+                ) : (
+                  <Tag color="error" icon={<CloseCircleFilled />}>
+                    Bağlantı Koptu
+                  </Tag>
+                )}
               </div>
-              {api.status === "CONNECTED" ? (
-                <Tag color="success" icon={<CheckCircleFilled />}>
-                  Bağlı
-                </Tag>
-              ) : (
-                <Tag color="error" icon={<CloseCircleFilled />}>
-                  Bağlı Değil
-                </Tag>
+              {api.details && (
+                <div className="text-[10px] text-slate-400 font-medium">
+                  {api.details}
+                </div>
               )}
             </div>
           </Card>

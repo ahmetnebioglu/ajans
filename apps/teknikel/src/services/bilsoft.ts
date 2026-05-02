@@ -1,5 +1,3 @@
-import { unstable_cache } from 'next/cache';
-
 /**
  * Bilsoft API Servis Yapısı
  */
@@ -25,27 +23,26 @@ export interface BilsoftCari {
   bakiye?: number;
 }
 
+// globalThis için tip tanımları
+declare global {
+  var bilsoftToken: string | undefined;
+  var bilsoftTokenExpiry: string | undefined;
+  var bilsoftLastSync: string | undefined;
+}
+
 /**
  * Telefon numarasını sadece rakamlardan oluşacak şekilde temizler.
- * Başındaki +90 veya 0 karakterlerini de siler.
  */
 export function normalizePhone(phone: string | null | undefined): string {
   if (!phone) return '';
-  // Sadece rakamları al
   let cleaned = phone.replace(/\D/g, '');
-  // Başındaki 90'ı sil (e-posta veya ülke kodu gibi)
-  if (cleaned.startsWith('90')) {
-    cleaned = cleaned.substring(2);
-  }
-  // Başındaki 0'ı sil
-  if (cleaned.startsWith('0')) {
-    cleaned = cleaned.substring(1);
-  }
+  if (cleaned.startsWith('90')) cleaned = cleaned.substring(2);
+  if (cleaned.startsWith('0')) cleaned = cleaned.substring(1);
   return cleaned;
 }
 
 /**
- * Metni karşılaştırma için normalize eder (Türkçe karakterleri ASCII'ye çevirir, küçük harfe dönüştürür).
+ * Metni karşılaştırma için normalize eder.
  */
 export function normalizeString(str: string | null | undefined): string {
   if (!str) return '';
@@ -58,57 +55,71 @@ export function normalizeString(str: string | null | undefined): string {
     .replace(/ü/g, 'u')
     .replace(/ö/g, 'o')
     .replace(/ı/g, 'i')
-    .replace(/\s+/g, ''); // Boşlukları da kaldırıyoruz daha iyi eşleşme için
+    .replace(/\s+/g, '');
 }
 
 /**
- * Bilsoft API Token'ını önbelleğe alarak getirir.
+ * Otonom Token Yöneticisi: Token'ı kontrol eder, süresi dolmuşsa yeniler.
  */
-export const getBilsoftToken = unstable_cache(
-  async () => {
-    const data = {
-      apiKullaniciAdi: process.env.BILSOFT_API_USER,
-      apiKullaniciSifre: process.env.BILSOFT_API_PASSWORD,
-      donemYil: process.env.BILSOFT_YEAR,
-      kullaniciAdi: process.env.BILSOFT_USER,
-      kullaniciSifre: process.env.BILSOFT_PASSWORD,
-      subeAd: process.env.BILSOFT_BRANCH,
-      vergiNumarasi: process.env.BILSOFT_TAX_NUMBER,
-      veritabaniAd: process.env.BILSOFT_DB_NAME,
-    };
+export async function getValidToken(): Promise<string> {
+  const now = new Date();
+  const bufferTime = 5 * 60 * 1000; // 5 dakika emniyet payı
 
-    try {
-      const response = await fetch('https://apiv3.bilsoft.com/api/Auth/GirisYap', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+  // 1. Önbellekte geçerli token var mı kontrol et
+  if (
+    globalThis.bilsoftToken &&
+    globalThis.bilsoftTokenExpiry &&
+    new Date(globalThis.bilsoftTokenExpiry).getTime() > now.getTime() + bufferTime
+  ) {
+    return globalThis.bilsoftToken;
+  }
 
-      const result: BilsoftAuthResponse = await response.json();
+  console.log('[BilsoftService] Token geçersiz veya süresi dolmuş, yenileniyor...');
 
-      if (!result.success || !result.data?.token) {
-        throw new Error(result.message || 'Bilsoft login failed');
-      }
+  // 2. Yeni token al
+  const data = {
+    apiKullaniciAdi: process.env.BILSOFT_API_USER,
+    apiKullaniciSifre: process.env.BILSOFT_API_PASSWORD,
+    donemYil: process.env.BILSOFT_YEAR,
+    kullaniciAdi: process.env.BILSOFT_USER,
+    kullaniciSifre: process.env.BILSOFT_PASSWORD,
+    subeAd: process.env.BILSOFT_BRANCH,
+    vergiNumarasi: process.env.BILSOFT_TAX_NUMBER,
+    veritabaniAd: process.env.BILSOFT_DB_NAME,
+  };
 
-      return {
-        token: result.data.token,
-        expiration: result.data.expiration,
-      };
-    } catch (error) {
-      console.error('[BilsoftService] Auth Error:', error);
-      throw error;
+  try {
+    const response = await fetch('https://apiv3.bilsoft.com/api/Auth/GirisYap', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      cache: 'no-store',
+    });
+
+    const result: BilsoftAuthResponse = await response.json();
+
+    if (!result.success || !result.data?.token) {
+      throw new Error(result.message || 'Bilsoft login failed');
     }
-  },
-  ['bilsoft-token'],
-  { revalidate: 3000 } // 50 dakika (Token genelde 1 saat geçerlidir)
-);
+
+    // 3. Global önbelleği güncelle
+    globalThis.bilsoftToken = result.data.token;
+    globalThis.bilsoftTokenExpiry = result.data.expiration;
+    globalThis.bilsoftLastSync = new Date().toISOString();
+
+    return result.data.token;
+  } catch (error) {
+    console.error('[BilsoftService] Token Refresh Error:', error);
+    throw error;
+  }
+}
 
 /**
  * Bilsoft'tan tüm cari listesini çeker.
  */
 export async function fetchBilsoftCurrents(): Promise<BilsoftCari[]> {
   try {
-    const { token } = await getBilsoftToken();
+    const token = await getValidToken();
     
     const response = await fetch('https://apiv3.bilsoft.com/api/CariKart/getall', {
       method: 'POST',
@@ -137,4 +148,15 @@ export async function fetchBilsoftCurrents(): Promise<BilsoftCari[]> {
     console.error('[BilsoftService] Fetch Currents Error:', error);
     return [];
   }
+}
+
+/**
+ * Mevcut token durumunu döner (Server Action için).
+ */
+export function getBilsoftTokenStatus() {
+  return {
+    isConnected: !!globalThis.bilsoftToken,
+    expiry: globalThis.bilsoftTokenExpiry,
+    lastSync: globalThis.bilsoftLastSync,
+  };
 }

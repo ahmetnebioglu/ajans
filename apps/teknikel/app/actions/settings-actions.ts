@@ -11,5 +11,6 @@ export async function getIntegrationStatuses() {
     googlePlaces: !!process.env.GOOGLE_PLACES_API_KEY,
     database: !!process.env.DATABASE_URL,
     netgsm: !!process.env.NETGSM_USERCODE && !!process.env.NETGSM_PASSWORD,
+    bilsoft: !!process.env.BILSOFT_USER && !!process.env.BILSOFT_PASSWORD,
   };
 }
