@@ -1,3 +1,5 @@
+import { unsecured_prisma as db } from '@ajans/db';
+
 /**
  * Bilsoft API Servis Yapısı
  */
@@ -76,23 +78,31 @@ export async function getValidToken(): Promise<string> {
 
   console.log('[BilsoftService] Token geçersiz veya süresi dolmuş, yenileniyor...');
 
-  // 2. Yeni token al
-  const data = {
-    apiKullaniciAdi: process.env.BILSOFT_API_USER,
-    apiKullaniciSifre: process.env.BILSOFT_API_PASSWORD,
-    donemYil: process.env.BILSOFT_YEAR,
-    kullaniciAdi: process.env.BILSOFT_USER,
-    kullaniciSifre: process.env.BILSOFT_PASSWORD,
-    subeAd: process.env.BILSOFT_BRANCH,
-    vergiNumarasi: process.env.BILSOFT_TAX_NUMBER,
-    veritabaniAd: process.env.BILSOFT_DB_NAME,
+  // 2. Kimlik bilgilerini getir (Önce DB, sonra ENV)
+  const dbConfig = await db.bilsoftConfig.findUnique({
+    where: { tenantId: 'teknikel' }
+  });
+
+  const credentials = {
+    apiKullaniciAdi: dbConfig?.apiUser || process.env.BILSOFT_API_USER,
+    apiKullaniciSifre: dbConfig?.apiPassword || process.env.BILSOFT_API_PASSWORD,
+    donemYil: dbConfig?.year || process.env.BILSOFT_YEAR,
+    kullaniciAdi: dbConfig?.user || process.env.BILSOFT_USER,
+    kullaniciSifre: dbConfig?.password || process.env.BILSOFT_PASSWORD,
+    subeAd: dbConfig?.branch || process.env.BILSOFT_BRANCH,
+    vergiNumarasi: dbConfig?.taxNumber || process.env.BILSOFT_TAX_NUMBER,
+    veritabaniAd: dbConfig?.dbName || process.env.BILSOFT_DB_NAME,
   };
+
+  if (!credentials.apiKullaniciAdi || !credentials.kullaniciAdi) {
+    throw new Error('Bilsoft kimlik bilgileri eksik (DB veya ENV).');
+  }
 
   try {
     const response = await fetch('https://apiv3.bilsoft.com/api/Auth/GirisYap', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(credentials),
       cache: 'no-store',
     });
 

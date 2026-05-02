@@ -598,3 +598,19 @@ model NetgsmConfig {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
+
+model BilsoftConfig {
+  id              String    @id @default(cuid())
+  tenantId        String    @unique @default("teknikel")
+  apiUser         String?
+  apiPassword     String?
+  year            String?
+  user            String?
+  password        String?
+  branch          String?
+  taxNumber       String?
+  dbName          String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+

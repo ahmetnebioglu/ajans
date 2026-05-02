@@ -124,6 +124,7 @@ export async function syncAndScoreLeads(): Promise<SyncResult> {
   }
 }
 
+
 /**
  * Bilsoft API bağlantı durumunu döner.
  */
@@ -141,3 +142,37 @@ export async function getBilsoftStatus() {
     };
   }
 }
+
+/**
+ * Bilsoft yapılandırmasını veritabanından getirir.
+ */
+export async function getBilsoftConfig() {
+  try {
+    const config = await db.bilsoftConfig.findUnique({
+      where: { tenantId: 'teknikel' }
+    });
+    return { success: true, data: config };
+  } catch (error) {
+    return { success: false, error: "Yapılandırma alınamadı." };
+  }
+}
+
+/**
+ * Bilsoft yapılandırmasını günceller.
+ */
+export async function updateBilsoftConfig(data: any) {
+  try {
+    const config = await db.bilsoftConfig.upsert({
+      where: { tenantId: 'teknikel' },
+      update: data,
+      create: {
+        tenantId: 'teknikel',
+        ...data
+      }
+    });
+    return { success: true, data: config };
+  } catch (error) {
+    return { success: false, error: "Yapılandırma güncellenemedi." };
+  }
+}
+

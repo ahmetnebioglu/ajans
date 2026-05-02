@@ -37,7 +37,7 @@ import {
 } from "@ant-design/icons";
 import { syncAllLeads } from "../actions/sync-leads";
 import { getIntegrationStatuses } from "../actions/settings-actions";
-import { getBilsoftStatus } from "../actions/bilsoft-actions";
+import { getBilsoftStatus, getBilsoftConfig, updateBilsoftConfig } from "../actions/bilsoft-actions";
 import { getApiUsageStats, updateNetgsmConfig } from "../actions/api-usage";
 import { sendTestSms } from "../actions/sms";
 import { sendTestEmail } from "../actions/email-actions";
@@ -114,6 +114,9 @@ export default function SettingsPage() {
   const [netgsmModalOpen, setNetgsmModalOpen] = React.useState(false);
   const [netgsmConfigLoading, setNetgsmConfigLoading] = React.useState(false);
   const [netgsmForm] = Form.useForm();
+  const [bilsoftModalOpen, setBilsoftModalOpen] = React.useState(false);
+  const [bilsoftConfigLoading, setBilsoftConfigLoading] = React.useState(false);
+  const [bilsoftForm] = Form.useForm();
 
   const handleOpenNetgsmModal = () => {
     if (usageStats?.netgsmDetails) {
@@ -151,6 +154,39 @@ export default function SettingsPage() {
       antdMessage.error("Bir hata oluştu.");
     } finally {
       setNetgsmConfigLoading(false);
+    }
+  };
+
+  const handleOpenBilsoftModal = async () => {
+    setLoading(true);
+    try {
+      const res = await getBilsoftConfig();
+      if (res.success && res.data) {
+        bilsoftForm.setFieldsValue(res.data);
+      }
+    } finally {
+      setLoading(false);
+      setBilsoftModalOpen(true);
+    }
+  };
+
+  const handleSaveBilsoftConfig = async (values: any) => {
+    setBilsoftConfigLoading(true);
+    try {
+      const result = await updateBilsoftConfig(values);
+      if (result.success) {
+        antdMessage.success("Bilsoft yapılandırması kaydedildi.");
+        setBilsoftModalOpen(false);
+        // Yeniden durum kontrolü yap
+        const b = await getBilsoftStatus();
+        if (b.success) setBilsoftDetails(b);
+      } else {
+        antdMessage.error("Hata: " + result.error);
+      }
+    } catch (e: any) {
+      antdMessage.error("Bir hata oluştu.");
+    } finally {
+      setBilsoftConfigLoading(false);
     }
   };
 
@@ -507,11 +543,21 @@ export default function SettingsPage() {
                   </Tag>
                 )}
               </div>
-              {api.details && (
+              <div className="flex items-center justify-between mt-1">
                 <div className="text-[10px] text-slate-400 font-medium">
-                  {api.details}
+                  {api.details || "Detay bilgisi yok"}
                 </div>
-              )}
+                {api.name === "Bilsoft Ön Muhasebe API" && (
+                  <Button 
+                    size="small" 
+                    type="link" 
+                    className="p-0 h-auto text-[10px]"
+                    onClick={handleOpenBilsoftModal}
+                  >
+                    Yapılandır
+                  </Button>
+                )}
+              </div>
             </div>
           </Card>
         ))}
@@ -825,6 +871,62 @@ export default function SettingsPage() {
 
           <Alert
             message="Bilgilendirme"
+            description="Burada yaptığınız değişiklikler sadece takip amaçlıdır. Gerçek SMS bakiyesi NetGSM paneli üzerinden güncellenir."
+            type="info"
+            showIcon
+            className="mt-4"
+          />
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Bilsoft API Yapılandırması"
+        open={bilsoftModalOpen}
+        onCancel={() => setBilsoftModalOpen(false)}
+        footer={null}
+        destroyOnClose
+        width={600}
+      >
+        <Form
+          form={bilsoftForm}
+          layout="vertical"
+          onFinish={handleSaveBilsoftConfig}
+          className="mt-4 grid grid-cols-2 gap-x-4"
+          size="small"
+        >
+          <Form.Item name="apiUser" label="API Kullanıcı Adı (BLS-...)">
+            <Input placeholder="Örn: BLS-2e9d4232..." />
+          </Form.Item>
+          <Form.Item name="apiPassword" label="API Şifre (UUID)">
+            <Input.Password placeholder="bcc11ce7-..." />
+          </Form.Item>
+          <Form.Item name="user" label="Panel Kullanıcı Adı">
+            <Input placeholder="Örn: teknikel2" />
+          </Form.Item>
+          <Form.Item name="password" label="Panel Şifre">
+            <Input.Password placeholder="****" />
+          </Form.Item>
+          <Form.Item name="year" label="Dönem Yılı">
+            <Input placeholder="2026" />
+          </Form.Item>
+          <Form.Item name="branch" label="Şube Adı">
+            <Input placeholder="Merkez" />
+          </Form.Item>
+          <Form.Item name="taxNumber" label="Vergi Numarası">
+            <Input placeholder="432..." />
+          </Form.Item>
+          <Form.Item name="dbName" label="Veritabanı Adı">
+            <Input placeholder="432..." />
+          </Form.Item>
+
+          <div className="col-span-2 mt-4 flex justify-end gap-2">
+            <Button onClick={() => setBilsoftModalOpen(false)}>İptal</Button>
+            <Button type="primary" htmlType="submit" loading={bilsoftConfigLoading}>
+              Kaydet
+            </Button>
+          </div>
+        </Form>
+      </Modal>
             description="Bu tarihler NetGSM API ile senkronize değildir. Sadece idari takip ve dashboard üzerindeki 'Kalan Gün' hesaplamaları için not alma amaçlı kullanılır."
             type="info"
             showIcon
