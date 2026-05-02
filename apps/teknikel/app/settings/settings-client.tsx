@@ -926,7 +926,6 @@ export default function SettingsPage() {
             </Button>
           </div>
         </Form>
-        </Form>
       </Modal>
     </div>
   );
