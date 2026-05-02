@@ -127,7 +127,7 @@ export async function getValidToken(): Promise<string> {
 /**
  * Bilsoft'tan tüm cari listesini çeker.
  */
-export async function fetchBilsoftCurrents(): Promise<BilsoftCari[]> {
+export async function getBilsoftCariler(): Promise<BilsoftCari[]> {
   try {
     const token = await getValidToken();
     

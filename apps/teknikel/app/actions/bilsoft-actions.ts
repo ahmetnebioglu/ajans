@@ -2,7 +2,7 @@
 
 import { unsecured_prisma as db } from '@ajans/db';
 import { revalidatePath } from 'next/cache';
-import { fetchBilsoftCurrents, normalizePhone, normalizeString, BilsoftCari, getBilsoftTokenStatus } from '@/src/services/bilsoft';
+import { getBilsoftCariler, normalizePhone, normalizeString, BilsoftCari, getBilsoftTokenStatus } from '@/src/services/bilsoft';
 
 interface SyncResult {
   success: boolean;
@@ -20,7 +20,7 @@ export async function syncAndScoreLeads(): Promise<SyncResult> {
     console.log('[BilsoftActions] Senkronizasyon başlatıldı...');
 
     // 1. Bilsoft'tan güncel carileri çek
-    const bilsoftCaris = await fetchBilsoftCurrents();
+    const bilsoftCaris = await getBilsoftCariler();
     if (!bilsoftCaris || bilsoftCaris.length === 0) {
       return {
         success: false,

@@ -35,6 +35,7 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
   const menuItems: MenuProps['items'] = [
     { key: "/", icon: <LayoutDashboard size={18} />, label: "Durum Özeti" },
     { key: "/leads", icon: <Search size={18} />, label: "Yeni Adaylar" },
+    { key: "/cariler", icon: <Users size={18} />, label: "Cariler (Bilsoft)" },
     { key: "/vip", icon: <Crown size={18} />, label: "Özel Müşteriler" },
     { type: "divider" },
     { key: "/settings", icon: <Settings size={18} />, label: "Sistem Ayarları" },
