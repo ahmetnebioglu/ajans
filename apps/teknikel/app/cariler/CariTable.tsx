@@ -42,10 +42,10 @@ export default function CariTable({ initialData }: CariTableProps) {
       dataIndex: 'faturaUnvan',
       key: 'faturaUnvan',
       render: (text, record) => (
-        <div className="flex flex-col">
+        <a href={`/cariler/${record.id}`} className="flex flex-col hover:opacity-80 transition-opacity">
           <span className="font-semibold text-slate-700 dark:text-slate-200">{text}</span>
           <span className="text-[10px] text-slate-400">{record.cariKod}</span>
-        </div>
+        </a>
       ),
       sorter: (a, b) => a.faturaUnvan.localeCompare(b.faturaUnvan),
     },

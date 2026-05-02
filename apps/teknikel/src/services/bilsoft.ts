@@ -161,6 +161,33 @@ export async function getBilsoftCariler(): Promise<BilsoftCari[]> {
 }
 
 /**
+ * Bilsoft'tan ID ile tekil cari detayı çeker.
+ */
+export async function getBilsoftCariById(id: string | number): Promise<any> {
+  try {
+    const token = await getValidToken();
+    
+    const response = await fetch(`https://apiv3.bilsoft.com/api/CariKart/getbyid?id=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.message || 'Failed to fetch cari detail');
+    }
+
+    return result.data;
+  } catch (error) {
+    console.error('[BilsoftService] Fetch Cari Detail Error:', error);
+    return null;
+  }
+}
+
+/**
  * Mevcut token durumunu döner (Server Action için).
  */
 export function getBilsoftTokenStatus() {
