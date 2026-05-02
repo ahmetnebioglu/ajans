@@ -37,7 +37,7 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 import { syncAllLeads } from "../actions/sync-leads";
-import { getIntegrationStatuses } from "../actions/settings-actions";
+import { getIntegrationStatuses, getIntegrationSettings, updateIntegrationSettings } from "../actions/settings-actions";
 import { getBilsoftStatus, getBilsoftConfig, updateBilsoftConfig } from "../actions/bilsoft-actions";
 import { getApiUsageStats, updateNetgsmConfig } from "../actions/api-usage";
 import { sendTestSms } from "../actions/sms";
