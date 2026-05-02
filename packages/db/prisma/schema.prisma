@@ -457,6 +457,10 @@ model Lead {
   status       LeadStatus     @default(PROSPECT)
   score        Int            @default(0)
   
+  // Bilsoft Integration
+  erpId        String?        @unique
+  erpCode      String?
+  
   // KVKK & Compliance
   communicationOptIn Boolean  @default(true)
   

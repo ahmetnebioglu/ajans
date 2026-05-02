@@ -50,6 +50,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { scheduleCall, toggleVipStatus, toggleCommunication, calculateLeadScore, checkChurnStatus } from "./actions";
+import { syncAndScoreLeads } from "../actions/bilsoft-actions";
 import { revalidateLeads } from "../actions/revalidate";
 
 const { Text } = Typography;
@@ -59,6 +60,7 @@ export default function LeadsPage() {
   const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
@@ -203,6 +205,29 @@ export default function LeadsPage() {
     if (res.success) {
       antdMessage.success(`Yeni skor hesaplandı: ${res.score}`);
       loadLeads();
+    }
+  };
+
+  const handleBilsoftSync = async () => {
+    setSyncing(true);
+    try {
+      const res = await syncAndScoreLeads();
+      if (res.success) {
+        api.success({
+          // @ts-ignore
+          title: "Muhasebe Senkronizasyonu",
+          description: res.message,
+          placement: "topRight",
+          icon: <ShieldCheck className="text-emerald-500" />,
+        } as any);
+        await loadLeads();
+      } else {
+        antdMessage.error(res.message);
+      }
+    } catch (error) {
+      antdMessage.error("Senkronizasyon sırasında hata oluştu.");
+    } finally {
+      setSyncing(false);
     }
   };
 
@@ -499,6 +524,16 @@ export default function LeadsPage() {
             onClick={() => setIsScannerOpen(true)}
           >
             Google'dan Usta Tara
+          </Button>
+          <Button
+            type="default"
+            icon={<ShieldCheck size={14} className={syncing ? "animate-pulse" : ""} />}
+            size="small"
+            onClick={handleBilsoftSync}
+            loading={syncing}
+            className="border-blue-200 text-blue-600 hover:bg-blue-50"
+          >
+            Muhasebe Senkronizasyon
           </Button>
         </div>
       </div>
