@@ -7,7 +7,7 @@
   "dependencies": {
     "googleapis": "latest",
     "google-auth-library": "latest",
-    "@ajans/db": "workspace:*"
+    "@ajans/db": "*"
   },
   "devDependencies": {
     "typescript": "^5"
