@@ -80,7 +80,11 @@ export default function SettingsPage() {
         setStatuses(s as any);
         if (b.success) {
           setBilsoftDetails(b);
-          setStatuses(prev => ({ ...prev, bilsoft: b.isConnected }));
+          // Type guard ekleyerek isConnected objede var mı diye kontrol ediyoruz
+          setStatuses(prev => ({ 
+            ...prev, 
+            bilsoft: 'isConnected' in b ? (b as any).isConnected : false 
+          }));
         }
         if (u.success) {
           setUsageStats(u);
