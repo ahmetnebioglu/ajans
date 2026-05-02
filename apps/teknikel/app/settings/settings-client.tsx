@@ -926,23 +926,8 @@ export default function SettingsPage() {
             </Button>
           </div>
         </Form>
-      </Modal>
-            description="Bu tarihler NetGSM API ile senkronize değildir. Sadece idari takip ve dashboard üzerindeki 'Kalan Gün' hesaplamaları için not alma amaçlı kullanılır."
-            type="info"
-            showIcon
-            className="mt-2"
-          />
-
-          <div className="flex justify-end gap-2 mt-6">
-            <Button onClick={() => setNetgsmModalOpen(false)}>İptal</Button>
-            <Button type="primary" htmlType="submit" loading={netgsmConfigLoading}>
-              Kaydet
-            </Button>
-          </div>
         </Form>
       </Modal>
     </div>
   );
 }
-
-import { Input } from "antd";
