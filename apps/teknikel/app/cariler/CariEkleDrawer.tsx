@@ -81,9 +81,10 @@ export default function CariEkleDrawer({ open, onClose }: CariEkleDrawerProps) {
         requiredMark="optional"
         className="cari-ekle-form"
       >
-        <Divider orientation="left" className="mt-0">
+        <div className="mt-0 mb-4">
           <Text strong className="text-[11px] text-slate-400 uppercase tracking-wider">Temel Bilgiler</Text>
-        </Divider>
+          <Divider className="my-1" />
+        </div>
 
         <Form.Item
           name="faturaUnvan"
@@ -110,9 +111,10 @@ export default function CariEkleDrawer({ open, onClose }: CariEkleDrawerProps) {
           <Input placeholder="10 Haneli Vergi No" />
         </Form.Item>
 
-        <Divider orientation="left">
+        <div className="mt-6 mb-4">
           <Text strong className="text-[11px] text-slate-400 uppercase tracking-wider">İletişim & Adres</Text>
-        </Divider>
+          <Divider className="my-1" />
+        </div>
 
         <Row gutter={16}>
           <Col span={12}>
