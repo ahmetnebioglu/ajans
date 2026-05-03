@@ -3,7 +3,7 @@ import path from 'path';
 import mongoose from 'mongoose';
 
 const TOKEN_FILE = path.join(process.cwd(), 'ideasoft-tokens.json');
-const ATLAS_URI = "mongodb+srv://teknikel34:HcmivLfP1bNv4Nbs@cluster0.kdz7ulj.mongodb.net/teknikel";
+const ATLAS_URI = process.env.OLD_MONGODB_URI;
 
 export interface IdeasoftToken {
   accessToken: string;
@@ -17,6 +17,9 @@ export interface IdeasoftToken {
  * Bu işlem sadece geliştirme ortamında (Dev Mode) kullanılmalıdır.
  */
 export async function syncTokensFromAtlas(): Promise<IdeasoftToken> {
+  if (!ATLAS_URI) {
+    throw new Error('OLD_MONGODB_URI ortam değişkeni tanımlanmamış. Lütfen .env.local dosyasını kontrol edin.');
+  }
   console.log('Ideasoft tokenları Atlas\'tan senkronize ediliyor...');
   
   let atlasConn;
