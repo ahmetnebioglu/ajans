@@ -1,6 +1,7 @@
 import { Readable } from "stream";
 import { google } from "googleapis";
 import { getGoogleAuth } from "./index";
+import { getGoogleSettings } from "./settings";
 
 export async function uploadToDrive(
   fileBuffer: Buffer,
@@ -8,17 +9,22 @@ export async function uploadToDrive(
   mimeType: string,
   folderId?: string
 ) {
-  const auth = getGoogleAuth();
+  const auth = await getGoogleAuth();
+  const settings = await getGoogleSettings();
+  
+  // Eğer folderId parametre olarak gelmediyse DB'den al, o da yoksa ENV'den al
+  const targetFolderId = folderId || settings?.googleDriveFolderId || process.env.GOOGLE_DRIVE_FOLDER_ID;
+
   // Service Account (GoogleAuth) veya OAuth2 desteği için istemciyi al
   const authClient = "getClient" in auth ? await (auth as any).getClient() : auth;
   const drive = google.drive({ version: "v3", auth: authClient });
 
-  console.log(`[Drive] Attempting RESUMABLE upload for ${fileName} to folder ${folderId}`);
+  console.log(`[Drive] Attempting RESUMABLE upload for ${fileName} to folder ${targetFolderId}`);
   
   const response = await drive.files.create({
     requestBody: {
       name: fileName,
-      parents: folderId ? [folderId] : [],
+      parents: targetFolderId ? [targetFolderId] : [],
     },
     media: {
       mimeType: mimeType,

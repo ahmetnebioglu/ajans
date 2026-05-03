@@ -350,6 +350,10 @@ model SiteSettings {
   address            String?
   googlePlacesApiKey String?
   googleDriveApiKey  String?
+  googleClientId     String?
+  googleClientSecret String?
+  googleRefreshToken String?
+  googleDriveFolderId String?
   resendApiKey       String?
   netgsmUsercode     String?
   netgsmPassword     String?

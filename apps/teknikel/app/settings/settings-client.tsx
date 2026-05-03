@@ -998,8 +998,19 @@ export default function SettingsPage() {
               <Form.Item name="googlePlacesApiKey" label="Google Places API Key">
                 <Input.Password placeholder="AIza..." />
               </Form.Item>
-              <Form.Item name="googleDriveApiKey" label="Google Drive API Key (Opsiyonel)">
-                <Input.Password placeholder="AIza..." />
+              <Divider className="my-2" />
+              <Typography.Text strong className="text-[11px] uppercase text-slate-400 block mb-2">Drive & OAuth2 Yapılandırması</Typography.Text>
+              <Form.Item name="googleClientId" label="Google Client ID">
+                <Input placeholder="1041...apps.googleusercontent.com" />
+              </Form.Item>
+              <Form.Item name="googleClientSecret" label="Google Client Secret">
+                <Input.Password placeholder="GOCSPX-..." />
+              </Form.Item>
+              <Form.Item name="googleRefreshToken" label="Google Refresh Token">
+                <Input.Password placeholder="1//041..." />
+              </Form.Item>
+              <Form.Item name="googleDriveFolderId" label="Varsayılan Drive Klasör ID">
+                <Input placeholder="19SuZ..." />
               </Form.Item>
               <Alert 
                 type="info" 

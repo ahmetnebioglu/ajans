@@ -38,6 +38,10 @@ export async function updateIntegrationSettings(data: any) {
     const allowedFields = [
       'googlePlacesApiKey', 
       'googleDriveApiKey', 
+      'googleClientId',
+      'googleClientSecret',
+      'googleRefreshToken',
+      'googleDriveFolderId',
       'resendApiKey', 
       'netgsmUsercode', 
       'netgsmPassword'

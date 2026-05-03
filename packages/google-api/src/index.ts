@@ -1,19 +1,26 @@
 import { google } from "googleapis";
 import path from "path";
 import fs from "fs";
+import { getGoogleSettings } from "./settings";
 
 // Google Cloud Authentication (Hybrid: Supports Service Account & OAuth2 Refresh Token)
-export const getGoogleAuth = () => {
+export const getGoogleAuth = async () => {
+  const settings = await getGoogleSettings();
+  
+  const clientId = settings?.googleClientId || process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = settings?.googleClientSecret || process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = settings?.googleRefreshToken || process.env.GOOGLE_REFRESH_TOKEN;
+
   // 1. Yol: OAuth2 Refresh Token (Bireysel hesap kotasını kullanmak için en iyisi)
-  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_REFRESH_TOKEN) {
-    console.log("[Google Auth] Using personal account OAuth2 Refresh Token.");
+  if (clientId && clientSecret && refreshToken) {
+    console.log("[Google Auth] Using dynamic OAuth2 Refresh Token.");
     const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
+      clientId,
+      clientSecret,
       "http://localhost"
     );
     oauth2Client.setCredentials({
-      refresh_token: process.env.GOOGLE_REFRESH_TOKEN
+      refresh_token: refreshToken
     });
     return oauth2Client;
   }
