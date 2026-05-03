@@ -50,7 +50,7 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
       theme={isDark ? "dark" : "light"}
       className={`z-50 border-r ${isDark ? 'border-white/5' : 'border-slate-200'}`}
       style={{
-        background: isDark ? "#020617" : "#ffffff",
+        background: isDark ? "#020617" : "#f6f6f6",
         height: "100vh",
         position: "fixed",
         left: 0,

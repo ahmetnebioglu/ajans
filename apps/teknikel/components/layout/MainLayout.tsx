@@ -26,7 +26,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const isAuthPage = pathname === "/login";
 
   return (
-    <Layout style={{ minHeight: "100vh", background: isDark ? "#020617" : "#f8fafc" }}>
+    <Layout style={{ minHeight: "100vh", background: isDark ? "#020617" : "#f6f6f6" }}>
       {!isAuthPage && (
         <Sidebar collapsed={collapsed} onCollapse={(val) => setCollapsed(val)} />
       )}
@@ -35,7 +35,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         style={{ 
           marginLeft: isAuthPage ? 0 : (collapsed ? 80 : 260), 
           transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-          background: isDark ? "#020617" : "#f8fafc",
+          background: isDark ? "#020617" : "#f6f6f6",
           minHeight: "100vh"
         }}
       >
