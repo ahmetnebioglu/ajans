@@ -805,7 +805,7 @@ export default function LeadsPage() {
                   </div>
                 ) : (
                   <Timeline
-                    mode="left"
+                    mode="start"
                     items={getTimelineItems()}
                     className="mt-4 custom-lead-timeline"
                   />
