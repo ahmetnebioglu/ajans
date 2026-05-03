@@ -69,8 +69,8 @@ export default async function CariDetailPage({
               }
               className="shadow-sm mb-6"
             >
-              <Descriptions column={{ xs: 1, sm: 2 }} bordered size="small">
-                <Descriptions.Item label="Ünvan" span={2}>
+              <Descriptions column={1} bordered size="small">
+                <Descriptions.Item label="Ünvan">
                   {safeCari.faturaUnvan}
                 </Descriptions.Item>
                 <Descriptions.Item label="Yetkili">
@@ -96,17 +96,17 @@ export default async function CariDetailPage({
               }
               className="shadow-sm mb-6"
             >
-              <Descriptions column={{ xs: 1, sm: 2 }} bordered size="small">
+              <Descriptions column={1} bordered size="small">
                 <Descriptions.Item label="Telefon">
                   {safeCari.tel || "-"}
                 </Descriptions.Item>
                 <Descriptions.Item label="Cep">
                   {safeCari.cep || "-"}
                 </Descriptions.Item>
-                <Descriptions.Item label="E-posta" span={2}>
+                <Descriptions.Item label="E-posta">
                   {safeCari.mail || "-"}
                 </Descriptions.Item>
-                <Descriptions.Item label="Web" span={2}>
+                <Descriptions.Item label="Web">
                   {safeCari.webAdresi || "-"}
                 </Descriptions.Item>
               </Descriptions>
