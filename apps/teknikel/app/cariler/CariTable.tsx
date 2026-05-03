@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Table, Input, Tag, Card, Button, Space } from 'antd';
 import { UserOutlined, PhoneOutlined, HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
@@ -27,6 +27,7 @@ interface CariTableProps {
 }
 
 export default function CariTable({ initialData, totalCount, currentPage }: CariTableProps) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
