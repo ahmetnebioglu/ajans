@@ -10,12 +10,15 @@ export async function GET(req: Request) {
     const isVipOnly = searchParams.get('vip') === 'true';
 
     const leads = await db.lead.findMany({
-      where: isVipOnly ? {
-        OR: [
-          { score: { gte: 30 } },
-          { status: 'VIP' }
-        ]
-      } : {},
+      where: {
+        tenantId: 'teknikel',
+        ...(isVipOnly ? {
+          OR: [
+            { score: { gte: 30 } },
+            { status: 'VIP' }
+          ]
+        } : {})
+      },
       orderBy: {
         createdAt: 'desc'
       }
