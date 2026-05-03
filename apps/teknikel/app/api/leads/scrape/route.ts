@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { searchBusinesses } from '@ajans/google-api';
-import { unsecured_prisma as db } from '@ajans/db';
+import { getServicePrisma } from '@ajans/db';
 import { revalidatePath } from 'next/cache';
 
 export async function POST(req: NextRequest) {
   try {
+    // 1. Servis Token Doğrulaması (Secure by Design)
+    const serviceToken = req.headers.get('X-Service-Token') || req.headers.get('Authorization')?.replace('Bearer ', '');
+    
+    if (!serviceToken) {
+      return NextResponse.json({ success: false, error: 'Yetkisiz erişim. Servis tokenı eksik.' }, { status: 401 });
+    }
+
+    // İzole veritabanı nesnesini al (Botun tenantId'sine otomatik kilitlenir)
+    const db = await getServicePrisma(serviceToken);
+
     const body = await req.json();
     const { query, location } = body;
 
@@ -31,7 +41,7 @@ export async function POST(req: NextRequest) {
     // Veritabanına kaydet
     for (const biz of businesses) {
       try {
-        // Telefon veya İsim+Şirket bazlı kontrol
+        // Telefon veya İsim+Şirket bazlı kontrol (Artık botun kendi tenantId'si içinde aranır)
         const existing = await db.lead.findFirst({
           where: {
             OR: [
@@ -49,14 +59,12 @@ export async function POST(req: NextRequest) {
           let calculatedScore = 0;
           const interactionData = [];
 
-          // 1. Temel Kayıt Etkileşimi
           interactionData.push({
             type: 'CREATED',
             scoreAdded: 0,
             description: 'Sisteme eklendi (Google Places)'
           });
 
-          // 2. Telefon Puanı
           if (biz.phone) {
             calculatedScore += 10;
             interactionData.push({
@@ -66,7 +74,6 @@ export async function POST(req: NextRequest) {
             });
           }
 
-          // 3. Web Sitesi Puanı
           if (biz.website) {
             calculatedScore += 5;
             interactionData.push({
@@ -76,7 +83,7 @@ export async function POST(req: NextRequest) {
             });
           }
 
-          const newLead = await db.lead.create({
+          await db.lead.create({
             data: {
               name: biz.name || "Bilinmeyen Yetkili",
               companyName: biz.companyName,
@@ -85,7 +92,7 @@ export async function POST(req: NextRequest) {
               source: 'GOOGLE_PLACES',
               status: 'PROSPECT',
               score: calculatedScore,
-              tenantId: 'teknikel',
+              // tenantId artık getServicePrisma tarafından veritabanı seviyesinde (RLS) hallediliyor
               interactions: {
                 create: interactionData
               }
@@ -99,7 +106,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Cache'i patlat
     revalidatePath('/leads');
     revalidatePath('/vip');
 
@@ -111,14 +117,10 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error('--------------------------------------------------');
     console.error('[SCRAPE FATAL ERROR]:', error.message);
-    if (error.stack) console.error(error.stack);
-    console.error('--------------------------------------------------');
-    
     return NextResponse.json({ 
       success: false, 
       error: error.message || 'Bilinmeyen bir hata oluştu.' 
-    }, { status: 500 });
+    }, { status: error.message.includes('Yetkisiz') ? 401 : 500 });
   }
 }
