@@ -61,7 +61,7 @@ export default function CariEkleDrawer({ open, onClose }: CariEkleDrawerProps) {
           <span>Yeni Cari Ekle (Bilsoft)</span>
         </Space>
       }
-      width={480}
+      size="default"
       onClose={onClose}
       open={open}
       styles={{ body: { paddingBottom: 80 } }}
