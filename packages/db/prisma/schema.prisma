@@ -466,6 +466,9 @@ enum InteractionType {
   MEETING
   NOTE
   SYSTEM
+  CREATED
+  PROFILE_PHONE
+  PROFILE_WEB
 }
 
 model Lead {

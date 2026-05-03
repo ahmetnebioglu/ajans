@@ -83,7 +83,7 @@ export async function calculateLeadScore(id: string) {
   try {
     const lead = await db.lead.findUnique({ 
       where: { id },
-      include: { interactions: true }
+      include: { interactionSummaries: true }
     });
     
     if (!lead) return { success: false };
@@ -103,7 +103,7 @@ export async function calculateLeadScore(id: string) {
     }
 
     // 2. Interaction Scoring
-    const interactionCount = lead.interactions.reduce((acc, curr) => acc + curr.count, 0);
+    const interactionCount = lead.interactionSummaries.reduce((acc, curr) => acc + (curr.count ?? 0), 0);
     score += Math.min(interactionCount * 5, 40);
 
     // 3. Website/Contact Check
@@ -128,12 +128,12 @@ export async function checkChurnStatus(id: string) {
   try {
     const lead = await db.lead.findUnique({
       where: { id },
-      include: { interactions: { orderBy: { lastSeen: 'desc' }, take: 1 } }
+      include: { interactionSummaries: { orderBy: { lastSeen: 'desc' }, take: 1 } }
     });
 
-    if (!lead || lead.interactions.length === 0) return { success: false };
+    if (!lead || lead.interactionSummaries.length === 0) return { success: false };
 
-    const lastSeen = new Date(lead.interactions[0].lastSeen);
+    const lastSeen = new Date(lead.interactionSummaries[0].lastSeen);
     const now = new Date();
     const daysSinceLastInteraction = Math.floor((now.getTime() - lastSeen.getTime()) / (1000 * 60 * 60 * 24));
 
