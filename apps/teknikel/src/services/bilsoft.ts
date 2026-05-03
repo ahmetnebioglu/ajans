@@ -125,30 +125,33 @@ export async function getValidToken(): Promise<string> {
 }
 
 /**
- * Bilsoft'tan cari listesini çeker (Dinamik Payload).
- * @param searchTerm Arama yapılacak kelime (Ünvan, Yetkili vb.)
+ * Bilsoft'tan cari listesini çeker (Server-Side Pagination & Search).
+ * @param searchTerm Arama yapılacak kelime
+ * @param page Sayfa numarası (1-indexed)
+ * @param pageSize Sayfa başına kayıt sayısı
  */
-export async function getBilsoftCariler(searchTerm: string = ""): Promise<BilsoftCari[]> {
+export async function getBilsoftCariler(
+  searchTerm: string = "", 
+  page: number = 1, 
+  pageSize: number = 50
+): Promise<{ data: BilsoftCari[], totalCount: number }> {
   try {
     const token = await getValidToken();
     
-    // Temel payload (Hertürlü gönderilmeli)
+    // Temel payload
     const payload: any = {
       subeAdi: 'Merkez',
       pagingOptions: {
-        pageSize: 1000, 
-        pageNumber: 0,
+        pageSize: pageSize, 
+        pageNumber: page - 1, // API 0 tabanlı bekliyor
       },
     };
 
-    // Koşullu Arama Mantığı: Sadece arama varsa ilgili alanları ekle
+    // Koşullu Arama Mantığı
     if (searchTerm && searchTerm.trim() !== "") {
       payload.aranacakKelime = searchTerm;
       payload.searchType = ['Contains'];
-      // API'nin filtrelemeyi yakalaması için veri objesini ekliyoruz
-      payload.veri = {
-        faturaUnvan: searchTerm 
-      };
+      payload.veri = { faturaUnvan: searchTerm };
     }
 
     console.log("🛠️ BİLSOFT FETCH PAYLOAD:", JSON.stringify(payload, null, 2));
@@ -171,18 +174,21 @@ export async function getBilsoftCariler(searchTerm: string = ""): Promise<Bilsof
       result = JSON.parse(resText);
     } catch (e) {
       console.error("🛠️ BİLSOFT JSON Parse Hatası:", e);
-      return [];
+      return { data: [], totalCount: 0 };
     }
 
     if (!result.success) {
       console.warn("🛠️ BİLSOFT API ERROR:", result.message);
-      throw new Error(result.message || 'Failed to fetch currents');
+      return { data: [], totalCount: 0 };
     }
 
-    return result.data || [];
+    return {
+      data: result.data || [],
+      totalCount: result.totalCount || 0
+    };
   } catch (error) {
     console.error('[BilsoftService] Fetch Currents Error:', error);
-    return [];
+    return { data: [], totalCount: 0 };
   }
 }
 

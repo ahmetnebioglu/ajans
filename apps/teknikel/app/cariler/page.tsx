@@ -7,20 +7,21 @@ import CariTable from "./CariTable";
 export default async function CarilerPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
-  const { q = "" } = await searchParams;
+  const { q = "", page = "1" } = await searchParams;
+  const currentPage = Number(page) || 1;
   const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/login");
   }
 
-  // Veriyi çek (Arama parametresi ile birlikte)
-  const carilerData = await getBilsoftCariler(q);
+  // Veriyi çek (Arama ve Sayfalama ile birlikte)
+  const { data: cariler, totalCount } = await getBilsoftCariler(q, currentPage);
   
   // KRİTİK: Veriyi sterilize et (Server -> Client geçişi için)
-  const safeCariler = JSON.parse(JSON.stringify(carilerData));
+  const safeCariler = JSON.parse(JSON.stringify(cariler));
 
   return (
     <div className="p-6">
@@ -33,7 +34,7 @@ export default async function CarilerPage({
         </p>
       </div>
       
-      <CariTable initialData={safeCariler} />
+      <CariTable initialData={safeCariler} totalCount={totalCount} currentPage={currentPage} />
     </div>
   );
 }

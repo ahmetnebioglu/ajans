@@ -21,9 +21,11 @@ interface BilsoftCari {
 
 interface CariTableProps {
   initialData: BilsoftCari[];
+  totalCount: number;
+  currentPage: number;
 }
 
-export default function CariTable({ initialData }: CariTableProps) {
+export default function CariTable({ initialData, totalCount, currentPage }: CariTableProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -32,10 +34,18 @@ export default function CariTable({ initialData }: CariTableProps) {
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
       params.set('q', value);
+      params.set('page', '1'); // Arama değişince 1. sayfaya dön
     } else {
       params.delete('q');
+      params.set('page', '1');
     }
     router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleTableChange = (pagination: any) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', pagination.current.toString());
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const columns: ColumnsType<BilsoftCari> = [
@@ -116,10 +126,13 @@ export default function CariTable({ initialData }: CariTableProps) {
         rowKey="id"
         size="middle"
         pagination={{
-          pageSize: 10,
-          showSizeChanger: true,
+          current: currentPage,
+          pageSize: 50,
+          total: totalCount,
+          showSizeChanger: false,
           showTotal: (total) => `Toplam ${total} kayıt`,
         }}
+        onChange={handleTableChange}
         className="cari-table"
       />
     </Card>
