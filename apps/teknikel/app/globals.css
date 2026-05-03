@@ -132,10 +132,22 @@
   color: hsl(var(--primary)) !important;
 }
 
-.ant-input, .ant-input-number, .ant-input-password {
+.ant-input, 
+.ant-input-number, 
+.ant-input-password, 
+.ant-input-affix-wrapper,
+textarea.ant-input {
   background: hsl(var(--background)) !important;
   border-color: hsl(var(--border)) !important;
   color: hsl(var(--foreground)) !important;
+}
+
+/* Ant Design Input Parçalı Görünüm (Affix Wrapper) Düzeltmesi */
+.ant-input-affix-wrapper > input.ant-input,
+.ant-input-affix-wrapper > textarea.ant-input,
+.ant-input-password > input.ant-input,
+.ant-input-affix-wrapper-focused > input.ant-input {
+    background-color: transparent !important;
 }
 
 .ant-divider {
@@ -149,15 +161,3 @@
 /* Scrollbar Hide */
 .hide-those-scrollbars::-webkit-scrollbar { display: none !important; }
 .hide-those-scrollbars { -ms-overflow-style: none !important; scrollbar-width: none !important; }
-
-/* Ant Design Input Parçalı Görünüm (Affix Wrapper) Düzeltmesi */
-.ant-input-affix-wrapper > input.ant-input,
-.ant-input-affix-wrapper > textarea.ant-input,
-.ant-input-password > input.ant-input {
-    background-color: transparent !important;
-}
-
-/* Focus durumunda da saydamlığın bozulmaması için */
-.ant-input-affix-wrapper-focused > input.ant-input {
-    background-color: transparent !important;
-}
