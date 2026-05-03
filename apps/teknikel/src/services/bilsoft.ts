@@ -145,6 +145,10 @@ export async function getBilsoftCariler(searchTerm: string = ""): Promise<Bilsof
     if (searchTerm && searchTerm.trim() !== "") {
       payload.aranacakKelime = searchTerm;
       payload.searchType = ['Contains'];
+      // API'nin filtrelemeyi yakalaması için veri objesini ekliyoruz
+      payload.veri = {
+        faturaUnvan: searchTerm 
+      };
     }
 
     console.log("🛠️ BİLSOFT FETCH PAYLOAD:", JSON.stringify(payload, null, 2));
