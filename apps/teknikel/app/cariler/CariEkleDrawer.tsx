@@ -74,10 +74,12 @@ export default function CariEkleDrawer({ open, onClose }: CariEkleDrawerProps) {
   return (
     <Drawer
       title="Yeni Cari Ekle (Bilsoft)"
-      width={500}
       onClose={onClose}
       open={open}
-      styles={{ body: { paddingBottom: 80 } }}
+      styles={{ 
+        body: { paddingBottom: 80 },
+        wrapper: { width: 500 }
+      }}
       extra={
         <Space>
           <Button onClick={onClose}>İptal</Button>
