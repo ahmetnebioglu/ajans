@@ -454,6 +454,17 @@ enum LeadStatus {
   CHURN_ALARM
 }
 
+enum InteractionType {
+  OPEN
+  CLICK
+  WEBSITE_VISIT
+  FORM_SUBMIT
+  CALL
+  MEETING
+  NOTE
+  SYSTEM
+}
+
 model Lead {
   id           String         @id @default(cuid())
   name         String?
@@ -465,6 +476,8 @@ model Lead {
   message      String?        @db.Text
   status       LeadStatus     @default(PROSPECT)
   score        Int            @default(0)
+  interactionScore Int        @default(0)
+  lastActivityAt DateTime?
   
   // Bilsoft Integration
   erpId        String?        @unique
@@ -483,12 +496,22 @@ model Lead {
   
   tenantId     String?
   activities   LeadActivity[]
-  interactions Interaction[]
+  interactions LeadInteraction[]
+  interactionSummaries Interaction[]
   deletedAt    DateTime?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 
   @@index([tenantId])
+}
+
+model LeadInteraction {
+  id        String          @id @default(cuid())
+  leadId    String
+  lead      Lead            @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type      InteractionType
+  metadata  Json?
+  createdAt DateTime        @default(now())
 }
 
 model Interaction {
