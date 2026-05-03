@@ -126,8 +126,9 @@ export async function getValidToken(): Promise<string> {
 
 /**
  * Bilsoft'tan tüm cari listesini çeker.
+ * @param searchTerm Arama yapılacak kelime (Ünvan, Yetkili vb.)
  */
-export async function getBilsoftCariler(): Promise<BilsoftCari[]> {
+export async function getBilsoftCariler(searchTerm: string = ""): Promise<BilsoftCari[]> {
   try {
     const token = await getValidToken();
     
@@ -138,11 +139,12 @@ export async function getBilsoftCariler(): Promise<BilsoftCari[]> {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        aranacakKelime: '',
+        aranacakKelime: searchTerm,
         searchType: ['Contains'],
         subeAdi: 'Merkez',
+        veri: {}, // Bazı endpointler boş veri objesi bekleyebilir
         pagingOptions: {
-          pageSize: 5000, 
+          pageSize: 1000, 
           pageNumber: 0,
         },
       }),

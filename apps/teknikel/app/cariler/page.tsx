@@ -4,15 +4,20 @@ import { redirect } from "next/navigation";
 import { getBilsoftCariler } from "@/src/services/bilsoft";
 import CariTable from "./CariTable";
 
-export default async function CarilerPage() {
+export default async function CarilerPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q = "" } = await searchParams;
   const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/login");
   }
 
-  // Veriyi çek
-  const carilerData = await getBilsoftCariler();
+  // Veriyi çek (Arama parametresi ile birlikte)
+  const carilerData = await getBilsoftCariler(q);
   
   // KRİTİK: Veriyi sterilize et (Server -> Client geçişi için)
   const safeCariler = JSON.parse(JSON.stringify(carilerData));

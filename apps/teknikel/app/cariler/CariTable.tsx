@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, Input, Tag, Card } from 'antd';
-import { SearchOutlined, UserOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
+import { UserOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 interface BilsoftCari {
   id: number;
@@ -23,18 +24,19 @@ interface CariTableProps {
 }
 
 export default function CariTable({ initialData }: CariTableProps) {
-  const [searchText, setSearchText] = useState('');
-  const [data] = useState<BilsoftCari[]>(initialData);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  // Arama filtresi
-  const filteredData = data.filter(item => {
-    const searchLower = searchText.toLowerCase();
-    return (
-      item.faturaUnvan?.toLowerCase().includes(searchLower) ||
-      item.yetkili?.toLowerCase().includes(searchLower) ||
-      item.cariKod?.toLowerCase().includes(searchLower)
-    );
-  });
+  const handleSearch = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set('q', value);
+    } else {
+      params.delete('q');
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+  };
 
   const columns: ColumnsType<BilsoftCari> = [
     {
@@ -47,7 +49,7 @@ export default function CariTable({ initialData }: CariTableProps) {
           <span className="text-[10px] text-slate-400">{record.cariKod}</span>
         </a>
       ),
-      sorter: (a, b) => a.faturaUnvan.localeCompare(b.faturaUnvan),
+      sorter: (a, b) => (a.faturaUnvan || "").localeCompare(b.faturaUnvan || ""),
     },
     {
       title: 'Yetkili',
@@ -66,7 +68,7 @@ export default function CariTable({ initialData }: CariTableProps) {
       render: (_, record) => (
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2 text-xs">
-            <PhoneOutlined className="text-slate-400" size={12} />
+            <PhoneOutlined className="text-slate-400" style={{ fontSize: 12 }} />
             <span>{record.cep || record.tel || '-'}</span>
           </div>
           <span className="text-[11px] text-slate-400">{record.mail}</span>
@@ -99,17 +101,18 @@ export default function CariTable({ initialData }: CariTableProps) {
     <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
       <div className="mb-4">
         <Input.Search
-          placeholder="Ünvan veya yetkili ismine göre ara..."
-          onSearch={value => setSearchText(value)}
-          onChange={e => setSearchText(e.target.value)}
+          placeholder="Bilsoft sisteminde ara..."
+          onSearch={handleSearch}
+          defaultValue={searchParams.get('q') || ''}
           allowClear
+          enterButton
           className="max-w-md dark:bg-slate-800 dark:border-slate-700"
         />
       </div>
 
       <Table
         columns={columns}
-        dataSource={filteredData}
+        dataSource={initialData}
         rowKey="id"
         size="middle"
         pagination={{
