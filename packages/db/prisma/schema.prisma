@@ -452,6 +452,9 @@ enum LeadStatus {
   BLACKLISTED
   VIP
   CHURN_ALARM
+  NEW
+  CONTACTED
+  HOT
 }
 
 enum InteractionType {
