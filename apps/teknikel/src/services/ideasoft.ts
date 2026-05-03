@@ -1,5 +1,8 @@
+import axios from 'axios';
+import { getLocalTokens, saveLocalTokens, syncTokensFromAtlas, IdeasoftToken } from '@/utils/ideasoft-auth';
+
 /**
- * Ideasoft API Entegrasyon Servisi (Mock)
+ * Ideasoft API Entegrasyon Servisi
  */
 
 export interface Product {
@@ -12,64 +15,100 @@ export interface Product {
   description?: string;
 }
 
-export async function getShowcaseProducts(): Promise<Product[]> {
-  // TODO: Ideasoft API entegrasyonu tamamlandığında gerçek veriler çekilecek.
-  // Şimdilik mock veri dönüyoruz.
-  
-  return [
-    {
-      id: 1,
-      name: "Vaillant Kombi Pompası (Wilo)",
-      price: "2.850 TL",
-      image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ec3?auto=format&fit=crop&q=80&w=400",
-      targetUrl: "https://teknikelkombi.com/urun/vaillant-kombi-pompasi",
-      category: "Pompa Grubu",
-      description: "Vaillant ve uyumlu kombiler için yüksek verimli sirkülasyon pompası."
-    },
-    {
-      id: 2,
-      name: "Demirdöküm Nitromix Eşanjör",
-      price: "4.150 TL",
-      image: "https://images.unsplash.com/photo-1585338447937-7082f89763d5?auto=format&fit=crop&q=80&w=400",
-      targetUrl: "https://teknikelkombi.com/urun/demirdokum-nitromix-esanjor",
-      category: "Isıtma Grubu",
-      description: "Orijinal Demirdöküm yedek parçası, uzun ömürlü ve garantili."
-    },
-    {
-      id: 3,
-      name: "ECA Confeo Premix Fan Motoru",
-      price: "1.950 TL",
-      image: "https://images.unsplash.com/photo-1590341328520-63256eb32bc3?auto=format&fit=crop&q=80&w=400",
-      targetUrl: "https://teknikelkombi.com/urun/eca-confeo-fan-motoru",
-      category: "Fan Grubu",
-      description: "Sessiz çalışma ve yüksek performanslı havalandırma ünitesi."
-    },
-    {
-      id: 4,
-      name: "Baymak Luna 3 Elektronik Kart",
-      price: "3.400 TL",
-      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=400",
-      targetUrl: "https://teknikelkombi.com/urun/baymak-luna-elektronik-kart",
-      category: "Kontrol Grubu",
-      description: "Baymak Luna serisi için revizyonlu ve test edilmiş anakart."
-    },
-    {
-      id: 5,
-      name: "Viessmann Vitopend 100 Gaz Valfi",
-      price: "2.100 TL",
-      image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&q=80&w=400",
-      targetUrl: "https://teknikelkombi.com/urun/viessmann-vitopend-gaz-valfi",
-      category: "Gaz Grubu",
-      description: "Honeywell marka orijinal gaz ayar mekanizması."
-    },
-    {
-      id: 6,
-      name: "Buderus GB062 Genleşme Tankı",
-      price: "1.750 TL",
-      image: "https://images.unsplash.com/photo-1584036561566-baf2418309c0?auto=format&fit=crop&q=80&w=400",
-      targetUrl: "https://teknikelkombi.com/urun/buderus-gb062-genlesme-tanki",
-      category: "Tank Grubu",
-      description: "8 Litre kapasiteli, 3/8 bağlantı çaplı standart tank."
+const DOMAIN = process.env.domain || 'https://teknikelkombi.myideasoft.com';
+const CLIENT_ID = process.env.client_id;
+const CLIENT_SECRET = process.env.client_secret;
+
+/**
+ * Aktif Ideasoft access token'ını döner. 
+ * Eğer token yoksa Atlas'tan çeker, süresi dolmuşsa refresh token ile yeniler.
+ */
+export async function getIdeasoftAccessToken(): Promise<string> {
+  let tokens = getLocalTokens();
+
+  // 1. Eğer hiç token yoksa Atlas'tan senkronize et
+  if (!tokens) {
+    tokens = await syncTokensFromAtlas();
+  }
+
+  // 2. Token süresini kontrol et (5 dakika pay bırakarak)
+  // Not: expires_in genellikle saniye cinsindendir. 
+  // updatedAt + expiresIn < now ise süresi dolmuştur.
+  const updatedAt = tokens.updatedAt ? new Date(tokens.updatedAt).getTime() : 0;
+  const isExpired = updatedAt + (tokens.expiresIn * 1000) < Date.now() + 300000;
+
+  if (isExpired) {
+    console.log('Ideasoft token süresi dolmuş, yenileniyor...');
+    try {
+      const response = await axios.post(`${DOMAIN}/oauth/v2/token`, new URLSearchParams({
+        grant_type: 'refresh_token',
+        client_id: CLIENT_ID!,
+        client_secret: CLIENT_SECRET!,
+        refresh_token: tokens.refreshToken,
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      });
+
+      const { access_token, refresh_token, expires_in } = response.data;
+      
+      const newTokens: IdeasoftToken = {
+        accessToken: access_token,
+        refreshToken: refresh_token,
+        expiresIn: expires_in,
+        updatedAt: new Date().toISOString()
+      };
+
+      saveLocalTokens(newTokens);
+      return access_token;
+    } catch (error: any) {
+      console.error('Token yenileme hatası, Atlas\'tan tekrar denenecek:', error.response?.data || error.message);
+      // Refresh başarısız olursa Atlas'tan temiz çekmeyi dene
+      const freshTokens = await syncTokensFromAtlas();
+      return freshTokens.accessToken;
     }
-  ];
+  }
+
+  return tokens.accessToken;
 }
+
+/**
+ * Ideasoft API'sinden vitrin ürünlerini çeker.
+ */
+export async function getShowcaseProducts(): Promise<Product[]> {
+  try {
+    const token = await getIdeasoftAccessToken();
+    
+    // Showcase ürünlerini çekmek için vitrin kategorisi veya özel bir filtre kullanılabilir.
+    // Şimdilik en son eklenen 6 ürünü çekiyoruz.
+    const response = await axios.get(`${DOMAIN}/admin-api/products?limit=6&sort=-id`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    if (!response.data || !Array.isArray(response.data.data)) {
+      return [];
+    }
+
+    const ideasoftProducts = response.data.data;
+
+    return ideasoftProducts.map((p: any) => ({
+      id: p.id,
+      name: p.name,
+      price: `${p.price1} TL`, // Para birimi p.currency'den de alınabilir
+      image: p.images && p.images.length > 0 
+        ? p.images[0].originalUrl || p.images[0].thumbUrl 
+        : 'https://images.unsplash.com/photo-1581094288338-2314dddb7ec3?auto=format&fit=crop&q=80&w=400',
+      targetUrl: `${DOMAIN}/${p.slug}`,
+      category: p.category ? p.category.name : 'Genel',
+      description: p.shortDetails || p.name
+    }));
+  } catch (error) {
+    console.error('Ürünler çekilirken hata oluştu:', error);
+    // Hata durumunda boş dizi dön veya mock verilere fallback yap
+    return [];
+  }
+}
+

@@ -78,3 +78,5 @@ Thumbs.db
 scratch/
 
 google-credentials.json
+ideasoft-tokens.json
+**/ideasoft-tokens.json

@@ -1,7 +1,7 @@
 import React from 'react';
 import { getShowcaseProducts } from '@/src/services/ideasoft';
-import { Card, Button, Typography, Tag, Divider } from 'antd';
-import { ShoppingCartOutlined, InfoCircleOutlined, StarFilled } from '@ant-design/icons';
+import { Card, Button, Typography, Tag, Divider, Empty } from 'antd';
+import { InfoCircleOutlined, StarFilled, ArrowRightOutlined } from '@ant-design/icons';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -62,59 +62,65 @@ export default async function ShowcasePage({ params }: { params: Promise<{ leadI
         </div>
 
         {/* Ürün Gridi */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {products.map((product) => (
-            <Card
-              key={product.id}
-              hoverable
-              className="group overflow-hidden border-0 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all duration-500 dark:bg-zinc-900 rounded-3xl"
-              styles={{ body: { padding: '24px' } }}
-              cover={
-                <div className="relative overflow-hidden aspect-[4/3]">
-                  <img
-                    alt={product.name}
-                    src={product.image}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <Tag color="rgba(255,255,255,0.9)" className="backdrop-blur-md border-0 text-slate-900 font-black px-4 py-1 rounded-lg text-[10px] uppercase shadow-sm">
-                      {product.category}
-                    </Tag>
+        {products.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {products.map((product) => (
+              <Card
+                key={product.id}
+                hoverable
+                className="group overflow-hidden border-0 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all duration-500 dark:bg-zinc-900 rounded-3xl"
+                styles={{ body: { padding: '24px' } }}
+                cover={
+                  <div className="relative overflow-hidden aspect-[4/3]">
+                    <img
+                      alt={product.name}
+                      src={product.image}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <Tag color="rgba(255,255,255,0.9)" className="backdrop-blur-md border-0 text-slate-900 font-black px-4 py-1 rounded-lg text-[10px] uppercase shadow-sm">
+                        {product.category}
+                      </Tag>
+                    </div>
                   </div>
-                </div>
-              }
-            >
-              <div className="flex flex-col h-full">
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 line-clamp-1 group-hover:text-blue-600 transition-colors">
-                    {product.name}
-                  </h3>
-                  <Paragraph className="text-slate-500 dark:text-zinc-400 text-sm line-clamp-2 min-h-[40px] leading-relaxed">
-                    {product.description}
-                  </Paragraph>
-                </div>
+                }
+              >
+                <div className="flex flex-col h-full">
+                  <div className="mb-6">
+                    <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                      {product.name}
+                    </h3>
+                    <Paragraph className="text-slate-500 dark:text-zinc-400 text-sm line-clamp-2 min-h-[40px] leading-relaxed">
+                      {product.description}
+                    </Paragraph>
+                  </div>
 
-                <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-50 dark:border-zinc-800">
-                  <div className="flex flex-col">
-                    <Text className="text-[10px] text-slate-400 uppercase font-black tracking-tighter">Peşin Fiyat</Text>
-                    <Text className="text-2xl font-black text-slate-900 dark:text-white">{product.price}</Text>
+                  <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-50 dark:border-zinc-800">
+                    <div className="flex flex-col">
+                      <Text className="text-[10px] text-slate-400 uppercase font-black tracking-tighter">Peşin Fiyat</Text>
+                      <Text className="text-2xl font-black text-slate-900 dark:text-white">{product.price}</Text>
+                    </div>
+                    
+                    {/* Takip API Yönlendirmesi */}
+                    <Button
+                      type="primary"
+                      size="large"
+                      icon={<ArrowRightOutlined />}
+                      className="bg-blue-600 hover:bg-blue-700 border-0 h-14 px-8 rounded-2xl font-black shadow-xl shadow-blue-500/20 flex items-center gap-2 group-hover:gap-4 transition-all"
+                      href={`/api/track?leadId=${leadId}&targetUrl=${encodeURIComponent(product.targetUrl)}&type=CLICK`}
+                    >
+                      Hemen Al
+                    </Button>
                   </div>
-                  
-                  {/* Takip API Yönlendirmesi */}
-                  <Button
-                    type="primary"
-                    size="large"
-                    icon={<ArrowRightOutlined />}
-                    className="bg-blue-600 hover:bg-blue-700 border-0 h-14 px-8 rounded-2xl font-black shadow-xl shadow-blue-500/20 flex items-center gap-2 group-hover:gap-4 transition-all"
-                    href={`/api/track?leadId=${leadId}&targetUrl=${encodeURIComponent(product.targetUrl)}&type=CLICK`}
-                  >
-                    Hemen Al
-                  </Button>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="py-20 flex justify-center">
+            <Empty description="Şu anda vitrin için ürün bulunamadı." />
+          </div>
+        )}
       </main>
       
       {/* Bilgi Kartı */}
