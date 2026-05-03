@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Table, Input, Tag, Card } from 'antd';
-import { UserOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
+import { Table, Input, Tag, Card, Button, Space } from 'antd';
+import { UserOutlined, PhoneOutlined, HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import CariEkleDrawer from './CariEkleDrawer';
 
 interface BilsoftCari {
   id: number;
@@ -109,7 +110,7 @@ export default function CariTable({ initialData, totalCount, currentPage }: Cari
 
   return (
     <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-      <div className="mb-4">
+      <div className="mb-4 flex items-center justify-between gap-4">
         <Input.Search
           placeholder="Bilsoft sisteminde ara..."
           onSearch={handleSearch}
@@ -118,6 +119,14 @@ export default function CariTable({ initialData, totalCount, currentPage }: Cari
           enterButton
           className="max-w-md dark:bg-slate-800 dark:border-slate-700"
         />
+        <Button 
+          type="primary" 
+          icon={<PlusOutlined />} 
+          onClick={() => setDrawerOpen(true)}
+          className="bg-primary"
+        >
+          Yeni Cari Ekle
+        </Button>
       </div>
 
       <Table
@@ -134,6 +143,11 @@ export default function CariTable({ initialData, totalCount, currentPage }: Cari
         }}
         onChange={handleTableChange}
         className="cari-table"
+      />
+
+      <CariEkleDrawer 
+        open={drawerOpen} 
+        onClose={() => setDrawerOpen(false)} 
       />
     </Card>
   );

@@ -2,7 +2,28 @@
 
 import { unsecured_prisma as db } from '@ajans/db';
 import { revalidatePath } from 'next/cache';
-import { getBilsoftCariler, normalizePhone, normalizeString, BilsoftCari, getBilsoftTokenStatus } from '@/src/services/bilsoft';
+import { 
+  getBilsoftCariler, 
+  normalizePhone, 
+  normalizeString, 
+  BilsoftCari, 
+  getBilsoftTokenStatus,
+  addBilsoftCari,
+  BilsoftCariInsertPayload
+} from '@/src/services/bilsoft';
+
+/**
+ * Bilsoft sistemine yeni cari ekler.
+ */
+export async function createCariAction(payload: Partial<BilsoftCariInsertPayload>) {
+  try {
+    const result = await addBilsoftCari(payload);
+    revalidatePath('/cariler');
+    return result;
+  } catch (error) {
+    return { success: false, message: "İşlem sırasında bir hata oluştu." };
+  }
+}
 
 interface SyncResult {
   success: boolean;

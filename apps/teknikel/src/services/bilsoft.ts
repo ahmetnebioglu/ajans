@@ -242,3 +242,70 @@ export function getBilsoftTokenStatus() {
     lastSync: globalThis.bilsoftLastSync,
   };
 }
+
+export interface BilsoftCariInsertPayload {
+  id: number;
+  firmaId: number;
+  cariKod: string;
+  cariAd: string;
+  cariTip: number;
+  vergiDairesi: string;
+  vergiNo: string;
+  tcKimlikNo: string;
+  adres: string;
+  il: string;
+  ilce: string;
+  telefon: string;
+  email: string;
+  yetkili: string;
+  yetkiliTelefon: string;
+  aktif: boolean;
+}
+
+/**
+ * Bilsoft'a yeni cari kartı ekler.
+ */
+export async function addBilsoftCari(payload: Partial<BilsoftCariInsertPayload>): Promise<{ success: boolean; message: string }> {
+  try {
+    const token = await getValidToken();
+    
+    // Varsayılan değerlerle birleştir (Zorunlu alanlar için fallback)
+    const finalPayload = {
+      id: 0,
+      firmaId: 0,
+      cariKod: payload.cariKod || `C${Date.now().toString().slice(-6)}`,
+      cariAd: payload.cariAd || "",
+      cariTip: 1,
+      vergiDairesi: payload.vergiDairesi || "",
+      vergiNo: payload.vergiNo || "",
+      tcKimlikNo: "",
+      adres: payload.adres || "",
+      il: payload.il || "",
+      ilce: payload.ilce || "",
+      telefon: payload.telefon || "",
+      email: payload.email || "",
+      yetkili: payload.yetkili || "",
+      yetkiliTelefon: payload.yetkiliTelefon || "",
+      aktif: true,
+      ...payload
+    };
+
+    const response = await fetch('https://apiv3.bilsoft.com/api/CariKart/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(finalPayload),
+    });
+
+    const result = await response.json();
+    return {
+      success: result.success,
+      message: result.message || (result.success ? "Cari başarıyla eklendi." : "Cari eklenirken bir hata oluştu.")
+    };
+  } catch (error) {
+    console.error('[BilsoftService] Add Cari Error:', error);
+    return { success: false, message: "Bağlantı hatası oluştu." };
+  }
+}
