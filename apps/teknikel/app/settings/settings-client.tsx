@@ -67,11 +67,11 @@ export default function SettingsPage() {
   });
   const [bilsoftDetails, setBilsoftDetails] = React.useState<any>(null);
   const [usageStats, setUsageStats] = React.useState<any>(null);
-  const [loading, setLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     async function loadData() {
-      setLoading(true);
+      setIsLoading(true);
       try {
         const [s, u, b] = await Promise.all([
           getIntegrationStatuses(),
@@ -96,7 +96,7 @@ export default function SettingsPage() {
       } catch (e: any) {
         console.error("Load data error:", e);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
     loadData();
@@ -166,14 +166,14 @@ export default function SettingsPage() {
   };
 
   const handleOpenBilsoftModal = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const res = await getBilsoftConfig();
       if (res.success && res.data) {
         bilsoftForm.setFieldsValue(res.data);
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
       setBilsoftModalOpen(true);
     }
   };
@@ -199,7 +199,7 @@ export default function SettingsPage() {
   };
 
   const handleOpenIntegrationModal = async (type: "google" | "resend" | "netgsm") => {
-    setLoading(true);
+    setIsLoading(true);
     setActiveIntegration(type);
     try {
       const res = await getIntegrationSettings();
@@ -207,7 +207,7 @@ export default function SettingsPage() {
         integrationForm.setFieldsValue(res);
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
       setIntegrationModalOpen(true);
     }
   };
@@ -321,7 +321,7 @@ export default function SettingsPage() {
 
   const dashboardContent = (
     <div className="mb-8 w-full" style={{ width: "100%" }}>
-      {loading ? (
+      {isLoading ? (
         <Skeleton active paragraph={{ rows: 6 }} />
       ) : (
         <Card
@@ -575,7 +575,9 @@ export default function SettingsPage() {
                     {api.name}
                   </span>
                 </div>
-                {api.status === "CONNECTED" ? (
+                {isLoading ? (
+                  <Skeleton.Button active size="small" shape="round" />
+                ) : api.status === "CONNECTED" ? (
                   <Tag color="success" icon={<CheckCircleFilled />}>
                     Bağlı
                   </Tag>
@@ -586,8 +588,12 @@ export default function SettingsPage() {
                 )}
               </div>
               <div className="flex items-center justify-between mt-1">
-                <div className="text-[10px] text-slate-400 font-medium">
-                  {api.details || "Detay bilgisi yok"}
+                <div className="text-[10px] text-slate-400 font-medium w-full">
+                  {isLoading ? (
+                    <Skeleton active title={false} paragraph={{ rows: 1, width: '70%' }} className="mt-1" />
+                  ) : (
+                    api.details || "Detay bilgisi yok"
+                  )}
                 </div>
                 {(api.name === "Bilsoft Ön Muhasebe API" || 
                   api.name === "Google Places API" || 
