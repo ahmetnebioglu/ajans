@@ -1,0 +1,142 @@
+import { unsecured_prisma as db } from '@ajans/db';
+import axios from 'axios';
+
+/**
+ * Merkezi Token Yönetim Servisi
+ * Ideasoft, Bilsoft ve diğer 3. parti entegrasyonlar için güvenli token yönetimi sağlar.
+ */
+
+export interface TokenData {
+  accessToken: string;
+  refreshToken?: string;
+  expiresAt: Date;
+}
+
+/**
+ * Belirtilen sağlayıcı için geçerli bir token döner.
+ * Emniyet Ventili: Süresi dolmaya 10 dakika kala otomatik yenileme yapar.
+ */
+export async function getValidToken(provider: string): Promise<string> {
+  const safetyMargin = 10 * 60 * 1000; // 10 dakika emniyet ventili
+  const now = new Date();
+
+  // 1. Veritabanından mevcut token'ı al
+  const tokenRecord = await db.apiToken.findUnique({
+    where: { provider }
+  });
+
+  if (tokenRecord) {
+    const isExpiring = tokenRecord.expiresAt.getTime() < now.getTime() + safetyMargin;
+
+    if (!isExpiring) {
+      return tokenRecord.accessToken;
+    }
+
+    console.log(`[TokenManager] ${provider} token süresi dolmak üzere veya dolmuş, yenileniyor...`);
+  } else {
+    console.log(`[TokenManager] ${provider} için kayıtlı token bulunamadı, yeni alınıyor...`);
+  }
+
+  // 2. Token yenileme (Refresh) mantığı
+  let newTokenData: TokenData;
+
+  switch (provider) {
+    case 'ideasoft':
+      newTokenData = await refreshIdeasoftToken(tokenRecord?.refreshToken);
+      break;
+    case 'bilsoft':
+      newTokenData = await refreshBilsoftToken();
+      break;
+    default:
+      throw new Error(`Bilinmeyen sağlayıcı: ${provider}`);
+  }
+
+  // 3. Veritabanını güncelle
+  await db.apiToken.upsert({
+    where: { provider },
+    update: {
+      accessToken: newTokenData.accessToken,
+      refreshToken: newTokenData.refreshToken || null,
+      expiresAt: newTokenData.expiresAt,
+    },
+    create: {
+      provider,
+      accessToken: newTokenData.accessToken,
+      refreshToken: newTokenData.refreshToken || null,
+      expiresAt: newTokenData.expiresAt,
+    }
+  });
+
+  return newTokenData.accessToken;
+}
+
+/**
+ * Ideasoft Refresh Token Akışı
+ */
+async function refreshIdeasoftToken(refreshToken?: string | null): Promise<TokenData> {
+  const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
+  const clientId = process.env.client_id;
+  const clientSecret = process.env.client_secret;
+
+  // Eğer refresh token yoksa (veya ilk kurulumsa) manuel olarak Atlas'tan veya ENV'den çekilmeli
+  // Şimdilik hata fırlatıyoruz çünkü otonom yenileme için refresh_token şart.
+  if (!refreshToken) {
+    // Geliştirme kolaylığı için Atlas'tan ödünç alma mantığını burada da fallback olarak kullanabiliriz
+    throw new Error('Ideasoft refresh token bulunamadı. Lütfen ilk kurulumu yapın.');
+  }
+
+  const response = await axios.post(`${domain}/oauth/v2/token`, new URLSearchParams({
+    grant_type: 'refresh_token',
+    client_id: clientId!,
+    client_secret: clientSecret!,
+    refresh_token: refreshToken,
+  }), {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  });
+
+  const { access_token, refresh_token, expires_in } = response.data;
+
+  return {
+    accessToken: access_token,
+    refreshToken: refresh_token,
+    expiresAt: new Date(Date.now() + expires_in * 1000)
+  };
+}
+
+/**
+ * Bilsoft Login Akışı (Bilsoft'ta refresh token yerine login kullanılır)
+ */
+async function refreshBilsoftToken(): Promise<TokenData> {
+  // apps/teknikel/src/services/bilsoft.ts içindeki mantığı kullanıyoruz
+  const dbConfig = await db.bilsoftConfig.findUnique({
+    where: { tenantId: 'teknikel' }
+  });
+
+  const credentials = {
+    apiKullaniciAdi: dbConfig?.apiUser || process.env.BILSOFT_API_USER,
+    apiKullaniciSifre: dbConfig?.apiPassword || process.env.BILSOFT_API_PASSWORD,
+    donemYil: dbConfig?.year || process.env.BILSOFT_YEAR,
+    kullaniciAdi: dbConfig?.user || process.env.BILSOFT_USER,
+    kullaniciSifre: dbConfig?.password || process.env.BILSOFT_PASSWORD,
+    subeAd: dbConfig?.branch || process.env.BILSOFT_BRANCH,
+    vergiNumarasi: dbConfig?.taxNumber || process.env.BILSOFT_TAX_NUMBER,
+    veritabaniAd: dbConfig?.dbName || process.env.BILSOFT_DB_NAME,
+  };
+
+  const response = await fetch('https://apiv3.bilsoft.com/api/Auth/GirisYap', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials),
+  });
+
+  const result = await response.json();
+
+  if (!result.success || !result.data?.token) {
+    throw new Error(result.message || 'Bilsoft login failed');
+  }
+
+  return {
+    accessToken: result.data.token,
+    expiresAt: new Date(result.data.expiration)
+  };
+}
