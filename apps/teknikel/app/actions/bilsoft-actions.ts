@@ -151,7 +151,7 @@ export async function syncAndScoreLeads(): Promise<SyncResult> {
  */
 export async function getBilsoftStatus() {
   try {
-    const status = getBilsoftTokenStatus();
+    const status = await getBilsoftTokenStatus();
     return {
       success: true,
       ...status

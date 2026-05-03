@@ -16,6 +16,34 @@ export interface BilsoftCari {
   bakiye?: number;
 }
 
+/**
+ * Telefon numarasını sadece rakamlardan oluşacak şekilde temizler.
+ */
+export function normalizePhone(phone: string | null | undefined): string {
+  if (!phone) return '';
+  let cleaned = phone.replace(/\D/g, '');
+  if (cleaned.startsWith('90')) cleaned = cleaned.substring(2);
+  if (cleaned.startsWith('0')) cleaned = cleaned.substring(1);
+  return cleaned;
+}
+
+/**
+ * Metni karşılaştırma için normalize eder.
+ */
+export function normalizeString(str: string | null | undefined): string {
+  if (!str) return '';
+  return str
+    .trim()
+    .toLocaleLowerCase('tr-TR')
+    .replace(/ç/g, 'c')
+    .replace(/ş/g, 's')
+    .replace(/ğ/g, 'g')
+    .replace(/ü/g, 'u')
+    .replace(/ö/g, 'o')
+    .replace(/ı/g, 'i')
+    .replace(/\s+/g, '');
+}
+
 
 /**
  * Otonom Token Yöneticisi: Merkezi TokenManager'ı kullanır.
@@ -136,11 +164,15 @@ export async function getBilsoftCariById(id: string | number): Promise<any> {
 /**
  * Mevcut token durumunu döner (Server Action için).
  */
-export function getBilsoftTokenStatus() {
+export async function getBilsoftTokenStatus() {
+  const token = await db.apiToken.findUnique({
+    where: { provider: 'bilsoft' }
+  });
+
   return {
-    isConnected: !!globalThis.bilsoftToken,
-    expiry: globalThis.bilsoftTokenExpiry,
-    lastSync: globalThis.bilsoftLastSync,
+    isConnected: !!token,
+    expiry: token?.expiresAt.toISOString(),
+    lastSync: token?.updatedAt.toISOString(),
   };
 }
 
