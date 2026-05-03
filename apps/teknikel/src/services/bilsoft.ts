@@ -147,6 +147,8 @@ export async function getBilsoftCariler(searchTerm: string = ""): Promise<Bilsof
       payload.searchType = ['Contains'];
     }
 
+    console.log("🛠️ BİLSOFT FETCH PAYLOAD:", JSON.stringify(payload, null, 2));
+
     const response = await fetch('https://apiv3.bilsoft.com/api/CariKart/getall', {
       method: 'POST',
       headers: {
@@ -156,8 +158,20 @@ export async function getBilsoftCariler(searchTerm: string = ""): Promise<Bilsof
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
+    const resText = await response.text();
+    console.log("🛠️ BİLSOFT HTTP STATUS:", response.status);
+    console.log("🛠️ BİLSOFT RAW RESPONSE (İlk 500 karakter):", resText.substring(0, 500));
+
+    let result;
+    try {
+      result = JSON.parse(resText);
+    } catch (e) {
+      console.error("🛠️ BİLSOFT JSON Parse Hatası:", e);
+      return [];
+    }
+
     if (!result.success) {
+      console.warn("🛠️ BİLSOFT API ERROR:", result.message);
       throw new Error(result.message || 'Failed to fetch currents');
     }
 
