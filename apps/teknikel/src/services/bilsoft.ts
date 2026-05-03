@@ -125,29 +125,35 @@ export async function getValidToken(): Promise<string> {
 }
 
 /**
- * Bilsoft'tan tüm cari listesini çeker.
+ * Bilsoft'tan cari listesini çeker (Dinamik Payload).
  * @param searchTerm Arama yapılacak kelime (Ünvan, Yetkili vb.)
  */
 export async function getBilsoftCariler(searchTerm: string = ""): Promise<BilsoftCari[]> {
   try {
     const token = await getValidToken();
     
+    // Temel payload (Hertürlü gönderilmeli)
+    const payload: any = {
+      subeAdi: 'Merkez',
+      pagingOptions: {
+        pageSize: 1000, 
+        pageNumber: 0,
+      },
+    };
+
+    // Koşullu Arama Mantığı: Sadece arama varsa ilgili alanları ekle
+    if (searchTerm && searchTerm.trim() !== "") {
+      payload.aranacakKelime = searchTerm;
+      payload.searchType = ['Contains'];
+    }
+
     const response = await fetch('https://apiv3.bilsoft.com/api/CariKart/getall', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        aranacakKelime: searchTerm,
-        searchType: ['Contains'],
-        subeAdi: 'Merkez',
-        veri: {}, // Bazı endpointler boş veri objesi bekleyebilir
-        pagingOptions: {
-          pageSize: 1000, 
-          pageNumber: 0,
-        },
-      }),
+      body: JSON.stringify(payload),
     });
 
     const result = await response.json();
