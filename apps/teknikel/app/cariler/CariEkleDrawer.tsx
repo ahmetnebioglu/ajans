@@ -64,7 +64,7 @@ export default function CariEkleDrawer({ open, onClose }: CariEkleDrawerProps) {
       width={480}
       onClose={onClose}
       open={open}
-      bodyStyle={{ paddingBottom: 80 }}
+      styles={{ body: { paddingBottom: 80 } }}
       extra={
         <Space>
           <Button onClick={onClose}>İptal</Button>
