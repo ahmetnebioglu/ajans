@@ -19,8 +19,8 @@ export async function syncAndScoreLeads(): Promise<SyncResult> {
   try {
     console.log('[BilsoftActions] Senkronizasyon başlatıldı...');
 
-    // 1. Bilsoft'tan güncel carileri çek
-    const bilsoftCaris = await getBilsoftCariler();
+    // 1. Bilsoft'tan güncel carileri çek (Senkronizasyon için geniş kapsamlı çekiyoruz)
+    const { data: bilsoftCaris } = await getBilsoftCariler("", 1, 5000);
     if (!bilsoftCaris || bilsoftCaris.length === 0) {
       return {
         success: false,
