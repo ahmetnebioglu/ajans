@@ -87,7 +87,7 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      <Card className="shadow-sm dark:bg-slate-900/50 dark:border-slate-800 overflow-hidden" bodyStyle={{ padding: 0 }}>
+      <Card className="shadow-sm dark:bg-slate-900/50 dark:border-slate-800 overflow-hidden" styles={{ body: { padding: 0 } }}>
         <div className="flex flex-col">
           {notifications.map((item) => (
             <div

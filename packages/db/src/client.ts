@@ -66,6 +66,33 @@ export function getSecuredPrisma(tenantId: string) {
   });
 }
 
+/**
+ * Botlar ve otonom servisler için güvenli, tenant-izole Prisma istemcisi döner.
+ * Botun token'ı veritabanında doğrulanır ve tüm işlemler o botun tenantId'sine kilitlenir.
+ */
+export async function getServicePrisma(serviceToken: string) {
+  const account = await basePrisma.serviceAccount.findUnique({
+    where: { serviceToken }
+  });
+
+  if (!account) {
+    throw new Error("Geçersiz veya yetkisiz Servis Token'ı.");
+  }
+
+  // PostgreSQL RLS Context Set ve Tenant İzolasyonu
+  return basePrisma.$extends({
+    query: {
+      $allModels: {
+        async $allOperations({ args, query }) {
+          // Bu botun tüm işlemleri otomatik olarak kendi tenantId'sine kilitlenir
+          await basePrisma.$executeRaw`SELECT set_config('app.current_tenant', ${account.tenantId}, true)`;
+          return query(args);
+        },
+      },
+    },
+  });
+}
+
 // Geliştiricilerin yanlışlıkla korumasız prisma kullanmasını zorlaştırmak için
 // ana prisma instance'ını direkt dışa aktarmıyoruz, ancak sistem seviyesindeki
 // işlemler (Auth vb.) için basePrisma'yı dışa aktarıyoruz.

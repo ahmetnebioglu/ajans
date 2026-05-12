@@ -50,12 +50,12 @@ export async function GET(req: NextRequest) {
     // 3. VIP Kontrolü
     const lead = await db.lead.findUnique({ 
       where: { id },
-      include: { interactions: true }
+      include: { interactionSummaries: true }
     });
     
     if (lead) {
-      const clickInteraction = lead.interactions.find(i => i.type === 'CLICK');
-      if ((clickInteraction && clickInteraction.count >= 3) || lead.score >= 15) {
+      const clickInteraction = lead.interactionSummaries.find(i => i.type === 'CLICK');
+      if ((clickInteraction && (clickInteraction.count ?? 0) >= 3) || lead.score >= 15) {
         await db.lead.update({
           where: { id },
           data: { status: 'VIP' }
