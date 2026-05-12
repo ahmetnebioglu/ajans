@@ -1,39 +1,30 @@
 "use server";
 
-import { prisma as db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { protectedAction } from "@ajans/core/server";
 
 export async function getServices() {
-  try {
+  return protectedAction(async ({ db }) => {
     return await db.service.findMany({
       orderBy: { order: "asc" },
     });
-  } catch (error) {
-    console.error("Error fetching services:", error);
-    throw new Error("Hizmetler alınamadı.");
-  }
+  });
 }
 
 export async function getService(id: string) {
-  try {
+  return protectedAction(async ({ db }) => {
     return await db.service.findUnique({
       where: { id },
     });
-  } catch (error) {
-    console.error("Error fetching service:", error);
-    throw new Error("Hizmet alınamadı.");
-  }
+  });
 }
 
 export async function getServiceBySlug(slug: string) {
-  try {
+  return protectedAction(async ({ db }) => {
     return await db.service.findUnique({
       where: { slug },
     });
-  } catch (error) {
-    console.error("Error fetching service by slug:", error);
-    return null;
-  }
+  });
 }
 
 export async function createService(data: {
@@ -47,17 +38,16 @@ export async function createService(data: {
   seoTitle?: string | null;
   seoDescription?: string | null;
 }) {
-  try {
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
+    
     const service = await db.service.create({
       data,
     });
     revalidatePath("/dashboard/cms/services");
     revalidatePath(`/hizmetlerimiz/${data.slug}`);
     return { success: true, data: service };
-  } catch (error: any) {
-    console.error("Error creating service:", error);
-    return { success: false, error: error.message || "Hizmet oluşturulamadı." };
-  }
+  });
 }
 
 export async function updateService(
@@ -74,7 +64,9 @@ export async function updateService(
     seoDescription?: string | null;
   }
 ) {
-  try {
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
+    
     const service = await db.service.update({
       where: { id },
       data,
@@ -82,23 +74,19 @@ export async function updateService(
     revalidatePath("/dashboard/cms/services");
     revalidatePath(`/hizmetlerimiz/${data.slug}`);
     return { success: true, data: service };
-  } catch (error: any) {
-    console.error("Error updating service:", error);
-    return { success: false, error: error.message || "Hizmet güncellenemedi." };
-  }
+  });
 }
 
 export async function deleteService(id: string) {
-  try {
+  return protectedAction(async ({ db, user }) => {
+    if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
+    
     const service = await db.service.delete({
       where: { id },
     });
     revalidatePath("/dashboard/cms/services");
     revalidatePath(`/hizmetlerimiz/${service.slug}`);
     return { success: true };
-  } catch (error: any) {
-    console.error("Error deleting service:", error);
-    return { success: false, error: error.message || "Hizmet silinemedi." };
-  }
+  });
 }
 

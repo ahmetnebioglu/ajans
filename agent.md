@@ -46,6 +46,10 @@ Bu dosya, projenin teknik standartlarını, güvenlik protokollerini ve AI Agent
 - **Nokta Atışı Tarama:** `.next`, `.turbo`, `node_modules` ve `dist` klasörlerini KESİNLİKLE tarama.
 - **Context Limit:** Sadece ilgili workspace içindeki dosyalara odaklan. `mercan-erp` düzenlerken `okul-erp` dosyalarını bağlam içine alma.
 - **Kod Yazımı:** Gereksiz yorum satırlarından kaçın, sadece `agent.md` kurallarına uymayan durumları açıkla.
+- **`getServerSession` Çağrısı:** Layout'larda `getServerSession` çağrısı yapılır ve sonuç page/component'lere **prop olarak** geçilir. Aynı session'ı birden fazla kez çekmek yasaktır (her çağrı ~50-100ms + token maliyeti).
+- **Debug Console Satırları:** `console.log`, `console.warn`, `console.error` satırları sadece geliştirme aşamasında kullanılır. Production'da bu satırlar **kaldırılmalı** veya `process.env.NODE_ENV === "development"` koşuluyla sarılmalıdır.
+- **`any` Tipi Yasağı:** Bölüm 7'de belirtildiği gibi `any` tipi kesinlikle yasaktır. Fonksiyon parametreleri ve veri yapıları için açık Interface/Type tanımlanmalıdır.
+- **`force-dynamic` Yerine `revalidate`:** Mümkün olduğunca `export const dynamic = "force-dynamic"` yerine `export const revalidate = 60` (veya uygun TTL) kullanılmalıdır. `force-dynamic` her request'te yeniden render eder ve token maliyeti yüksektir.
 
 ## 7. Yazım Konvansiyonları
 

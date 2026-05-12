@@ -1,10 +1,7 @@
 import React from "react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@ajans/auth/options";
 import { getLeads } from "@ajans/core";
 import CrmKanbanClient from "./crm-kanban-client";
 import { LayoutGrid, Layers, Zap } from "lucide-react";
-import { redirect } from "next/navigation";
 
 import { KanbanSkeleton } from "@ajans/ui";
 import { Suspense } from "react";
@@ -13,11 +10,7 @@ import AiDashboard from "./ai-dashboard";
 export const dynamic = "force-dynamic";
 
 export default async function CRMPage() {
-  const session = await getServerSession(authOptions);
-  const allowedRoles = ["ADMIN", "EXPERT"];
-  if (!allowedRoles.includes(session?.user?.role || "")) {
-    redirect("/dashboard");
-  }
+  // Session kontrolü layout'ta yapılıyor, burada tekrar yapılmıyor
 
   return (
     <div className="h-[calc(100vh-24px)] flex flex-col overflow-hidden px-4 gap-3 bg-white dark:bg-zinc-950">
@@ -68,12 +61,14 @@ export default async function CRMPage() {
  * Dinamik Veri Yükleyici (Streaming Component)
  */
 async function KanbanLoader() {
+  const { getServerSession } = await import("next-auth");
+  const { authOptions } = await import("@ajans/auth/options");
+  
   const session = await getServerSession(authOptions);
   const tenantId = (session?.user as any)?.tenantId || "mercan"; 
   
   const leadsRes = await getLeads(tenantId);
   const leads = leadsRes.success ? leadsRes.data : [];
-  console.log(`>>> [KanbanLoader] Tenant: ${tenantId}, Count: ${leads.length}`);
 
   return (
     <CrmKanbanClient 

@@ -40,7 +40,6 @@ export async function getHomepageSettings() {
 export async function updateHomepageSettings(data: any) {
   try {
     const session = await getServerSession(authOptions);
-    console.log("DEBUG: Homepage Update Session:", JSON.stringify(session?.user));
 
     if (!session?.user?.email) {
       throw new Error("Oturum bulunamadı. Lütfen tekrar giriş yapın.");
@@ -51,11 +50,8 @@ export async function updateHomepageSettings(data: any) {
       where: { email: session.user.email },
       select: { role: true, name: true }
     });
-    
-    console.log("DEBUG: DB User Found:", JSON.stringify(user));
 
     const userRole = user?.role?.toUpperCase();
-    console.log("DEBUG: Processed Role:", userRole);
     
     if (!user || (userRole !== "ADMIN" && userRole !== "EXPERT")) {
       throw new Error(`Yetkisiz erişim: Mevcut rolünüz (${userRole || 'BELİRSİZ'}) bu işlem için yeterli değil.`);

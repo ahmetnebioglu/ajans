@@ -29,10 +29,6 @@ export async function uploadReportAction(formData: FormData, companyId: string) 
       select: { driveFolderId: true, name: true }
     });
 
-    if (!company || !company.driveFolderId) {
-      console.warn(">>> [DriveAction] Drive yapılandırması eksik, mock yükleme yapılıyor...");
-    }
-
     const driveFolderId = company?.driveFolderId || "mock_folder_id";
 
     // 2. Dosyayı işle

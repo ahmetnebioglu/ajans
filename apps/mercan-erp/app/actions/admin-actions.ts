@@ -368,12 +368,11 @@ export async function getCompanyDetails(
 }
 
 export async function createFolder(
-  name: string,
-  companyId: string,
-  parentId: string | null = null,
-) {
-  console.log(`>>> [Action:createFolder] Name: ${name}, CompanyId: ${companyId}`);
-  return protectedAction(async ({ db, user, tenantId }) => {
+   name: string,
+   companyId: string,
+   parentId: string | null = null,
+ ) {
+   return protectedAction(async ({ db, user, tenantId }) => {
     // Yetki Kontrolü (Uzmanlar için)
     if (user.role === "EXPERT") {
       const hasAccess = await db.companyAccess.findUnique({
