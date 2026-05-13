@@ -8,6 +8,8 @@ import trTR from "antd/locale/tr_TR";
 
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "../context/AuthContext";
+import { SyncProvider } from "../src/context/SyncContext";
+import FloatingSyncWidget from "../components/sync/FloatingSyncWidget";
 
 function AntdConfig({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
@@ -66,11 +68,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <AuthProvider>
-        <AntdRegistry>
-          <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-            <AntdConfig>{children}</AntdConfig>
-          </NextThemesProvider>
-        </AntdRegistry>
+        <SyncProvider>
+          <AntdRegistry>
+            <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
+              <AntdConfig>
+                {children}
+                <FloatingSyncWidget />
+              </AntdConfig>
+            </NextThemesProvider>
+          </AntdRegistry>
+        </SyncProvider>
       </AuthProvider>
     </SessionProvider>
   );

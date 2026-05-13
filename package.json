@@ -12,7 +12,7 @@
     "db:seed": "turbo db:seed",
     "start": "turbo start",
     "stop": "taskkill /f /im node.exe 2>nul || exit 0",
-    "postinstall": "prisma generate && prisma db push --accept-data-loss"
+    "postinstall": "prisma generate"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

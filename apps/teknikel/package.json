@@ -39,6 +39,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.5.0",
+    "mongodb": "^7.2.0",
     "postcss": "^8.5.12",
     "react-email": "^6.0.5",
     "tailwindcss": "^4.2.4",

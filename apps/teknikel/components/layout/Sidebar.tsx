@@ -17,7 +17,9 @@ import {
   Moon,
   Sun,
   ShieldCheck,
-  Users
+  Users,
+  FileText,
+  Package
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -32,14 +34,20 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
   
   const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-  const menuItems: MenuProps['items'] = [
-    { key: "/", icon: <LayoutDashboard size={18} />, label: "Durum Özeti" },
-    { key: "/leads", icon: <Search size={18} />, label: "Yeni Adaylar" },
-    { key: "/cariler", icon: <Users size={18} />, label: "Cariler (Bilsoft)" },
-    { key: "/vip", icon: <Crown size={18} />, label: "Özel Müşteriler" },
-    { type: "divider" },
-    { key: "/settings", icon: <Settings size={18} />, label: "Sistem Ayarları" },
-  ];
+   const menuItems: MenuProps['items'] = [
+     { key: "/", icon: <LayoutDashboard size={18} />, label: "Durum Özeti" },
+     { key: "/leads", icon: <Search size={18} />, label: "Yeni Adaylar" },
+     { key: "/vip", icon: <Crown size={18} />, label: "Özel Müşteriler" },
+     { key: "/cariler", icon: <Users size={18} />, label: "Cariler (Bilsoft)" },
+     { key: "/faturalar", icon: <FileText size={18} />, label: "Faturalar (Bilsoft)" },
+     { key: "/stoklar", icon: <Package size={18} />, label: "Stok Kartları (Bilsoft)" },
+     { type: "divider" },
+     { key: "/musteriler", icon: <Users size={18} />, label: "Müşteriler (Ideasoft)" },
+     { key: "/urunler", icon: <Package size={18} />, label: "Ürünler (Ideasoft)" },
+     { key: "/siparisler", icon: <FileText size={18} />, label: "Siparişler (Ideasoft)" },
+     { type: "divider" },
+     { key: "/settings", icon: <Settings size={18} />, label: "Sistem Ayarları" },
+   ];
 
   return (
     <Sider
