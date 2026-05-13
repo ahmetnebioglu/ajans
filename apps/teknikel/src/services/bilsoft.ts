@@ -195,6 +195,275 @@ export interface BilsoftCariInsertPayload {
   aktif: boolean;
 }
 
+// ============================================================
+// FATURA (BILLS) SERVİSLERİ
+// ============================================================
+
+export interface BilsoftFatura {
+  id: number;
+  unvan: string;
+  cariKod: string;
+  cariId?: number;
+  fatTarih: string;
+  toplam: number;
+  kdv: number;
+  gtoplam: number;
+  odemeSekli?: string;
+  faturaTuru?: string;
+  fisno?: string;
+  eFaturaNo?: string;
+  eFaturaDurum?: string;
+  adres?: string;
+  vd?: string;
+  vn?: string;
+  cariGrup?: string;
+  odenen?: number;
+  iskonto?: number;
+  fatIsl?: BilsoftFaturaKalem[];
+}
+
+export interface BilsoftFaturaKalem {
+  id?: number;
+  sira?: number;
+  stokKodu?: string;
+  stokAdi?: string;
+  aciklama?: string;
+  miktar?: number;
+  birim?: string;
+  birimFiyat?: number;
+  kdvOran?: number;
+  iskontoOran?: number;
+  tutar?: number;
+  topfiyat?: number;
+  gtopfiyat?: number;
+  kdvTutar?: number;
+}
+
+/**
+ * Bilsoft'tan fatura listesini çeker (Server-Side Pagination & Search).
+ */
+export async function getBilsoftFaturalar(
+  searchTerm: string = "",
+  page: number = 1,
+  pageSize: number = 50
+): Promise<{ data: BilsoftFatura[]; totalCount: number }> {
+  try {
+    const token = await getValidToken();
+
+    const payload: any = {
+      subeAdi: 'Merkez',
+      pagingOptions: {
+        pageSize,
+        pageNumber: page - 1,
+      },
+    };
+
+    if (searchTerm && searchTerm.trim() !== "") {
+      payload.aranacakKelime = searchTerm;
+      payload.searchType = ['Contains'];
+    }
+
+    const response = await fetch('https://apiv3.bilsoft.com/api/Fatura/getall', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: 'no-store',
+    });
+
+    const resText = await response.text();
+    let result;
+    try {
+      result = JSON.parse(resText);
+    } catch {
+      console.error('[BilsoftService] Fatura JSON Parse Hatası');
+      return { data: [], totalCount: 0 };
+    }
+
+    if (!result.success) {
+      console.warn('[BilsoftService] Fatura API ERROR:', result.message);
+      return { data: [], totalCount: 0 };
+    }
+
+    // API yanıtı: result.data.data (array) + result.data.totalCount
+    const rawData = result.data?.data ?? result.data ?? [];
+    const totalCount = result.data?.totalCount ?? result.totalCount ?? rawData.length;
+
+    // ID'ye göre azalan sıralama (en yeni fatura başta)
+    const sorted = [...rawData].sort((a: any, b: any) => b.id - a.id);
+
+    return { data: sorted, totalCount };
+  } catch (error) {
+    console.error('[BilsoftService] Fetch Faturalar Error:', error);
+    return { data: [], totalCount: 0 };
+  }
+}
+
+/**
+ * Bilsoft'tan ID ile tekil fatura detayı çeker.
+ */
+export async function getBilsoftFaturaById(id: string | number): Promise<BilsoftFatura | null> {
+  try {
+    const token = await getValidToken();
+    const numericId = typeof id === 'string' ? parseInt(id) : id;
+
+    const response = await fetch(
+      `https://apiv3.bilsoft.com/api/Fatura/getbyid?id=${numericId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+      }
+    );
+
+    const result = await response.json();
+
+    if (result?.data) {
+      return result.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('[BilsoftService] Fetch Fatura Detail Error:', error);
+    return null;
+  }
+}
+
+// ============================================================
+// STOK KARTI SERVİSLERİ
+// ============================================================
+
+export interface BilsoftStokKarti {
+  id?: number;
+  kod: string;
+  ad: string;
+  barkod?: string;
+  birim?: string;
+  grup?: string;
+  sFiyat?: number;
+  aFiyat?: number;
+  kdvOran?: number;
+  kdvDahil?: string;
+  bakiye?: number;
+  giris?: number;
+  cikis?: number;
+  stokRafi?: string;
+  stokMarka?: string;
+  stokOzelKod1?: string;
+  stokOzelKod2?: string;
+  subeAdi?: string;
+  kullaniciAdi?: string;
+  otvOran?: string;
+  oivOran?: string;
+  resimYolu?: string;
+  aliciUrunKodu?: string;
+  saticiUrunKodu?: string;
+}
+
+/**
+ * Bilsoft'tan stok kartı listesini çeker (Server-Side Pagination & Search).
+ */
+export async function getBilsoftStokKartlari(
+  searchTerm: string = "",
+  page: number = 1,
+  pageSize: number = 50
+): Promise<{ data: BilsoftStokKarti[]; totalCount: number }> {
+  try {
+    const token = await getValidToken();
+
+    const payload: any = {
+      aranacakKelime: searchTerm && searchTerm.trim() !== "" ? searchTerm : '',
+      searchType: ['Contains'],
+      subeAdi: 'Merkez',
+      pagingOptions: {
+        pageSize: pageSize,
+        pageNumber: page - 1,
+      },
+      veri: {
+        kod: '',
+      },
+    };
+
+    console.log("🛠️ BİLSOFT STOK FETCH PAYLOAD:", JSON.stringify(payload, null, 2));
+
+    const response = await fetch('https://apiv3.bilsoft.com/api/Stok/GetListWithBakiye', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: 'no-store',
+    });
+
+    const resText = await response.text();
+    console.log("🛠️ BİLSOFT STOK HTTP STATUS:", response.status);
+    console.log("🛠️ BİLSOFT STOK RAW RESPONSE (İlk 500 karakter):", resText.substring(0, 500));
+
+    let result;
+    try {
+      result = JSON.parse(resText);
+    } catch {
+      console.error('[BilsoftService] StokKart JSON Parse Hatası');
+      return { data: [], totalCount: 0 };
+    }
+
+    if (!result.success) {
+      console.warn('[BilsoftService] StokKart API ERROR:', result.message);
+      return { data: [], totalCount: 0 };
+    }
+
+    const rawData = result.data?.data ?? result.data ?? [];
+    const totalCount = result.data?.totalCount ?? result.totalCount ?? rawData.length;
+
+    console.log(`🛠️ BİLSOFT STOK: ${rawData.length} kayıt, toplam: ${totalCount}`);
+
+    return { data: rawData, totalCount };
+  } catch (error) {
+    console.error('[BilsoftService] Fetch StokKartlari Error:', error);
+    return { data: [], totalCount: 0 };
+  }
+}
+
+/**
+ * Bilsoft'tan stok kodu ile tekil stok kartı detayı çeker.
+ */
+export async function getBilsoftStokById(kod: string): Promise<BilsoftStokKarti | null> {
+  try {
+    const token = await getValidToken();
+
+    const response = await fetch('https://apiv3.bilsoft.com/api/Stok/GetListWithBakiye', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        aranacakKelime: kod,
+        searchType: ['Equals'],
+        subeAdi: 'Merkez',
+        pagingOptions: { pageSize: 10, pageNumber: 0 },
+        veri: { kod: kod },
+      }),
+      cache: 'no-store',
+    });
+
+    const result = await response.json();
+    if (!result.success) return null;
+
+    const rawData = result.data?.data ?? result.data ?? [];
+    // Tam eşleşmeyi bul
+    const exact = rawData.find((s: any) => s.kod === kod);
+    return exact ?? (rawData.length > 0 ? rawData[0] : null);
+  } catch (error) {
+    console.error('[BilsoftService] Fetch StokKart Detail Error:', error);
+    return null;
+  }
+}
+
 /**
  * Bilsoft'a yeni cari kartı ekler.
  */
@@ -240,5 +509,67 @@ export async function addBilsoftCari(payload: Partial<BilsoftCariInsertPayload>)
   } catch (error) {
     console.error('[BilsoftService] Add Cari Error:', error);
     return { success: false, message: "Bağlantı hatası oluştu." };
+  }
+}
+
+// ============================================================
+// FATURA OLUŞTURMA SERVİSLERİ
+// ============================================================
+
+/**
+ * Bilsoft'a fatura ekler.
+ */
+export async function createBilsoftFatura(payload: any): Promise<{ success: boolean; data?: any; message: string }> {
+  try {
+    const token = await getValidToken();
+
+    const response = await fetch('https://apiv3.bilsoft.com/api/Fatura/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: 'no-store',
+    });
+
+    const result = await response.json();
+    return {
+      success: result.success,
+      data: result.data,
+      message: result.message || (result.success ? "Fatura başarıyla oluşturuldu." : "Fatura oluşturulurken bir hata oluştu.")
+    };
+  } catch (error) {
+    console.error('[BilsoftService] Create Fatura Error:', error);
+    return { success: false, message: "Bağlantı hatası oluştu." };
+  }
+}
+
+/**
+ * Bilsoft'ta fatura arar (duplicate kontrol için).
+ */
+export async function searchBilsoftFatura(payload: any): Promise<{ success: boolean; data?: any[]; message: string }> {
+  try {
+    const token = await getValidToken();
+
+    const response = await fetch('https://apiv3.bilsoft.com/api/Fatura/getall', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: 'no-store',
+    });
+
+    const result = await response.json();
+    return {
+      success: result.success,
+      data: result.data || [],
+      message: result.message || (result.success ? "Arama başarılı." : "Arama sırasında bir hata oluştu.")
+    };
+  } catch (error) {
+    console.error('[BilsoftService] Search Fatura Error:', error);
+    return { success: false, data: [], message: "Bağlantı hatası oluştu." };
   }
 }
