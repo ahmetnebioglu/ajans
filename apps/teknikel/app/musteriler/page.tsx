@@ -1,0 +1,43 @@
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/auth";
+import { redirect } from "next/navigation";
+import { getIdeasoftCustomers } from "@/src/services/ideasoft";
+import CustomerTable from "./CustomerTable";
+
+export default async function MusterilerPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+  const { q = "", page = "1" } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const customers = await getIdeasoftCustomers();
+
+  // Veriyi sterilize et (Server -> Client geçişi için)
+  const safeCustomers = JSON.parse(JSON.stringify(customers));
+
+  return (
+    <div className="p-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+          Müşteriler (Ideasoft)
+        </h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Ideasoft üzerinden alınan müşteri listesi
+        </p>
+      </div>
+
+      <CustomerTable
+        initialData={safeCustomers}
+        totalCount={safeCustomers.length}
+        currentPage={currentPage}
+      />
+    </div>
+  );
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Table, Input, Tag, Card, Button, Space } from 'antd';
 import { UserOutlined, PhoneOutlined, HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
@@ -56,10 +57,10 @@ export default function CariTable({ initialData, totalCount, currentPage }: Cari
       dataIndex: 'faturaUnvan',
       key: 'faturaUnvan',
       render: (text, record) => (
-        <a href={`/cariler/${record.id}`} className="flex flex-col hover:opacity-80 transition-opacity">
+        <Link href={`/cariler/${record.id}`} className="flex flex-col hover:opacity-80 transition-opacity">
           <span className="font-semibold text-slate-700 dark:text-slate-200">{text}</span>
           <span className="text-[10px] text-slate-400">{record.cariKod}</span>
-        </a>
+        </Link>
       ),
       sorter: (a, b) => (a.faturaUnvan || "").localeCompare(b.faturaUnvan || ""),
     },
