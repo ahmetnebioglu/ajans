@@ -1,7 +1,13 @@
 "use client";
 
 import React from "react";
-import { Calendar, CreditCard, Send, Users, Tag as TagIcon } from "lucide-react";
+import {
+  Calendar,
+  CreditCard,
+  Send,
+  Users,
+  Tag as TagIcon,
+} from "lucide-react";
 import {
   Tabs,
   Card,
@@ -37,8 +43,20 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 import { syncAllLeads } from "../actions/sync-leads";
-import { getIntegrationStatuses, getIntegrationSettings, updateIntegrationSettings } from "../actions/settings-actions";
-import { getBilsoftStatus, getBilsoftConfig, updateBilsoftConfig } from "../actions/bilsoft-actions";
+import {
+  getIntegrationStatuses,
+  getIntegrationSettings,
+  updateIntegrationSettings,
+} from "../actions/settings-actions";
+import {
+  getBilsoftStatus,
+  getBilsoftConfig,
+  updateBilsoftConfig,
+} from "../actions/bilsoft-actions";
+import {
+  getIdeasoftStatus,
+  disconnectIdeasoft,
+} from "../actions/ideasoft-actions";
 import { getApiUsageStats, updateNetgsmConfig } from "../actions/api-usage";
 import { sendTestSms } from "../actions/sms";
 import { sendTestEmail } from "../actions/email-actions";
@@ -66,6 +84,10 @@ export default function SettingsPage() {
     bilsoft: false,
   });
   const [bilsoftDetails, setBilsoftDetails] = React.useState<any>(null);
+  const [ideasoftDetails, setIdeasoftDetails] = React.useState<any>(null);
+  const [ideasoftAuthUrl, setIdeasoftAuthUrl] = React.useState<string>("");
+  const [ideasoftConnecting, setIdeasoftConnecting] = React.useState(false);
+  const [ideasoftModalOpen, setIdeasoftModalOpen] = React.useState(false);
   const [usageStats, setUsageStats] = React.useState<any>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -73,18 +95,26 @@ export default function SettingsPage() {
     async function loadData() {
       setIsLoading(true);
       try {
-        const [s, u, b] = await Promise.all([
+        const [s, u, b, ids] = await Promise.all([
           getIntegrationStatuses(),
           getApiUsageStats(),
           getBilsoftStatus(),
+          getIdeasoftStatus(),
         ]);
         setStatuses(s as any);
         if (b.success) {
           setBilsoftDetails(b);
           // Type guard ekleyerek isConnected objede var mı diye kontrol ediyoruz
-          setStatuses(prev => ({ 
-            ...prev, 
-            bilsoft: 'isConnected' in b ? (b as any).isConnected : false 
+          setStatuses((prev) => ({
+            ...prev,
+            bilsoft: "isConnected" in b ? (b as any).isConnected : false,
+          }));
+        }
+        if (ids.success) {
+          setIdeasoftDetails(ids);
+          setStatuses((prev) => ({
+            ...prev,
+            ideasoft: "isConnected" in ids ? (ids as any).isConnected : false,
           }));
         }
         if (u.success) {
@@ -119,8 +149,11 @@ export default function SettingsPage() {
 
   // Genel Entegrasyon Modalı (Google, Resend, NetGSM)
   const [integrationModalOpen, setIntegrationModalOpen] = React.useState(false);
-  const [integrationConfigLoading, setIntegrationConfigLoading] = React.useState(false);
-  const [activeIntegration, setActiveIntegration] = React.useState<"google" | "resend" | "netgsm" | null>(null);
+  const [integrationConfigLoading, setIntegrationConfigLoading] =
+    React.useState(false);
+  const [activeIntegration, setActiveIntegration] = React.useState<
+    "google" | "resend" | "netgsm" | null
+  >(null);
 
   const [netgsmForm] = Form.useForm();
   const [bilsoftForm] = Form.useForm();
@@ -130,9 +163,15 @@ export default function SettingsPage() {
     if (usageStats?.netgsmDetails) {
       netgsmForm.setFieldsValue({
         totalSmsPackage: usageStats.netgsmDetails.totalSmsPackage || 20000,
-        packageStartDate: usageStats.netgsmDetails.packageStartDate ? dayjs(usageStats.netgsmDetails.packageStartDate) : null,
-        packageEndDate: usageStats.netgsmDetails.packageEndDate ? dayjs(usageStats.netgsmDetails.packageEndDate) : null,
-        lastTopupDate: usageStats.netgsmDetails.lastTopupDate ? dayjs(usageStats.netgsmDetails.lastTopupDate) : null,
+        packageStartDate: usageStats.netgsmDetails.packageStartDate
+          ? dayjs(usageStats.netgsmDetails.packageStartDate)
+          : null,
+        packageEndDate: usageStats.netgsmDetails.packageEndDate
+          ? dayjs(usageStats.netgsmDetails.packageEndDate)
+          : null,
+        lastTopupDate: usageStats.netgsmDetails.lastTopupDate
+          ? dayjs(usageStats.netgsmDetails.lastTopupDate)
+          : null,
       });
     }
     setNetgsmModalOpen(true);
@@ -142,12 +181,18 @@ export default function SettingsPage() {
     setNetgsmConfigLoading(true);
     try {
       const data = {
-        packageStartDate: values.packageStartDate ? values.packageStartDate.toDate() : null,
-        packageEndDate: values.packageEndDate ? values.packageEndDate.toDate() : null,
-        lastTopupDate: values.lastTopupDate ? values.lastTopupDate.toDate() : null,
+        packageStartDate: values.packageStartDate
+          ? values.packageStartDate.toDate()
+          : null,
+        packageEndDate: values.packageEndDate
+          ? values.packageEndDate.toDate()
+          : null,
+        lastTopupDate: values.lastTopupDate
+          ? values.lastTopupDate.toDate()
+          : null,
         lastTopupAmount: values.totalSmsPackage || null,
       };
-      
+
       const result = await updateNetgsmConfig(data);
       if (result.success) {
         antdMessage.success("NetGSM paketi güncellendi.");
@@ -198,7 +243,9 @@ export default function SettingsPage() {
     }
   };
 
-  const handleOpenIntegrationModal = async (type: "google" | "resend" | "netgsm") => {
+  const handleOpenIntegrationModal = async (
+    type: "google" | "resend" | "netgsm",
+  ) => {
     setIsLoading(true);
     setActiveIntegration(type);
     try {
@@ -320,7 +367,7 @@ export default function SettingsPage() {
   };
 
   const dashboardContent = (
-    <div className="mb-8 w-full" style={{ width: "100%" }}>
+    <div className=" w-full" style={{ width: "100%" }}>
       {isLoading ? (
         <Skeleton active paragraph={{ rows: 6 }} />
       ) : (
@@ -356,7 +403,7 @@ export default function SettingsPage() {
           <div className="w-full p-4 bg-slate-50 dark:bg-slate-800/20 rounded-lg border border-slate-100 dark:border-slate-800/50 mb-6">
             <div className="flex justify-between items-center mb-3 w-full">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight flex items-center gap-1.5">
-                <MobileOutlined /> Kurumsal SMS Paketi
+                <MobileOutlined /> Kurumsal SMS Paketi - NETGSM
               </span>
               <div className="flex items-center gap-2">
                 {usageStats?.netgsmBalance === null ||
@@ -372,10 +419,10 @@ export default function SettingsPage() {
                     Yenilenme: {usageStats?.netgsmExpiry || "Bilinmiyor"}
                   </span>
                 )}
-                <Button 
-                  size="small" 
-                  type="text" 
-                  icon={<SettingOutlined />} 
+                <Button
+                  size="small"
+                  type="text"
+                  icon={<SettingOutlined />}
                   onClick={handleOpenNetgsmModal}
                   className="text-slate-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                 >
@@ -387,7 +434,8 @@ export default function SettingsPage() {
             {usageStats?.netgsmBalance !== null &&
             usageStats?.netgsmBalance !== undefined ? (
               (() => {
-                const total = usageStats.netgsmDetails?.totalSmsPackage || 20000;
+                const total =
+                  usageStats.netgsmDetails?.totalSmsPackage || 20000;
                 const balance =
                   usageStats.netgsmBalance !== null &&
                   usageStats.netgsmBalance !== undefined &&
@@ -428,8 +476,6 @@ export default function SettingsPage() {
                         Kalan SMS: {balance.toLocaleString("tr-TR")}
                       </span>
                     </div>
-
-
                   </div>
                 );
               })()
@@ -522,9 +568,277 @@ export default function SettingsPage() {
     </div>
   );
 
+  // Dev ortamı: Canlıdan token kopyalama
+  const [copyTokensLoading, setCopyTokensLoading] = React.useState(false);
+
+  const handleCopyTokensFromProd = async () => {
+    setCopyTokensLoading(true);
+    try {
+      const res = await fetch("/api/dev/copy-tokens", { method: "POST" });
+
+      // Yanıt boş veya JSON olmayabilir (sunucu çökmesi durumunda)
+      let data: any = {};
+      const text = await res.text();
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          antdMessage.error(
+            `Sunucu geçersiz yanıt döndürdü (HTTP ${res.status}). ` +
+            "Sunucu loglarını kontrol edin.",
+          );
+          return;
+        }
+      } else {
+        antdMessage.error(
+          `Sunucu boş yanıt döndürdü (HTTP ${res.status}). ` +
+          "Sunucu loglarını kontrol edin.",
+        );
+        return;
+      }
+
+      if (res.ok && data.success) {
+        antdMessage.success(`${data.message} (${data.providers?.join(", ")})`);
+        // Durumları yenile
+        const [ids, b] = await Promise.all([
+          getIdeasoftStatus(),
+          getBilsoftStatus(),
+        ]);
+        if (ids.success) {
+          setIdeasoftDetails(ids);
+          setStatuses((prev) => ({
+            ...prev,
+            ideasoft: (ids as any).isConnected ?? false,
+          }));
+        }
+        if (b.success) {
+          setBilsoftDetails(b);
+          setStatuses((prev) => ({
+            ...prev,
+            bilsoft: "isConnected" in b ? (b as any).isConnected : false,
+          }));
+        }
+      } else {
+        antdMessage.error(
+          "Kopyalama başarısız: " + (data.error || "Bilinmeyen hata"),
+        );
+      }
+    } catch (e: any) {
+      antdMessage.error("Bağlantı hatası: " + e.message);
+    } finally {
+      setCopyTokensLoading(false);
+    }
+  };
+
+  // IdeaSoft OAuth bağlantısını başlat: auth URL'i al ve yeni sekmede aç
+  const handleIdeasoftConnect = async () => {
+    setIdeasoftConnecting(true);
+    try {
+      const res = await fetch("/api/ideasoft/auth-url");
+      const data = await res.json();
+      if (data.url) {
+        setIdeasoftAuthUrl(data.url);
+        // Yeni sekmede IdeaSoft yetkilendirme sayfasını aç
+        window.open(data.url, "_blank", "noopener,noreferrer");
+        antdMessage.info(
+          "IdeaSoft yetkilendirme sayfası yeni sekmede açıldı. Yetkilendirme tamamlandıktan sonra bu sayfayı yenileyin.",
+        );
+      } else {
+        antdMessage.error(
+          "IdeaSoft yetkilendirme URL'i alınamadı: " +
+            (data.error || "Bilinmeyen hata"),
+        );
+      }
+    } catch (e: any) {
+      antdMessage.error("Bağlantı hatası: " + e.message);
+    } finally {
+      setIdeasoftConnecting(false);
+    }
+  };
+
+  // IdeaSoft bağlantısını kes
+  const handleIdeasoftDisconnect = async () => {
+    try {
+      const result = await disconnectIdeasoft();
+      if (result.success) {
+        antdMessage.success("IdeaSoft bağlantısı kesildi.");
+        setIdeasoftModalOpen(false);
+        // Durumu güncelle
+        const ids = await getIdeasoftStatus();
+        if (ids.success) {
+          setIdeasoftDetails(ids);
+          setStatuses((prev) => ({
+            ...prev,
+            ideasoft: (ids as any).isConnected ?? false,
+          }));
+        }
+      } else {
+        antdMessage.error("Bağlantı kesilemedi: " + (result as any).error);
+      }
+    } catch (e: any) {
+      antdMessage.error("Bir hata oluştu: " + e.message);
+    }
+  };
+
   const integrationsContent = (
     <div className="space-y-4 py-4 w-full block" style={{ width: "100%" }}>
       {dashboardContent}
+
+      <Divider titlePlacement="center">
+        <span className="text-[11px] font-bold text-slate-400 uppercase">
+          Servis Yapılandırmaları ve Bağlantılar
+        </span>
+      </Divider>
+
+      {/* ═══ IdeaSoft E-Ticaret Entegrasyonu (OAuth2) ═══ */}
+      <Card
+        size="small"
+        className="border-slate-100 dark:border-slate-800 shadow-sm bg-transparent"
+      >
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400">
+                <ApiOutlined />
+              </span>
+              <span className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">
+                IdeaSoft E-Ticaret API
+              </span>
+              <Tag
+                color="blue"
+                className="text-[9px] border-none bg-blue-500/10 text-blue-600 font-bold"
+              >
+                OAuth2
+              </Tag>
+            </div>
+            {isLoading ? (
+              <Skeleton.Button active size="small" shape="round" />
+            ) : ideasoftDetails?.isConnected ? (
+              <Tag color="success" icon={<CheckCircleFilled />}>
+                Bağlı
+              </Tag>
+            ) : (
+              <Tag color="error" icon={<CloseCircleFilled />}>
+                Bağlantı Yok
+              </Tag>
+            )}
+          </div>
+
+          <div className="text-[10px] text-slate-400 leading-relaxed">
+            {isLoading ? (
+              <Skeleton
+                active
+                title={false}
+                paragraph={{ rows: 1, width: "70%" }}
+                className="mt-1"
+              />
+            ) : ideasoftDetails?.isConnected ? (
+              <>
+                <span className="text-emerald-600 font-semibold">
+                  ✓ Otonom token yenileme aktif.
+                </span>
+                {ideasoftDetails?.expiry && (
+                  <span className="ml-2">
+                    Token geçerliliği:{" "}
+                    {dayjs(ideasoftDetails.expiry).format("DD/MM/YYYY HH:mm")}
+                  </span>
+                )}
+                {ideasoftDetails?.lastSync && (
+                  <span className="ml-2 text-slate-300">
+                    · Son güncelleme:{" "}
+                    {dayjs(ideasoftDetails.lastSync).format("DD/MM/YYYY HH:mm")}
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-amber-600">
+                ⚠ Henüz bağlantı kurulmamış. İlk bağlantı için aşağıdaki butona
+                tıklayın. Yetkilendirme tamamlandıktan sonra token otomatik
+                yönetilecektir.
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 pt-1">
+            {ideasoftDetails?.isConnected ? (
+              <>
+                <Button
+                  size="small"
+                  type="default"
+                  onClick={() => setIdeasoftModalOpen(true)}
+                  className="text-[11px]"
+                >
+                  Detaylar
+                </Button>
+                <Button
+                  size="small"
+                  type="link"
+                  danger
+                  onClick={handleIdeasoftDisconnect}
+                  className="text-[11px] p-0 h-auto"
+                >
+                  Bağlantıyı Kes
+                </Button>
+              </>
+            ) : (
+              <Button
+                size="small"
+                type="primary"
+                loading={ideasoftConnecting}
+                onClick={handleIdeasoftConnect}
+                className="text-[11px]"
+              >
+                IdeaSoft&apos;a Bağlan (OAuth2)
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* ═══ Dev Ortamı: Canlıdan Token Kopyalama ═══ */}
+        {process.env.NODE_ENV === "development" && (
+          <>
+            <Divider className="dark:border-slate-800/50" />
+            <div className="flex items-center justify-between my-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <DatabaseOutlined className="text-amber-600" />
+                  <span className="text-[13px] font-semibold text-amber-800 dark:text-amber-400">
+                    Canlıdan Token Kopyala
+                  </span>
+                  <Tag
+                    color="warning"
+                    className="text-[9px] border-none font-bold"
+                  >
+                    SADECE DEV
+                  </Tag>
+                </div>
+                <p className="text-[10px] text-amber-600 dark:text-amber-500 m-0">
+                  Canlı veritabanındaki IdeaSoft ve Bilsoft tokenlarını local
+                  DB&apos;ye kopyalar.
+                  <br />
+                  Gerekli:{" "}
+                  <code className="bg-amber-100 dark:bg-amber-900/30 px-1 rounded text-[9px]">
+                    PRODUCTION_DATABASE_URL
+                  </code>{" "}
+                  .env.local&apos;da tanımlı olmalı.
+                </p>
+              </div>
+              <Button
+                type="default"
+                size="small"
+                loading={copyTokensLoading}
+                onClick={handleCopyTokensFromProd}
+                className="border-amber-400 text-amber-700 hover:border-amber-500 hover:text-amber-800 shrink-0 ml-4"
+                icon={<SyncOutlined />}
+              >
+                Kopyala
+              </Button>
+            </div>
+          </>
+        )}
+      </Card>
+
+      <div className="my-4" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
@@ -557,9 +871,9 @@ export default function SettingsPage() {
             name: "Bilsoft Ön Muhasebe API",
             status: statuses.bilsoft ? "CONNECTED" : "DISCONNECTED",
             icon: <CloudServerOutlined />,
-            details: bilsoftDetails?.expiry 
+            details: bilsoftDetails?.expiry
               ? `Geçerlilik: ${dayjs(bilsoftDetails.expiry).format("DD/MM/YYYY HH:mm")}`
-              : "Token bilgisi henüz alınmadı"
+              : "Token bilgisi henüz alınmadı",
           },
         ].map((api) => (
           <Card
@@ -590,25 +904,37 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between mt-1">
                 <div className="text-[10px] text-slate-400 font-medium w-full">
                   {isLoading ? (
-                    <Skeleton active title={false} paragraph={{ rows: 1, width: '70%' }} className="mt-1" />
+                    <Skeleton
+                      active
+                      title={false}
+                      paragraph={{ rows: 1, width: "70%" }}
+                      className="mt-1"
+                    />
                   ) : (
                     api.details || "Detay bilgisi yok"
                   )}
                 </div>
-                {(api.name === "Bilsoft Ön Muhasebe API" || 
-                  api.name === "Google Places API" || 
-                  api.name === "Google Drive API" || 
-                  api.name === "Resend Email API" || 
+                {(api.name === "Bilsoft Ön Muhasebe API" ||
+                  api.name === "Google Places API" ||
+                  api.name === "Google Drive API" ||
+                  api.name === "Resend Email API" ||
                   api.name === "NetGSM SMS API") && (
-                  <Button 
-                    size="small" 
-                    type="link" 
+                  <Button
+                    size="small"
+                    type="link"
                     className="p-0 h-auto text-[10px]"
                     onClick={() => {
-                      if (api.name === "Bilsoft Ön Muhasebe API") handleOpenBilsoftModal();
-                      else if (api.name === "Google Places API" || api.name === "Google Drive API") handleOpenIntegrationModal("google");
-                      else if (api.name === "Resend Email API") handleOpenIntegrationModal("resend");
-                      else if (api.name === "NetGSM SMS API") handleOpenIntegrationModal("netgsm");
+                      if (api.name === "Bilsoft Ön Muhasebe API")
+                        handleOpenBilsoftModal();
+                      else if (
+                        api.name === "Google Places API" ||
+                        api.name === "Google Drive API"
+                      )
+                        handleOpenIntegrationModal("google");
+                      else if (api.name === "Resend Email API")
+                        handleOpenIntegrationModal("resend");
+                      else if (api.name === "NetGSM SMS API")
+                        handleOpenIntegrationModal("netgsm");
                     }}
                   >
                     Yapılandır
@@ -620,7 +946,7 @@ export default function SettingsPage() {
         ))}
       </div>
 
-      <Divider titlePlacement="left">
+      <Divider titlePlacement="center">
         <span className="text-[11px] font-bold text-slate-400 uppercase">
           Entegrasyon Test Merkezi
         </span>
@@ -693,20 +1019,6 @@ export default function SettingsPage() {
           </div>
         </div>
       </Card>
-
-      <Divider titlePlacement="left">
-        <span className="text-[11px] font-bold text-slate-400 uppercase">
-          Entegrasyon Durumu
-        </span>
-      </Divider>
-      <div className="max-w-full bg-slate-50 dark:bg-slate-800/50 p-4 rounded-md border border-slate-100 dark:border-slate-800">
-        <Text className="text-[12px] text-slate-500 block leading-relaxed">
-          Yukarıdaki durumlar sistemdeki <Text code>.env.local</Text> dosyasında
-          tanımlı olan API anahtarlarının varlığına göre belirlenmektedir. Eğer
-          bir servis "Bağlı Değil" görünüyorsa, ilgili ortam değişkenini kontrol
-          edin.
-        </Text>
-      </div>
     </div>
   );
 
@@ -889,7 +1201,7 @@ export default function SettingsPage() {
         open={netgsmModalOpen}
         onCancel={() => setNetgsmModalOpen(false)}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form
           form={netgsmForm}
@@ -900,30 +1212,35 @@ export default function SettingsPage() {
           <Form.Item
             name="totalSmsPackage"
             label="Toplam Paket Miktarı (SMS)"
-            rules={[{ required: true, message: 'Lütfen paket miktarını girin.' }]}
+            rules={[
+              { required: true, message: "Lütfen paket miktarını girin." },
+            ]}
           >
             <InputNumber className="w-full" min={1} />
           </Form.Item>
-          
-          <Form.Item
-            name="packageStartDate"
-            label="Paket Başlangıç Tarihi"
-          >
-            <DatePicker className="w-full" format="DD/MM/YYYY" placeholder="Seçiniz" />
+
+          <Form.Item name="packageStartDate" label="Paket Başlangıç Tarihi">
+            <DatePicker
+              className="w-full"
+              format="DD/MM/YYYY"
+              placeholder="Seçiniz"
+            />
           </Form.Item>
-          
-          <Form.Item
-            name="packageEndDate"
-            label="Paket Bitiş Tarihi"
-          >
-            <DatePicker className="w-full" format="DD/MM/YYYY" placeholder="Seçiniz" />
+
+          <Form.Item name="packageEndDate" label="Paket Bitiş Tarihi">
+            <DatePicker
+              className="w-full"
+              format="DD/MM/YYYY"
+              placeholder="Seçiniz"
+            />
           </Form.Item>
-          
-          <Form.Item
-            name="lastTopupDate"
-            label="Son Yükleme Tarihi"
-          >
-            <DatePicker className="w-full" format="DD/MM/YYYY" placeholder="Seçiniz" />
+
+          <Form.Item name="lastTopupDate" label="Son Yükleme Tarihi">
+            <DatePicker
+              className="w-full"
+              format="DD/MM/YYYY"
+              placeholder="Seçiniz"
+            />
           </Form.Item>
 
           <Alert
@@ -941,7 +1258,7 @@ export default function SettingsPage() {
         open={bilsoftModalOpen}
         onCancel={() => setBilsoftModalOpen(false)}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
         width={600}
       >
         <Form
@@ -978,11 +1295,78 @@ export default function SettingsPage() {
 
           <div className="col-span-2 mt-4 flex justify-end gap-2">
             <Button onClick={() => setBilsoftModalOpen(false)}>İptal</Button>
-            <Button type="primary" htmlType="submit" loading={bilsoftConfigLoading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={bilsoftConfigLoading}
+            >
               Kaydet
             </Button>
           </div>
         </Form>
+      </Modal>
+
+      {/* ═══ IdeaSoft Detay Modalı ═══ */}
+      <Modal
+        title="IdeaSoft E-Ticaret API — Bağlantı Detayları"
+        open={ideasoftModalOpen}
+        onCancel={() => setIdeasoftModalOpen(false)}
+        footer={null}
+        destroyOnHidden
+        width={480}
+      >
+        <div className="mt-4 space-y-4">
+          <Alert
+            type="success"
+            showIcon
+            message="Bağlantı Aktif"
+            description="IdeaSoft OAuth2 bağlantısı kurulu. Token yenileme işlemi arka planda otomatik gerçekleşmektedir."
+          />
+          <div className="grid grid-cols-2 gap-3 text-[12px]">
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-lg">
+              <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">
+                Token Geçerliliği
+              </div>
+              <div className="font-semibold text-slate-700 dark:text-slate-200">
+                {ideasoftDetails?.expiry
+                  ? dayjs(ideasoftDetails.expiry).format("DD/MM/YYYY HH:mm")
+                  : "—"}
+              </div>
+            </div>
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-lg">
+              <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">
+                Son Güncelleme
+              </div>
+              <div className="font-semibold text-slate-700 dark:text-slate-200">
+                {ideasoftDetails?.lastSync
+                  ? dayjs(ideasoftDetails.lastSync).format("DD/MM/YYYY HH:mm")
+                  : "—"}
+              </div>
+            </div>
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/30 rounded-lg col-span-2">
+              <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">
+                Refresh Token
+              </div>
+              <div className="font-semibold text-slate-700 dark:text-slate-200">
+                {ideasoftDetails?.hasRefreshToken
+                  ? "✓ Mevcut (otonom yenileme aktif)"
+                  : "✗ Yok"}
+              </div>
+            </div>
+          </div>
+          <Alert
+            type="info"
+            showIcon
+            message="Otonom Yenileme"
+            description="Vercel Cron her gün sabah 04:00'te token yenileme kontrolü yapar. Token süresi dolmaya 10 dakika kala otomatik yenilenir."
+          />
+          <div className="flex justify-between items-center pt-2">
+            <Button danger size="small" onClick={handleIdeasoftDisconnect}>
+              Bağlantıyı Kes
+            </Button>
+            <Button onClick={() => setIdeasoftModalOpen(false)}>Kapat</Button>
+          </div>
+        </div>
       </Modal>
 
       <Modal
@@ -990,7 +1374,7 @@ export default function SettingsPage() {
         open={integrationModalOpen}
         onCancel={() => setIntegrationModalOpen(false)}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
         width={500}
       >
         <Form
@@ -1001,11 +1385,19 @@ export default function SettingsPage() {
         >
           {activeIntegration === "google" && (
             <>
-              <Form.Item name="googlePlacesApiKey" label="Google Places API Key">
+              <Form.Item
+                name="googlePlacesApiKey"
+                label="Google Places API Key"
+              >
                 <Input.Password placeholder="AIza..." />
               </Form.Item>
               <Divider className="my-2" />
-              <Typography.Text strong className="text-[11px] uppercase text-slate-400 block mb-2">Drive & OAuth2 Yapılandırması</Typography.Text>
+              <Typography.Text
+                strong
+                className="text-[11px] uppercase text-slate-400 block mb-2"
+              >
+                Drive & OAuth2 Yapılandırması
+              </Typography.Text>
               <Form.Item name="googleClientId" label="Google Client ID">
                 <Input placeholder="1041...apps.googleusercontent.com" />
               </Form.Item>
@@ -1015,12 +1407,15 @@ export default function SettingsPage() {
               <Form.Item name="googleRefreshToken" label="Google Refresh Token">
                 <Input.Password placeholder="1//041..." />
               </Form.Item>
-              <Form.Item name="googleDriveFolderId" label="Varsayılan Drive Klasör ID">
+              <Form.Item
+                name="googleDriveFolderId"
+                label="Varsayılan Drive Klasör ID"
+              >
                 <Input placeholder="19SuZ..." />
               </Form.Item>
-              <Alert 
-                type="info" 
-                showIcon 
+              <Alert
+                type="info"
+                showIcon
                 message="Google Cloud Console üzerinden 'Places API (New)' ve 'Drive API' servislerinin etkinleştirildiğinden emin olun."
                 className="mb-4"
               />
@@ -1032,9 +1427,9 @@ export default function SettingsPage() {
               <Form.Item name="resendApiKey" label="Resend API Key">
                 <Input.Password placeholder="re_..." />
               </Form.Item>
-              <Alert 
-                type="info" 
-                showIcon 
+              <Alert
+                type="info"
+                showIcon
                 message="Resend panelinden aldığınız API anahtarını buraya girin. Gönderim yapabilmek için domain doğrulaması yapmanız önerilir."
                 className="mb-4"
               />
@@ -1049,9 +1444,9 @@ export default function SettingsPage() {
               <Form.Item name="netgsmPassword" label="NetGSM Şifre">
                 <Input.Password placeholder="****" />
               </Form.Item>
-              <Alert 
-                type="info" 
-                showIcon 
+              <Alert
+                type="info"
+                showIcon
                 message="NetGSM API erişim şifrenizi girin. Bu şifre panel giriş şifresinden farklı olabilir."
                 className="mb-4"
               />
@@ -1059,8 +1454,14 @@ export default function SettingsPage() {
           )}
 
           <div className="flex justify-end gap-2 mt-6">
-            <Button onClick={() => setIntegrationModalOpen(false)}>İptal</Button>
-            <Button type="primary" htmlType="submit" loading={integrationConfigLoading}>
+            <Button onClick={() => setIntegrationModalOpen(false)}>
+              İptal
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={integrationConfigLoading}
+            >
               Kaydet
             </Button>
           </div>

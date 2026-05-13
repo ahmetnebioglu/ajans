@@ -72,35 +72,68 @@ export async function getValidToken(provider: string): Promise<string> {
 
 /**
  * Ideasoft Refresh Token Akışı
+ * İlk kurulumda OAuth2 authorization_code akışı ile refresh_token elde edilmeli.
+ * Sonrasında bu fonksiyon refresh_token kullanarak otonom yenileme yapar.
  */
 async function refreshIdeasoftToken(refreshToken?: string | null): Promise<TokenData> {
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
   const clientId = process.env.client_id;
   const clientSecret = process.env.client_secret;
 
-  // Eğer refresh token yoksa (veya ilk kurulumsa) manuel olarak Atlas'tan veya ENV'den çekilmeli
-  // Şimdilik hata fırlatıyoruz çünkü otonom yenileme için refresh_token şart.
+  // Refresh token yoksa ilk kurulum yapılmamış demektir.
+  // Kullanıcının Settings sayfasından "IdeaSoft'a Bağlan" butonuna tıklaması gerekir.
   if (!refreshToken) {
-    // Geliştirme kolaylığı için Atlas'tan ödünç alma mantığını burada da fallback olarak kullanabiliriz
-    throw new Error('Ideasoft refresh token bulunamadı. Lütfen ilk kurulumu yapın.');
+    throw new Error(
+      'IdeaSoft refresh token bulunamadı. ' +
+      'Lütfen Ayarlar > Sistem Bağlantıları sayfasından IdeaSoft entegrasyonunu başlatın.'
+    );
   }
 
-  const response = await axios.post(`${domain}/oauth/v2/token`, new URLSearchParams({
-    grant_type: 'refresh_token',
-    client_id: clientId!,
-    client_secret: clientSecret!,
-    refresh_token: refreshToken,
-  }), {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  });
+  if (!clientId || !clientSecret) {
+    throw new Error('IdeaSoft OAuth yapılandırması eksik (client_id veya client_secret).');
+  }
 
-  const { access_token, refresh_token, expires_in } = response.data;
+  try {
+    const response = await axios.post(
+      `${domain}/oauth/v2/token`,
+      new URLSearchParams({
+        grant_type: 'refresh_token',
+        client_id: clientId,
+        client_secret: clientSecret,
+        refresh_token: refreshToken,
+      }),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        validateStatus: (status) => status < 500,
+      }
+    );
 
-  return {
-    accessToken: access_token,
-    refreshToken: refresh_token,
-    expiresAt: new Date(Date.now() + expires_in * 1000)
-  };
+    if (response.status !== 200) {
+      console.error('[TokenManager] IdeaSoft refresh token yanıtı:', response.status, response.data);
+      throw new Error(
+        `IdeaSoft token yenileme başarısız (HTTP ${response.status}). ` +
+        'Refresh token geçersiz olabilir. Lütfen IdeaSoft entegrasyonunu yeniden başlatın.'
+      );
+    }
+
+    const { access_token, refresh_token: new_refresh_token, expires_in } = response.data;
+
+    if (!access_token) {
+      throw new Error('IdeaSoft token yanıtında access_token eksik.');
+    }
+
+    return {
+      accessToken: access_token,
+      // IdeaSoft her refresh'te yeni refresh_token döndürebilir; döndürmezse eskisini koru
+      refreshToken: new_refresh_token || refreshToken,
+      expiresAt: new Date(Date.now() + (expires_in || 86400) * 1000),
+    };
+  } catch (error: any) {
+    if (error.response) {
+      console.error('[TokenManager] IdeaSoft API hatası:', error.response.status, error.response.data);
+    }
+    throw error;
+  }
 }
 
 /**
