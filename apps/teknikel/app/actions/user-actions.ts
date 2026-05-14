@@ -5,6 +5,7 @@ import { unsecured_prisma as db } from "@ajans/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
 
 /**
  * Profil bilgilerini ve resmi günceller
@@ -76,15 +77,28 @@ export async function updateProfile(formData: FormData) {
 /**
  * Şifre değiştirme işlemi
  */
-export async function changePassword(values: any) {
+export async function changePassword(newPassword: string) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) return { success: false, error: "Yetkisiz" };
 
-    // Şifre hashleme ve güncelleme mantığı buraya gelecek
-    // Şu an için simüle ediyoruz
+    if (!newPassword || newPassword.length < 6) {
+      return { success: false, error: "Şifre en az 6 karakter olmalıdır." };
+    }
+
+    // Yeni şifreyi hashle
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Veritabanında güncelle
+    await db.user.update({
+      where: { email: session.user.email },
+      data: { password: hashedPassword },
+    });
+
+    console.log(`[PasswordAction] Password updated for ${session.user.email}`);
     return { success: true };
   } catch (error: any) {
+    console.error("[PasswordAction] Error:", error);
     return { success: false, error: error.message };
   }
 }

@@ -31,7 +31,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { updateProfile } from "../actions/user-actions";
+import { updateProfile, changePassword } from "../actions/user-actions";
 
 const { Title, Text } = Typography;
 
@@ -59,6 +59,35 @@ export default function ProfilePage() {
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
+      // Şifre değiştirme işlemi
+      if (values.newPassword || values.confirmPassword) {
+        if (!values.newPassword) {
+          message.error("Lütfen yeni şifrenizi girin.");
+          setLoading(false);
+          return;
+        }
+        if (values.newPassword.length < 6) {
+          message.error("Şifre en az 6 karakter olmalıdır.");
+          setLoading(false);
+          return;
+        }
+        if (values.newPassword !== values.confirmPassword) {
+          message.error("Şifreler eşleşmiyor. Lütfen tekrar kontrol edin.");
+          setLoading(false);
+          return;
+        }
+
+        const pwResult = await changePassword(values.newPassword);
+        if (!pwResult.success) {
+          message.error(pwResult.error || "Şifre güncellenemedi.");
+          setLoading(false);
+          return;
+        }
+        message.success("Şifreniz başarıyla güncellendi.");
+        form.setFieldsValue({ newPassword: "", confirmPassword: "" });
+      }
+
+      // Profil bilgileri güncelleme
       const formData = new FormData();
       formData.append("name", values.name);
       if (avatarFile) {
@@ -68,7 +97,10 @@ export default function ProfilePage() {
       const result = await updateProfile(formData);
 
       if (result.success) {
-        message.success("Profil bilgileriniz başarıyla güncellendi.");
+        if (!values.newPassword) {
+          // Sadece profil güncellendiyse mesaj göster (şifre mesajı zaten gösterildi)
+          message.success("Profil bilgileriniz başarıyla güncellendi.");
+        }
         // Session'ı manuel güncelle (next-auth v4 custom session update)
         await update({
           ...session,
