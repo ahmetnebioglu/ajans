@@ -457,3 +457,126 @@ export const printOrder = (order: Order, pageFormat: 'A4' | 'A5' = 'A5'): void =
     printWindow.close();
   }, 500);
 };
+
+/**
+ * Boş sipariş şablonu yazdırma fonksiyonu
+ */
+export const printEmptyOrder = (pageFormat: 'A4' | 'A5' = 'A5'): void => {
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return;
+
+  const pageWidth = pageFormat === 'A4' ? '210mm' : '148mm';
+  const pageHeight = pageFormat === 'A4' ? '297mm' : '210mm';
+  const fontSize = pageFormat === 'A4' ? '12px' : '10px';
+
+  printWindow.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Boş Sipariş Şablonu</title>
+  <style>
+    @page { size: ${pageWidth} ${pageHeight}; margin: 10mm; }
+    body { font-family: Arial, sans-serif; font-size: ${fontSize}; color: #333; margin: 0; padding: 0; }
+    .header { text-align: center; margin-bottom: 16px; border-bottom: 2px solid #333; padding-bottom: 8px; }
+    .header h1 { font-size: 1.4em; margin: 0 0 4px 0; }
+    .header p { margin: 0; font-size: 0.85em; color: #666; }
+    .section { margin-bottom: 14px; }
+    .section-title { font-weight: bold; font-size: 1em; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 8px; }
+    .field-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: flex-end; }
+    .field-label { font-weight: bold; white-space: nowrap; min-width: 100px; }
+    .field-line { flex: 1; border-bottom: 1px solid #999; min-width: 80px; height: 16px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    th { background: #f0f0f0; border: 1px solid #ccc; padding: 4px 6px; text-align: left; font-size: 0.9em; }
+    td { border: 1px solid #ccc; padding: 4px 6px; height: 20px; }
+    .totals-row td { font-weight: bold; }
+    .footer { margin-top: 20px; border-top: 1px solid #ccc; padding-top: 8px; text-align: center; font-size: 0.8em; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Teknikel Kombi Yedek Parça</h1>
+    <p>Sipariş Formu</p>
+  </div>
+
+  <div class="two-col">
+    <div class="section">
+      <div class="section-title">Sipariş Bilgileri</div>
+      <div class="field-row"><span class="field-label">Sipariş No:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">Tarih:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">Durum:</span><span class="field-line"></span></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Ödeme Bilgileri</div>
+      <div class="field-row"><span class="field-label">Ödeme Türü:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">Ödeme Şekli:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">Kargo:</span><span class="field-line"></span></div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="section">
+      <div class="section-title">Müşteri Bilgileri</div>
+      <div class="field-row"><span class="field-label">Ad Soyad:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">E-posta:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">Telefon:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">Müşteri Grubu:</span><span class="field-line"></span></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Teslimat Adresi</div>
+      <div class="field-row"><span class="field-label">Ad Soyad:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">Adres:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">İlçe / İl:</span><span class="field-line"></span></div>
+      <div class="field-row"><span class="field-label">Telefon:</span><span class="field-line"></span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Sipariş Ürünleri</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40%">Ürün Adı</th>
+          <th style="width:15%">SKU</th>
+          <th style="width:10%">Adet</th>
+          <th style="width:17.5%">Birim Fiyat</th>
+          <th style="width:17.5%">Toplam</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${Array(8).fill('<tr><td></td><td></td><td></td><td></td><td></td></tr>').join('')}
+        <tr class="totals-row">
+          <td colspan="3"></td>
+          <td>Ara Toplam:</td>
+          <td></td>
+        </tr>
+        <tr class="totals-row">
+          <td colspan="3"></td>
+          <td>KDV:</td>
+          <td></td>
+        </tr>
+        <tr class="totals-row">
+          <td colspan="3"></td>
+          <td>Kargo:</td>
+          <td></td>
+        </tr>
+        <tr class="totals-row">
+          <td colspan="3"></td>
+          <td>Genel Toplam:</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <p>Teknikel Kombi Yedek Parça © 2025</p>
+  </div>
+</body></html>`);
+
+  printWindow.document.close();
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 500);
+};

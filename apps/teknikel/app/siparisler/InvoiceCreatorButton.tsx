@@ -355,53 +355,46 @@ export default function InvoiceCreatorButton({
               />
             )}
 
-            <div style={{ marginBottom: '16px' }}>
-              <p>
-                Bu sipariş için <strong>{memberGroupInfo.cariName}</strong> carisine
-                fatura oluşturulacak.
-              </p>
-              <div
-                style={{
-                  padding: '12px',
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: '4px',
-                  marginBottom: '16px',
-                }}
-              >
-                <div>
-                  <strong>Sipariş No:</strong> #{order.id}
-                </div>
-                <div>
-                  <strong>Müşteri:</strong> {order.customerFirstname}{' '}
-                  {order.customerSurname}
-                </div>
-                <div>
-                  <strong>Müşteri Grubu:</strong> {order.memberGroupName || 'Üyeliksiz'}
-                </div>
-                <div>
-                  <strong>Cari:</strong> {memberGroupInfo.cariName} (ID:{' '}
-                  {memberGroupInfo.cariId})
-                </div>
-                <div>
-                  <strong>Tutar:</strong>{' '}
-                  {new Intl.NumberFormat('tr-TR', {
-                    style: 'currency',
-                    currency: 'TRY',
-                  }).format(order.finalAmount)}
-                </div>
-              </div>
-            </div>
+             <div className="mb-4">
+               <p>
+                 Bu sipariş için <strong>{memberGroupInfo.cariName}</strong> carisine
+                 fatura oluşturulacak.
+               </p>
+               <div className="bg-slate-100 dark:bg-slate-700/60 rounded p-3 mb-4">
+                 <div>
+                   <strong>Sipariş No:</strong> #{order.id}
+                 </div>
+                 <div>
+                   <strong>Müşteri:</strong> {order.customerFirstname}{' '}
+                   {order.customerSurname}
+                 </div>
+                 <div>
+                   <strong>Müşteri Grubu:</strong> {order.memberGroupName || 'Üyeliksiz'}
+                 </div>
+                 <div>
+                   <strong>Cari:</strong> {memberGroupInfo.cariName} (ID:{' '}
+                   {memberGroupInfo.cariId})
+                 </div>
+                 <div>
+                   <strong>Tutar:</strong>{' '}
+                   {new Intl.NumberFormat('tr-TR', {
+                     style: 'currency',
+                     currency: 'TRY',
+                   }).format(order.finalAmount)}
+                 </div>
+               </div>
+             </div>
 
             {checkingStocks && (
-              <div style={{ marginBottom: '16px' }}>
-                <div style={{ marginBottom: '8px' }}>
+              <div className="mb-4">
+                <div className="mb-2">
                   <strong>
                     Stok Kartları Kontrol Ediliyor ({checkedCount}/{totalItems})
                   </strong>
                 </div>
                 <Progress percent={Math.round((checkedCount / totalItems) * 100)} />
                 {currentlyChecking && (
-                  <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
                     Şu an sorgulanan: <strong>{currentlyChecking}</strong>
                   </div>
                 )}

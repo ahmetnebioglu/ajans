@@ -1,13 +1,22 @@
 'use client';
 
 import React from 'react';
-import { Input, Select, Pagination, Button, Card, Space } from 'antd';
+import { Input, Select, Button, Dropdown, Modal, Radio } from 'antd';
+import type { MenuProps } from 'antd';
 import {
-  ShoppingOutlined,
-  SortAscendingOutlined,
+  SearchOutlined,
   ReloadOutlined,
+  LeftOutlined,
+  RightOutlined,
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
+  DownOutlined,
+  FileAddOutlined,
+  PrinterOutlined,
 } from '@ant-design/icons';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useTheme } from 'next-themes';
+import { printEmptyOrder } from './utils/printOrder';
 import OrderCard from './OrderCard';
 
 interface IdeasoftOrder {
@@ -51,42 +60,6 @@ interface OrderTableProps {
   sort: string;
 }
 
-const formatDate = (dateString: string | null | undefined) => {
-  if (!dateString) return '-';
-  try {
-    return new Date(dateString).toLocaleDateString('tr-TR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return dateString;
-  }
-};
-
-const formatPrice = (price: number | null | undefined) => {
-  if (price == null) return '-';
-  return new Intl.NumberFormat('tr-TR', {
-    style: 'currency',
-    currency: 'TRY',
-    minimumFractionDigits: 2,
-  }).format(price);
-};
-
-const getStatusColor = (status: string | undefined) => {
-  if (!status) return 'default';
-  const s = status.toLowerCase();
-  if (s === 'new' || s === 'waiting_for_approval') return 'blue';
-  if (s === 'pending' || s === 'waiting_for_payment') return 'orange';
-  if (s === 'being_prepared' || s === 'on_accumulation') return 'cyan';
-  if (s === 'shipped' || s === 'fulfilled') return 'purple';
-  if (s === 'delivered' || s === 'approved') return 'green';
-  if (s === 'cancelled' || s === 'deleted') return 'red';
-  return 'default';
-};
-
 const getStatusLabel = (status: string | undefined) => {
   if (!status) return '-';
   const s = status.toLowerCase();
@@ -123,12 +96,18 @@ const statusOptions = [
 ];
 
 const sortOptions = [
-  { value: '-id', label: 'En Yeniler' },
-  { value: 'id', label: 'En Eskiler' },
+  { value: '-id', label: 'En Yeniden ...' },
+  { value: 'id', label: 'En Eskiden ...' },
   { value: '-finalAmount', label: 'Tutar (Yüksek-Düşük)' },
   { value: 'finalAmount', label: 'Tutar (Düşük-Yüksek)' },
   { value: '-createdAt', label: 'Tarih (Yeni-Eski)' },
   { value: 'createdAt', label: 'Tarih (Eski-Yeni)' },
+];
+
+const pageSizeOptions = [
+  { value: '20', label: '20 Sipariş' },
+  { value: '50', label: '50 Sipariş' },
+  { value: '100', label: '100 Sipariş' },
 ];
 
 export default function OrderTable({
@@ -143,6 +122,20 @@ export default function OrderTable({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [loading, setLoading] = React.useState(false);
+  const [searchText, setSearchText] = React.useState('');
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
+  // Boş şablon yazdırma state
+  const [emptyPrintOpen, setEmptyPrintOpen] = React.useState(false);
+  const [emptyPageFormat, setEmptyPageFormat] = React.useState<'A4' | 'A5'>('A5');
+
+  const c = {
+    mutedText: isDark ? '#94a3b8' : '#6b7280',
+    strongText: isDark ? '#f8fafc' : '#374151',
+    emptyBg: isDark ? '#0f172a' : '#ffffff',
+    emptyBorder: isDark ? '#1e293b' : '#e5e7eb',
+  };
 
   const handleStatusChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -162,7 +155,15 @@ export default function OrderTable({
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  const handlePageSizeChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('limit', value);
+    params.set('page', '1');
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
   const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
     router.push(`${pathname}?${params.toString()}`);
@@ -174,63 +175,356 @@ export default function OrderTable({
     setTimeout(() => setLoading(false), 1000);
   };
 
-  return (
-    <div className="space-y-4">
-      {/* Filtreler */}
-      <Card className="shadow-sm border-slate-100 dark:border-slate-800">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4 flex-wrap">
-            <Select
-              value={statusFilter}
-              onChange={handleStatusChange}
-              options={statusOptions}
-              className="w-[200px]"
-              placeholder="Durum Filtresi"
-            />
-            <Select
-              value={sort}
-              onChange={handleSortChange}
-              options={sortOptions}
-              className="w-[200px]"
-              prefix={<SortAscendingOutlined />}
-            />
-            <Button
-              icon={<ReloadOutlined />}
-              onClick={handleRefresh}
-              loading={loading}
-            >
-              Yenile
-            </Button>
-          </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
-            Toplam <strong>{totalCount}</strong> sipariş
-            {statusFilter && (
-              <span> • {getStatusLabel(statusFilter)} filtrelendi</span>
-            )}
-          </div>
-        </div>
-      </Card>
+  const handleEmptyPrint = () => {
+    printEmptyOrder(emptyPageFormat);
+    setEmptyPrintOpen(false);
+  };
 
-      {/* Sipariş Kartları */}
-      <div className="space-y-3">
-        {initialData.map((order) => (
-          <OrderCard key={order.id} order={order} />
-        ))}
+  // "Diğer sayfalar" dropdown menüsü
+  const otherPagesMenu: MenuProps = {
+    items: [
+      {
+        key: 'musteriler',
+        label: 'Müşteriler',
+        onClick: () => router.push('/musteriler'),
+      },
+      {
+        key: 'urunler',
+        label: 'Ürünler',
+        onClick: () => router.push('/urunler'),
+      },
+      {
+        key: 'sepet-ara',
+        label: 'Sepet Ara',
+        onClick: () => router.push('/sepet-ara'),
+      },
+    ],
+  };
+
+  // Sayfa numaralarını oluştur
+  const getPageNumbers = () => {
+    const pages: (number | '...')[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (currentPage > 3) pages.push('...');
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+      for (let i = start; i <= end; i++) pages.push(i);
+      if (currentPage < totalPages - 2) pages.push('...');
+      pages.push(totalPages);
+    }
+    return pages;
+  };
+
+  // Müşteri arama filtresi (client-side)
+  const filteredOrders = searchText.trim()
+    ? initialData.filter((o) => {
+        const fullName = `${o.customerFirstname} ${o.customerSurname}`.toLowerCase();
+        const email = (o.customerEmail || '').toLowerCase();
+        const phone = (o.customerPhone || '').toLowerCase();
+        const q = searchText.toLowerCase();
+        return fullName.includes(q) || email.includes(q) || phone.includes(q);
+      })
+    : initialData;
+
+  // Mevcut page size
+  const currentLimit = searchParams.get('limit') || '50';
+
+  return (
+    <div>
+      {/* Üst Toolbar */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '12px',
+          marginBottom: '16px',
+        }}
+      >
+        {/* Sol: Arama */}
+        <Input
+          prefix={<SearchOutlined style={{ color: '#9ca3af' }} />}
+          placeholder="Müşteri Ara"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          style={{ width: '240px' }}
+          allowClear
+        />
+
+        {/* Sağ: Durum filtresi + Diğer sayfalar + Boş Şablon + Yenile */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <Select
+            value={statusFilter}
+            onChange={handleStatusChange}
+            options={statusOptions}
+            style={{ width: '180px' }}
+            placeholder="Durum Filtresi"
+          />
+
+          <Dropdown menu={otherPagesMenu} trigger={['click']}>
+            <Button>
+              Diğer sayfalar <DownOutlined />
+            </Button>
+          </Dropdown>
+
+          <Button
+            icon={<FileAddOutlined />}
+            onClick={() => setEmptyPrintOpen(true)}
+          >
+            Boş Şablon
+          </Button>
+
+          <Button
+            icon={<ReloadOutlined />}
+            onClick={handleRefresh}
+            loading={loading}
+          >
+            Yenile
+          </Button>
+        </div>
       </div>
 
-      {/* Sayfalama */}
+      {/* Sayfalama + Sıralama + Gösterim Satırı */}
       {totalPages > 1 && (
-        <div className="flex justify-center py-6">
-          <Pagination
-            current={currentPage}
-            total={totalCount}
-            pageSize={50}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-            showTotal={(total) => `Toplam ${total} sipariş`}
-          />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '12px',
+            marginBottom: '16px',
+          }}
+        >
+          {/* Sayfa Numaraları */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              style={paginationBtnStyle(false, currentPage === 1, isDark)}
+            >
+              <DoubleLeftOutlined />
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              style={paginationBtnStyle(false, currentPage === 1, isDark)}
+            >
+              <LeftOutlined />
+            </button>
+
+            {getPageNumbers().map((p, idx) =>
+              p === '...' ? (
+                <span key={`ellipsis-${idx}`} style={{ padding: '0 4px', color: c.mutedText }}>
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={p}
+                  onClick={() => handlePageChange(p as number)}
+                  style={paginationBtnStyle(p === currentPage, false, isDark)}
+                >
+                  {p}
+                </button>
+              )
+            )}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              style={paginationBtnStyle(false, currentPage === totalPages, isDark)}
+            >
+              <RightOutlined />
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              style={paginationBtnStyle(false, currentPage === totalPages, isDark)}
+            >
+              <DoubleRightOutlined />
+            </button>
+          </div>
+
+          {/* Sıralama + Gösterim */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '12px', color: c.mutedText, whiteSpace: 'nowrap' }}>
+                Sıralama
+              </span>
+              <Select
+                value={sort}
+                onChange={handleSortChange}
+                options={sortOptions}
+                style={{ width: '160px' }}
+                size="small"
+              />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '12px', color: c.mutedText, whiteSpace: 'nowrap' }}>
+                Gösterim
+              </span>
+              <Select
+                value={currentLimit}
+                onChange={handlePageSizeChange}
+                options={pageSizeOptions}
+                style={{ width: '120px' }}
+                size="small"
+              />
+            </div>
+          </div>
         </div>
       )}
+
+      {/* Toplam Bilgisi */}
+      <div style={{ marginBottom: '12px', fontSize: '13px', color: c.mutedText }}>
+        Toplam <strong style={{ color: c.strongText }}>{totalCount}</strong> sipariş
+        {statusFilter && (
+          <span> • <strong>{getStatusLabel(statusFilter)}</strong> filtrelendi</span>
+        )}
+        {searchText && (
+          <span> • "<strong>{searchText}</strong>" araması: {filteredOrders.length} sonuç</span>
+        )}
+      </div>
+
+      {/* Sipariş Kartları */}
+      <div>
+        {filteredOrders.length === 0 ? (
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '48px',
+              color: c.mutedText,
+              background: c.emptyBg,
+              border: `1px solid ${c.emptyBorder}`,
+              borderRadius: '8px',
+            }}
+          >
+            Sipariş bulunamadı.
+          </div>
+        ) : (
+          filteredOrders.map((order) => (
+            <OrderCard key={order.id} order={order} />
+          ))
+        )}
+      </div>
+
+      {/* Alt Sayfalama */}
+      {totalPages > 1 && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '4px',
+            paddingTop: '24px',
+            paddingBottom: '8px',
+          }}
+        >
+          <button
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+            style={paginationBtnStyle(false, currentPage === 1, isDark)}
+          >
+            <DoubleLeftOutlined />
+          </button>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            style={paginationBtnStyle(false, currentPage === 1, isDark)}
+          >
+            <LeftOutlined />
+          </button>
+
+          {getPageNumbers().map((p, idx) =>
+            p === '...' ? (
+              <span key={`ellipsis2-${idx}`} style={{ padding: '0 4px', color: c.mutedText }}>
+                ...
+              </span>
+            ) : (
+              <button
+                key={p}
+                onClick={() => handlePageChange(p as number)}
+                style={paginationBtnStyle(p === currentPage, false, isDark)}
+              >
+                {p}
+              </button>
+            )
+          )}
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            style={paginationBtnStyle(false, currentPage === totalPages, isDark)}
+          >
+            <RightOutlined />
+          </button>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+            style={paginationBtnStyle(false, currentPage === totalPages, isDark)}
+          >
+            <DoubleRightOutlined />
+          </button>
+        </div>
+      )}
+
+      {/* Boş Şablon Yazdırma Modal */}
+      <Modal
+        title="Boş Şablon Yazdır"
+        open={emptyPrintOpen}
+        onCancel={() => setEmptyPrintOpen(false)}
+        okText="Yazdır"
+        cancelText="İptal"
+        onOk={handleEmptyPrint}
+        okButtonProps={{ icon: <PrinterOutlined /> }}
+      >
+        <div style={{ padding: '16px 0' }}>
+          <p>Boş şablonu hangi kağıt boyutunda yazdırmak istiyorsunuz?</p>
+          <Radio.Group
+            value={emptyPageFormat}
+            onChange={(e) => setEmptyPageFormat(e.target.value as 'A4' | 'A5')}
+            style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+          >
+            <Radio value="A4">
+              <span style={{ marginLeft: '8px' }}>
+                A4 (210 × 297 mm) - Standart kağıt boyutu
+              </span>
+            </Radio>
+            <Radio value="A5">
+              <span style={{ marginLeft: '8px' }}>
+                A5 (148 × 210 mm) - Kompakt boyut
+              </span>
+            </Radio>
+          </Radio.Group>
+        </div>
+      </Modal>
     </div>
   );
+}
+
+function paginationBtnStyle(
+  active: boolean,
+  disabled: boolean,
+  isDark?: boolean
+): React.CSSProperties {
+  return {
+    minWidth: '32px',
+    height: '32px',
+    padding: '0 8px',
+    border: active ? 'none' : `1px solid ${isDark ? '#334155' : '#d1d5db'}`,
+    borderRadius: '6px',
+    background: active ? '#dc2626' : disabled ? (isDark ? '#0f172a' : '#f9fafb') : (isDark ? '#1e293b' : '#fff'),
+    color: active ? '#fff' : disabled ? (isDark ? '#475569' : '#d1d5db') : (isDark ? '#e2e8f0' : '#374151'),
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    fontSize: '13px',
+    fontWeight: active ? 700 : 400,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.15s',
+  };
 }
