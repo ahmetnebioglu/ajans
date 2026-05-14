@@ -79,5 +79,7 @@ scratch/
 
 google-credentials.json
 ideasoft-tokens.json
-**/ideasoft-tokens.json
+**/ideasoft-tokens.json
+
 .vercel
+.test-123
