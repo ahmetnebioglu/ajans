@@ -1,0 +1,14 @@
+node_modules
+.next
+.turbo
+apps/e2e-tests
+apps/ecommerce-hub
+apps/mercan-erp
+apps/mercan-website
+apps/okul-erp
+apps/teknikel/.next
+apps/teknikel/node_modules
+packages/*/node_modules
+packages/*/.turbo
+*.log
+.env*.local
