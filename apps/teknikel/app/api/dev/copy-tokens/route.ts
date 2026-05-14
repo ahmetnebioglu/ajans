@@ -17,15 +17,7 @@ import { MongoClient } from 'mongodb';
  * NOT: İleride proje PostgreSQL'e taşındığında bu endpoint güncellenmeli.
  */
 export async function POST() {
-  // 1. Sadece development ortamında veya ENABLE_TOKEN_COPY=true ise çalışır
-  if (process.env.NODE_ENV !== 'development' && process.env.ENABLE_TOKEN_COPY !== 'true') {
-    return NextResponse.json(
-      { error: 'Bu endpoint sadece geliştirme ortamında kullanılabilir.' },
-      { status: 403 }
-    );
-  }
-
-  // 2. Oturum kontrolü
+  // 1. Oturum kontrolü
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

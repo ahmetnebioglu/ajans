@@ -794,9 +794,8 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ═══ Token Kopyalama (Dev veya ENABLE_TOKEN_COPY=true) ═══ */}
-        {(process.env.NODE_ENV === "development" ||
-          process.env.NEXT_PUBLIC_ENABLE_TOKEN_COPY === "true") && (
+        {/* ═══ Token Kopyalama ═══ */}
+        {true && (
           <>
             <Divider className="dark:border-slate-800/50" />
             <div className="flex items-center justify-between my-4">
