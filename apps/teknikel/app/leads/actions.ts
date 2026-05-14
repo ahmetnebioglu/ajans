@@ -2,7 +2,7 @@
 'use server';
 
 import { getSecuredPrisma } from '@ajans/db';
-import { sendSms } from '@ajans/core';
+import { sendSms } from '@ajans/core/server';
 import { sendOutreachEmail } from '@/lib/email';
 import { revalidatePath } from 'next/cache';
 

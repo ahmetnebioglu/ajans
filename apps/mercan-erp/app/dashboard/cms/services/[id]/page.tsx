@@ -35,29 +35,30 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
     }
   }, [params.id]);
 
-  const fetchService = async () => {
-    try {
-      const data = await getService(params.id);
-      if (data) {
-        setFormData({
-          title: data.title || "",
-          slug: data.slug || "",
-          featuredImage: data.featuredImage || "",
-          summary: data.summary || "",
-          content: data.content || "",
-          order: data.order || 0,
-          isPublished: data.isPublished,
-          seoTitle: data.seoTitle || "",
-          seoDescription: data.seoDescription || "",
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Hizmet bilgileri alınamadı.");
-    } finally {
-      setLoading(false);
-    }
-  };
+   const fetchService = async () => {
+     try {
+       const response = await getService(params.id);
+       if (response.success && response.data) {
+         const data = response.data;
+         setFormData({
+           title: data.title || "",
+           slug: data.slug || "",
+           featuredImage: data.featuredImage || "",
+           summary: data.summary || "",
+           content: data.content || "",
+           order: data.order || 0,
+           isPublished: data.isPublished,
+           seoTitle: data.seoTitle || "",
+           seoDescription: data.seoDescription || "",
+         });
+       }
+     } catch (error) {
+       console.error(error);
+       alert("Hizmet bilgileri alınamadı.");
+     } finally {
+       setLoading(false);
+     }
+   };
 
   const handleSave = async () => {
     if (!formData.title || !formData.slug) {

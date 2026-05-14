@@ -12,7 +12,7 @@ export async function GET() {
   }
 
   try {
-    const auth = getGoogleAuth();
+    const auth = await getGoogleAuth();
     const drive = google.drive({ version: "v3", auth });
     const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 

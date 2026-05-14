@@ -14,16 +14,16 @@ export default function ServicesPage() {
     fetchServices();
   }, []);
 
-  const fetchServices = async () => {
-    try {
-      const data = await getServices();
-      setServices(data || []);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+   const fetchServices = async () => {
+     try {
+       const response = await getServices();
+       setServices(response.success ? response.data : []);
+     } catch (error) {
+       console.error(error);
+     } finally {
+       setLoading(false);
+     }
+   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Bu hizmeti silmek istediğinize emin misiniz?")) return;

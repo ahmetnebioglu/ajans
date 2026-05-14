@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import { logApiUsage } from '@ajans/db';
-import { getCachedSettings } from '@ajans/core';
+import { getCachedSettings } from '@ajans/core/server';
 import { render } from '@react-email/render';
 import { ServiceNotificationEmail } from '../emails/ServiceNotificationEmail';
 import React from 'react';

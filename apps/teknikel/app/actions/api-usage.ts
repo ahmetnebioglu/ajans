@@ -1,7 +1,7 @@
 'use server'
 
 import { unsecured_prisma as prisma } from "@ajans/db";
-import { getBalance, getSenders } from "@ajans/core";
+import { getBalance, getSenders } from "@ajans/core/server";
 
 export async function getApiUsageStats() {
   try {

@@ -2,7 +2,7 @@
 
 import { getSecuredPrisma } from '@ajans/db';
 import { revalidatePath } from 'next/cache';
-import { clearSettingsCache } from '@ajans/core';
+import { clearSettingsCache } from '@ajans/core/server';
 
 /**
  * Entegrasyonların (Resend, Google vb.) durumlarını kontrol eder.

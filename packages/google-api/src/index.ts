@@ -25,8 +25,8 @@ export const getGoogleAuth = async () => {
     return oauth2Client;
   }
 
-  // 2. Yol: Service Account (google-credentials.json dosyası varsa)
-  const keyPath = path.join(process.cwd(), "google-credentials.json");
+   // 2. Yol: Service Account (google-credentials.json dosyası varsa)
+   const keyPath = path.join(/*turbopackIgnore: true*/ process.cwd(), "google-credentials.json");
   if (fs.existsSync(keyPath)) {
     console.log(`[Google Auth] Using Service Account from: ${keyPath}`);
     return new google.auth.GoogleAuth({
@@ -39,7 +39,7 @@ export const getGoogleAuth = async () => {
   if (process.env.GOOGLE_SERVICE_ACCOUNT_PATH) {
     const envPath = path.isAbsolute(process.env.GOOGLE_SERVICE_ACCOUNT_PATH) 
       ? process.env.GOOGLE_SERVICE_ACCOUNT_PATH 
-      : path.join(process.cwd(), process.env.GOOGLE_SERVICE_ACCOUNT_PATH);
+      : path.join(/*turbopackIgnore: true*/ process.cwd(), process.env.GOOGLE_SERVICE_ACCOUNT_PATH);
     
     if (fs.existsSync(envPath)) {
       console.log(`[Google Auth] Using Service Account from ENV path: ${envPath}`);

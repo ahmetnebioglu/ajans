@@ -5,7 +5,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./server": "./src/actions/protected-action.ts"
+    "./server": "./src/server.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.64",

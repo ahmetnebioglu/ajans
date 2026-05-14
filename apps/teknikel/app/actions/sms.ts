@@ -1,6 +1,6 @@
 'use server';
 
-import { sendSms } from '@ajans/core';
+import { sendSms } from '@ajans/core/server';
 
 export async function sendTestSms(phone: string, message: string) {
   try {
