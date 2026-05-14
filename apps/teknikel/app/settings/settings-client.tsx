@@ -794,8 +794,9 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ═══ Dev Ortamı: Canlıdan Token Kopyalama ═══ */}
-        {process.env.NODE_ENV === "development" && (
+        {/* ═══ Token Kopyalama (Dev veya ENABLE_TOKEN_COPY=true) ═══ */}
+        {(process.env.NODE_ENV === "development" ||
+          process.env.NEXT_PUBLIC_ENABLE_TOKEN_COPY === "true") && (
           <>
             <Divider className="dark:border-slate-800/50" />
             <div className="flex items-center justify-between my-4">
@@ -809,18 +810,18 @@ export default function SettingsPage() {
                     color="warning"
                     className="text-[9px] border-none font-bold"
                   >
-                    SADECE DEV
+                    ADMIN
                   </Tag>
                 </div>
                 <p className="text-[10px] text-amber-600 dark:text-amber-500 m-0">
-                  Canlı veritabanındaki IdeaSoft ve Bilsoft tokenlarını local
-                  DB&apos;ye kopyalar.
+                  Canlı veritabanındaki IdeaSoft ve Bilsoft tokenlarını
+                  PostgreSQL DB&apos;ye kopyalar.
                   <br />
                   Gerekli:{" "}
                   <code className="bg-amber-100 dark:bg-amber-900/30 px-1 rounded text-[9px]">
                     PRODUCTION_DATABASE_URL
                   </code>{" "}
-                  .env.local&apos;da tanımlı olmalı.
+                  ortam değişkeni tanımlı olmalı.
                 </p>
               </div>
               <Button
