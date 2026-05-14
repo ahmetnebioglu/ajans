@@ -173,51 +173,60 @@ export default function InvoiceCreatorButton({
     }
   };
 
-  const openHandler = async () => {
-    setInvoiceError(null);
+   const openHandler = async () => {
+     setInvoiceError(null);
 
-    const normalizedGroupName =
-      order.memberGroupName?.toLocaleLowerCase('tr-TR').trim() || '';
-    if (normalizedGroupName === 'servis') {
-      setSearchingCari(true);
-      try {
-        const customerName =
-          `${order.customerFirstname || ''} ${order.customerSurname || ''}`.trim();
-        const resp = await fetch('/api/bilsoft/cari-search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ customerName }),
-        });
+     // Önce mevcut faturayı kontrol et
+     await checkExistingInvoice();
 
-        const data = await resp.json();
-        if (data.success && data.caris) {
-          setFoundCaris(data.caris);
-          if (data.caris.length === 1) {
-            setSelectedCari(data.caris[0]);
-            setInvoiceModalOpen(true);
-            await Promise.all([checkExistingInvoice(), checkMissingStocks()]);
-          } else if (data.caris.length > 1) {
-            setCariSelectionOpen(true);
-          } else {
-            setInvoiceModalOpen(true);
-            await Promise.all([checkExistingInvoice(), checkMissingStocks()]);
-          }
-        } else {
-          setInvoiceModalOpen(true);
-          await Promise.all([checkExistingInvoice(), checkMissingStocks()]);
-        }
-      } catch (err: any) {
-        setInvoiceError('Cari araması sırasında hata oluştu: ' + err.message);
-        setInvoiceModalOpen(true);
-        await checkMissingStocks();
-      } finally {
-        setSearchingCari(false);
-      }
-    } else {
-      setInvoiceModalOpen(true);
-      await Promise.all([checkExistingInvoice(), checkMissingStocks()]);
-    }
-  };
+     // Eğer fatura zaten kesilmişse, stok kontrolü yapma
+     if (existingInvoice) {
+       setInvoiceModalOpen(true);
+       return;
+     }
+
+     const normalizedGroupName =
+       order.memberGroupName?.toLocaleLowerCase('tr-TR').trim() || '';
+     if (normalizedGroupName === 'servis') {
+       setSearchingCari(true);
+       try {
+         const customerName =
+           `${order.customerFirstname || ''} ${order.customerSurname || ''}`.trim();
+         const resp = await fetch('/api/bilsoft/cari-search', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ customerName }),
+         });
+
+         const data = await resp.json();
+         if (data.success && data.caris) {
+           setFoundCaris(data.caris);
+           if (data.caris.length === 1) {
+             setSelectedCari(data.caris[0]);
+             setInvoiceModalOpen(true);
+             await checkMissingStocks();
+           } else if (data.caris.length > 1) {
+             setCariSelectionOpen(true);
+           } else {
+             setInvoiceModalOpen(true);
+             await checkMissingStocks();
+           }
+         } else {
+           setInvoiceModalOpen(true);
+           await checkMissingStocks();
+         }
+       } catch (err: any) {
+         setInvoiceError('Cari araması sırasında hata oluştu: ' + err.message);
+         setInvoiceModalOpen(true);
+         await checkMissingStocks();
+       } finally {
+         setSearchingCari(false);
+       }
+     } else {
+       setInvoiceModalOpen(true);
+       await checkMissingStocks();
+     }
+   };
 
   const handleCariSelect = async (cari: Cari) => {
     setSelectedCari(cari);

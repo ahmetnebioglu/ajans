@@ -1,5 +1,5 @@
 import React from 'react';
-import { getShowcaseProducts } from '@/src/services/ideasoft';
+import { getIdeasoftProducts } from '@/src/services/ideasoft';
 import { Card, Button, Typography, Tag, Divider, Empty } from 'antd';
 import { InfoCircleOutlined, StarFilled, ArrowRightOutlined } from '@ant-design/icons';
 
@@ -12,7 +12,8 @@ const { Title, Text, Paragraph } = Typography;
 export default async function ShowcasePage({ params }: { params: Promise<{ leadId: string }> }) {
   // Next.js 15+ ve 16'da params asenkron olarak bekletilmelidir
   const { leadId } = await params;
-  const products = await getShowcaseProducts();
+  const response = await getIdeasoftProducts();
+  const products = response.data || [];
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pb-20">
@@ -74,12 +75,12 @@ export default async function ShowcasePage({ params }: { params: Promise<{ leadI
                   <div className="relative overflow-hidden aspect-[4/3]">
                     <img
                       alt={product.name}
-                      src={product.image}
+                      src={product.images?.[0]?.thumbUrl || '/default.webp'}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     <div className="absolute top-4 left-4">
                       <Tag color="rgba(255,255,255,0.9)" className="backdrop-blur-md border-0 text-slate-900 font-black px-4 py-1 rounded-lg text-[10px] uppercase shadow-sm">
-                        {product.category}
+                        {product.categories?.[0]?.name || 'Ürün'}
                       </Tag>
                     </div>
                   </div>
@@ -91,14 +92,16 @@ export default async function ShowcasePage({ params }: { params: Promise<{ leadI
                       {product.name}
                     </h3>
                     <Paragraph className="text-slate-500 dark:text-zinc-400 text-sm line-clamp-2 min-h-[40px] leading-relaxed">
-                      {product.description}
+                      {product.detail?.details || 'Yüksek kaliteli ürün'}
                     </Paragraph>
                   </div>
 
                   <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-50 dark:border-zinc-800">
                     <div className="flex flex-col">
                       <Text className="text-[10px] text-slate-400 uppercase font-black tracking-tighter">Peşin Fiyat</Text>
-                      <Text className="text-2xl font-black text-slate-900 dark:text-white">{product.price}</Text>
+                      <Text className="text-2xl font-black text-slate-900 dark:text-white">
+                        {new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(product.price1 || 0)}
+                      </Text>
                     </div>
                     
                     {/* Takip API Yönlendirmesi */}
@@ -107,7 +110,7 @@ export default async function ShowcasePage({ params }: { params: Promise<{ leadI
                       size="large"
                       icon={<ArrowRightOutlined />}
                       className="bg-blue-600 hover:bg-blue-700 border-0 h-14 px-8 rounded-2xl font-black shadow-xl shadow-blue-500/20 flex items-center gap-2 group-hover:gap-4 transition-all"
-                      href={`/api/track?leadId=${leadId}&targetUrl=${encodeURIComponent(product.targetUrl)}&type=CLICK`}
+                      href={`/api/track?leadId=${leadId}&targetUrl=${encodeURIComponent(`/urunler/${product.id}`)}&type=CLICK`}
                     >
                       Hemen Al
                     </Button>

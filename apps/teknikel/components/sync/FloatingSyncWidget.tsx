@@ -103,7 +103,7 @@ export default function FloatingSyncWidget() {
           return {
             title: '🔄 Senkronizasyon Devam Ediyor',
             subtitle: 'Sayfalar arası gezinebilirsiniz',
-            bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+            bgColor: 'bg-blue-50 dark:bg-blue-900',
             borderColor: 'border-blue-300 dark:border-blue-700',
             showProgress: true,
           };
@@ -111,7 +111,7 @@ export default function FloatingSyncWidget() {
           return {
             title: 'Bilgi Girişi Gerekiyor',
             subtitle: 'Havale indirimi giriniz',
-            bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
+            bgColor: 'bg-yellow-50 dark:bg-yellow-900',
             borderColor: 'border-yellow-300 dark:border-yellow-700',
             showProgress: false,
           };
@@ -119,7 +119,7 @@ export default function FloatingSyncWidget() {
           return {
             title: 'Onay Gerekiyor',
             subtitle: 'Ön kontrol sonuçlarını inceleyiniz',
-            bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
+            bgColor: 'bg-yellow-50 dark:bg-yellow-900',
             borderColor: 'border-yellow-300 dark:border-yellow-700',
             showProgress: false,
           };
@@ -127,7 +127,7 @@ export default function FloatingSyncWidget() {
           return {
             title: syncResult?.success ? '✅ İşlem Tamamlandı' : '❌ İşlem Başarısız',
             subtitle: 'Sonuçları görüntüleyiniz',
-            bgColor: syncResult?.success ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20',
+            bgColor: syncResult?.success ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900',
             borderColor: syncResult?.success ? 'border-green-300 dark:border-green-700' : 'border-red-300 dark:border-red-700',
             showProgress: false,
           };
@@ -135,7 +135,7 @@ export default function FloatingSyncWidget() {
           return {
             title: '🔄 Senkronizasyon',
             subtitle: 'Devam etmek için genişletiniz',
-            bgColor: 'bg-slate-50 dark:bg-slate-900/20',
+            bgColor: 'bg-slate-50 dark:bg-slate-900',
             borderColor: 'border-slate-300 dark:border-slate-700',
             showProgress: false,
           };

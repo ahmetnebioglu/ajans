@@ -22,10 +22,87 @@ Bu dosya, projenin teknik standartlarını, güvenlik protokollerini ve AI Agent
 
 ## 3. Veritabanı ve RLS (Dokunulmazlık Maddeleri)
 
+### 3.1 Güvenli Erişim Kuralları
+
 - **Güvenli Erişim:** Veritabanına ASLA doğrudan `prisma` objesiyle erişme. Daima `getSecuredPrisma()` fonksiyonunu kullan.
 - **İzolasyon:** `getSecuredPrisma()`, session üzerinden `tenantId` süzgecini otomatik uygular. Sorgularda manuel `tenantId` filtresine gerek yoktur.
 - **Yazma İşlemleri:** Yeni kayıt oluştururken (`create`), `tenantId` alanını session'dan gelen veriyle zorunlu olarak doldur.
 - **Soft Delete:** Fiziksel silme (`delete()`) KESİNLİKLE yasaktır. Daima `deletedAt: new Date()` ile güncelleme yap.
+
+### 3.2 RLS (Row Level Security) Kullanım Kılavuzu
+
+**Ne zaman hangi fonksiyonu kullanmalı?**
+
+| Senaryo | Fonksiyon | Açıklama |
+|---------|-----------|----------|
+| **Tenant verisi oku/yaz** (Lead, Company, vb.) | `getSecuredPrisma(tenantId)` | RLS policy'leri otomatik devreye girer. Tenant izolasyonu garantili. |
+| **Sistem servisleri** (Cron, Webhook, Background Job) | `getServicePrisma()` | Belirli bir tenant'a kilitli işlemler için. RLS policy'leri uygulanır. |
+| **Auth ve Dev araçları** (NextAuth callback, seed script) | `unsecured_prisma` | User tablosu (cross-tenant) ve dev amaçlı işlemler için. RLS bypass edilir. |
+
+**Örnek Kullanımlar:**
+
+```typescript
+// ✅ DOĞRU: Server Action'da tenant verisi işleme
+import { getSecuredPrisma } from '@ajans/db';
+
+export async function createLead(data: LeadInput) {
+  const db = getSecuredPrisma("teknikel");
+  return db.lead.create({
+    data: {
+      ...data,
+      tenantId: "teknikel", // RLS policy'si bunu kontrol eder
+    },
+  });
+}
+
+// ✅ DOĞRU: API route'da tenant verisi sorgulama
+export async function GET(req: Request) {
+  const db = getSecuredPrisma("teknikel");
+  const leads = await db.lead.findMany(); // RLS otomatik filtreler
+  return NextResponse.json(leads);
+}
+
+// ✅ DOĞRU: Cron job'da sistem servisi
+import { getServicePrisma } from '@ajans/db';
+
+export async function GET(request: Request) {
+  const db = getServicePrisma();
+  const tokens = await db.apiToken.findMany(); // Cross-tenant sistem verisi
+  return NextResponse.json({ status: 'ok' });
+}
+
+// ❌ YANLIŞ: Doğrudan unsecured_prisma kullanımı (tenant verisi için)
+import { unsecured_prisma } from '@ajans/db';
+
+export async function GET() {
+  const leads = await unsecured_prisma.lead.findMany(); // RLS bypass! Tüm tenant'lar görünür
+  return NextResponse.json(leads);
+}
+```
+
+**RLS Güvenlik Garantileri:**
+
+- ✅ `getSecuredPrisma()` ile yapılan sorgular **otomatik olarak** `tenantId` filtresi alır
+- ✅ Kod hatası (WHERE clause unutma) halinde bile RLS policy'leri devreye girer
+- ✅ 15 tablo RLS ile korunuyor: Lead, LeadActivity, Company, Folder, Report, AuditLog, Classroom, Student, ParentStudent, PermissionRequest, JobPosting, Candidate, LeaveRequest, ServiceAccount, NewsletterSubscriber
+- ✅ Production'da `app_user` (BYPASSRLS yok) ile bağlantı yapılır → RLS her zaman aktif
+
+**RLS Test Etme:**
+
+```bash
+# RLS durumunu kontrol et
+node scripts/check-rls.js
+
+# Tenant izolasyonunu test et (app_user ile)
+node scripts/test-rls-isolation-real.js
+```
+
+**Dikkat Edilecekler:**
+
+1. **Tenant Context Zorunlu:** `getSecuredPrisma()` çağrısında `tenantId` parametresi zorunludur. Dinamik tenant'lar için session'dan alın.
+2. **User Tablosu:** NextAuth uyumluluğu için User tablosu RLS'siz bırakılmıştır (cross-tenant).
+3. **Performance:** RLS her sorguya WHERE eklediği için index'lerin `(tenantId, ...)` şeklinde olması kritiktir.
+4. **Rollback:** Migration geri alınması gerekirse: `DROP POLICY tenant_isolation ON "TableName"; ALTER TABLE "TableName" DISABLE ROW LEVEL SECURITY;`
 
 ## 4. Next.js 16 ve Geliştirme Standartları
 

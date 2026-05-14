@@ -53,6 +53,7 @@ import { useRouter } from "next/navigation";
 import { scheduleCall, toggleVipStatus, toggleCommunication, calculateLeadScore, checkChurnStatus } from "./actions";
 import { syncAndScoreLeads } from "../actions/bilsoft-actions";
 import { revalidateLeads } from "../actions/revalidate";
+import { scrapeLeads } from "../actions/scrape-leads";
 
 const { Text } = Typography;
 
@@ -230,21 +231,16 @@ export default function LeadsPage() {
   const handleStartScrape = async (values: any) => {
     setIsScraping(true);
     try {
-      const response = await fetch("/api/leads/scrape", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      // Server Action kullanarak tarama yap (X-Service-Token gerektirmez, session ile korunur)
+      const result = await scrapeLeads({ query: values.query, location: values.location });
 
-      const result = await response.json();
-
-      if (response.ok) {
+      if (result.success) {
         await revalidateLeads();
         await loadLeads();
         api.success({
           // @ts-ignore
           title: "Tarama Başarılı",
-          description: `${result.count || 0} yeni lead bulundu ve sisteme eklendi.`,
+          description: result.message || `${result.count || 0} yeni lead bulundu ve sisteme eklendi.`,
           placement: "topRight",
           icon: <CheckCircle2 className="text-emerald-500" />,
         } as any);
@@ -255,17 +251,15 @@ export default function LeadsPage() {
         api.error({
           // @ts-ignore
           title: "Tarama Hatası",
-          description:
-            result.error ||
-            "Google Places verileri çekilirken bir sorun oluştu.",
+          description: result.error || "Google Places verileri çekilirken bir sorun oluştu.",
           icon: <AlertCircle className="text-rose-500" />,
         } as any);
       }
     } catch (error) {
       api.error({
         // @ts-ignore
-        title: "Bağlantı Hatası",
-        description: "Sunucuya ulaşılamadı, lütfen internetinizi kontrol edin.",
+        title: "Beklenmeyen Hata",
+        description: "Tarama sırasında beklenmeyen bir hata oluştu.",
       } as any);
     } finally {
       setIsScraping(false);
