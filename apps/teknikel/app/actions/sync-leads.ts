@@ -1,10 +1,12 @@
 "use server";
 
-import { unsecured_prisma as db } from "@ajans/db";
+import { getSecuredPrisma } from "@ajans/db";
 import { revalidatePath } from "next/cache";
 
 export async function syncAllLeads() {
   try {
+    const db = getSecuredPrisma("teknikel");
+    
     const leads = await db.lead.findMany({
       include: {
         interactions: true

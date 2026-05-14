@@ -1,11 +1,12 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/auth';
-import { getBilsoftStokById } from '@/src/services/bilsoft';
+import { getBilsoftStockCardDetail } from '@/src/services/bilsoft';
 import { NextResponse } from 'next/server';
 
 /**
  * Bilsoft'ta SKU ile stok kartı var mı kontrol eder.
  * Fatura oluşturma öncesi stok kontrol için kullanılır.
+ * Cache'den hızlıca normalize edilmiş arama yapar.
  */
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -27,12 +28,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const stok = await getBilsoftStokById(sku);
+    const result = await getBilsoftStockCardDetail({
+      stokKodu: sku,
+      forceRefresh: false,
+    });
 
-    if (!stok) {
+    if (!result.success) {
       return NextResponse.json({
         success: false,
-        message: `Stok kartı bulunamadı: ${sku}`,
+        message: result.message || `Stok kartı bulunamadı: ${sku}`,
         data: null,
       });
     }
@@ -40,7 +44,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: 'Stok kartı bulundu',
-      data: stok,
+      data: result.data,
     });
   } catch (error) {
     console.error('[InvoiceCheckItem] Error:', error);

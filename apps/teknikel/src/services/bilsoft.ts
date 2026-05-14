@@ -1,10 +1,168 @@
 import { unsecured_prisma as db } from '@ajans/db';
 import { getValidToken as getCentralValidToken } from './tokenManager';
 
+// ============================================================
+// SKU NORMALIZATION & CACHING
+// ============================================================
+
+/**
+ * Normalizes SKU values for consistent comparison
+ * Handles spaces, dashes, underscores, dots, and Turkish characters
+ */
+const normalizationCache = new Map<string, string>();
+
+export function normalizeSkuForComparison(value: string | null | undefined): string {
+  if (!value) return '';
+
+  const cacheKey = String(value);
+  if (normalizationCache.has(cacheKey)) {
+    return normalizationCache.get(cacheKey)!;
+  }
+
+  let normalized = typeof value === 'string' ? value.trim() : String(value).trim();
+  normalized = normalized
+    .toLowerCase()
+    .replace(/[\s\-_\.]+/g, '') // Remove spaces, dashes, underscores, dots
+    .replace(/[^\w\d]/g, ''); // Remove non-alphanumeric characters
+
+  if (normalizationCache.size < 10000) {
+    normalizationCache.set(cacheKey, normalized);
+  }
+
+  return normalized;
+}
+
+// Global stock cache
+let globalStockCache: any[] | null = null;
+let lastCacheTime = 0;
+const CACHE_TTL = 1000 * 60 * 60 * 24; // 24 hours
+
+/**
+ * Fetches and caches all Bilsoft stock cards
+ * Uses pagination to handle large datasets
+ */
+export async function fetchAndCacheBilsoftStocks(force: boolean = false): Promise<any[]> {
+  const now = Date.now();
+  
+  // Return cached data if still valid and not forced
+  if (!force && globalStockCache && (now - lastCacheTime < CACHE_TTL)) {
+    console.log('[bilsoft.ts] Returning cached stocks');
+    return globalStockCache;
+  }
+
+  try {
+    const token = await getValidToken();
+    console.log('[bilsoft.ts] Fetching all stock cards from Bilsoft...');
+
+    let allStocks: any[] = [];
+    let page = 1;
+    const pageSize = 500;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await fetch('https://apiv3.bilsoft.com/api/Stok/GetListWithBakiye', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          aranacakKelime: '',
+          searchType: ['Contains'],
+          subeAdi: 'Merkez',
+          pagingOptions: {
+            pageSize,
+            pageNumber: page - 1,
+          },
+          veri: { kod: '' },
+        }),
+        cache: 'no-store',
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        console.warn('[bilsoft.ts] Stock fetch failed:', result.message);
+        break;
+      }
+
+      const rawData = result.data?.data ?? result.data ?? [];
+      allStocks = allStocks.concat(rawData);
+
+      if (rawData.length < pageSize) {
+        hasMore = false;
+      } else {
+        page++;
+      }
+    }
+
+    globalStockCache = allStocks;
+    lastCacheTime = Date.now();
+    console.log(`[bilsoft.ts] Cached ${allStocks.length} stock cards`);
+    return allStocks;
+  } catch (error) {
+    console.error('[bilsoft.ts] Cache fetch error:', error);
+    if (globalStockCache) return globalStockCache;
+    throw error;
+  }
+}
+
+/**
+ * Gets stock card detail by SKU code
+ * Uses in-memory cache with normalized comparison
+ */
+export async function getBilsoftStockCardDetail(options: {
+  stokKodu: string;
+  forceRefresh?: boolean;
+}): Promise<{ success: boolean; data: any | null; message: string }> {
+  try {
+    const { stokKodu, forceRefresh = false } = options;
+    if (!stokKodu) {
+      return { success: false, data: null, message: 'Stock code is required' };
+    }
+
+    const normalizedStokKodu = normalizeSkuForComparison(stokKodu);
+    const allStocks = await fetchAndCacheBilsoftStocks(forceRefresh);
+
+    if (!allStocks || allStocks.length === 0) {
+      return { success: false, data: null, message: 'Stock list is empty' };
+    }
+
+    // Search in memory with normalized comparison
+    const matchingStock = allStocks.find((stock) => {
+      const stockKodNorm = normalizeSkuForComparison(stock.kod);
+      const stockBarkodNorm = normalizeSkuForComparison(stock.barkod);
+      return stockKodNorm === normalizedStokKodu || stockBarkodNorm === normalizedStokKodu;
+    });
+
+    if (matchingStock) {
+      console.log(`[bilsoft.ts] Found stock from cache: ${stokKodu} -> ${matchingStock.kod}`);
+      return {
+        success: true,
+        data: matchingStock,
+        message: 'Stock card found',
+      };
+    }
+
+    return {
+      success: false,
+      data: null,
+      message: `Stock code "${stokKodu}" not found in ${allStocks.length} records`,
+    };
+  } catch (error) {
+    console.error(`[bilsoft.ts] Stock search error (${options.stokKodu}):`, error);
+    return {
+      success: false,
+      data: null,
+      message: error instanceof Error ? error.message : 'Error occurred',
+    };
+  }
+}
+
 /**
  * Bilsoft API Servis Yapısı
  */
 export interface BilsoftCari {
+
   id: number;
   cariKod: string;
   faturaUnvan: string;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 import { InteractionType, LeadStatus } from '@prisma/client';
 
 /**
@@ -7,6 +7,7 @@ import { InteractionType, LeadStatus } from '@prisma/client';
  * Örn: /api/track?leadId=123&targetUrl=https://ideasoft.com.tr&type=CLICK
  */
 export async function GET(req: NextRequest) {
+  const db = getSecuredPrisma("teknikel");
   const { searchParams } = new URL(req.url);
   const leadId = searchParams.get('leadId');
   const targetUrl = searchParams.get('targetUrl');

@@ -1,6 +1,6 @@
 'use server';
 
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 import { revalidatePath } from 'next/cache';
 import { 
   getBilsoftCariler, 
@@ -40,6 +40,8 @@ export async function syncAndScoreLeads(): Promise<SyncResult> {
   try {
     console.log('[BilsoftActions] Senkronizasyon başlatıldı...');
 
+    const db = getSecuredPrisma("teknikel");
+
     // 1. Bilsoft'tan güncel carileri çek (Senkronizasyon için geniş kapsamlı çekiyoruz)
     const { data: bilsoftCaris } = await getBilsoftCariler("", 1, 5000);
     if (!bilsoftCaris || bilsoftCaris.length === 0) {
@@ -56,75 +58,94 @@ export async function syncAndScoreLeads(): Promise<SyncResult> {
       where: { deletedAt: null },
     });
 
-    let matchedCount = 0;
+     let matchedCount = 0;
+     const usedCariIds = new Set<string>(); // Aynı cari birden fazla lead'e atanmasını önle
+     const existingErpIds = new Set(
+       leads.filter(l => l.erpId).map(l => l.erpId!)
+     ); // Zaten atanmış erpId'leri takip et
 
-    // 3. Eşleştirme ve Güncelleme İşlemi (Transaction)
-    await db.$transaction(async (tx) => {
-      for (const lead of leads) {
-        let match: BilsoftCari | null = null;
-        let scoreBonus = 0;
+     // 3. Eşleştirme ve Güncelleme İşlemi (Transaction)
+     await db.$transaction(async (tx) => {
+       for (const lead of leads) {
+         let match: BilsoftCari | null = null;
+         let scoreBonus = 0;
 
-        // Normalizasyon
-        const leadPhoneNorm = normalizePhone(lead.phone);
-        const leadNameNorm = normalizeString(lead.name);
-        const leadCompanyNorm = normalizeString(lead.companyName);
+         // Normalizasyon
+         const leadPhoneNorm = normalizePhone(lead.phone);
+         const leadNameNorm = normalizeString(lead.name);
+         const leadCompanyNorm = normalizeString(lead.companyName);
 
-        // A. Telefon ile eşleştirme (En güvenilir)
-        if (leadPhoneNorm) {
-          match = bilsoftCaris.find(
-            (c) => normalizePhone(c.cep) === leadPhoneNorm || normalizePhone(c.tel) === leadPhoneNorm
-          ) || null;
-          
-          if (match) scoreBonus += 50;
-        }
+         // A. Telefon ile eşleştirme (En güvenilir)
+         if (leadPhoneNorm) {
+           match = bilsoftCaris.find(
+             (c) => normalizePhone(c.cep) === leadPhoneNorm || normalizePhone(c.tel) === leadPhoneNorm
+           ) || null;
+           
+           if (match) scoreBonus += 50;
+         }
 
-        // B. İsim/Unvan ile eşleştirme (Telefon tutmazsa)
-        if (!match && (leadNameNorm || leadCompanyNorm)) {
-          match = bilsoftCaris.find((c) => {
-            const cariUnvanNorm = normalizeString(c.faturaUnvan);
-            const cariYetkiliNorm = normalizeString(c.yetkili);
-            
-            return (
-              (leadCompanyNorm && cariUnvanNorm.includes(leadCompanyNorm)) ||
-              (leadNameNorm && cariYetkiliNorm.includes(leadNameNorm)) ||
-              (leadCompanyNorm && cariYetkiliNorm.includes(leadCompanyNorm))
-            );
-          }) || null;
+         // B. İsim/Unvan ile eşleştirme (Telefon tutmazsa)
+         if (!match && (leadNameNorm || leadCompanyNorm)) {
+           match = bilsoftCaris.find((c) => {
+             const cariUnvanNorm = normalizeString(c.faturaUnvan);
+             const cariYetkiliNorm = normalizeString(c.yetkili);
+             
+             return (
+               (leadCompanyNorm && cariUnvanNorm.includes(leadCompanyNorm)) ||
+               (leadNameNorm && cariYetkiliNorm.includes(leadNameNorm)) ||
+               (leadCompanyNorm && cariYetkiliNorm.includes(leadCompanyNorm))
+             );
+           }) || null;
 
-          if (match) scoreBonus += 30;
-        }
+           if (match) scoreBonus += 30;
+         }
 
-        // Eğer eşleşme bulunduysa güncelle
-        if (match) {
-          matchedCount++;
-          
-          // VIP Kontrolü
-          const isVip = match.grup === 'VIP' || (match.bakiye && match.bakiye > 100000);
-          const newStatus = isVip ? 'VIP' : 'ACTIVE';
+         // Eğer eşleşme bulunduysa güncelle
+         if (match) {
+           const cariIdStr = String(match.id);
+           
+           // Aynı cari zaten başka lead'e atanmış mı?
+           if (usedCariIds.has(cariIdStr)) {
+             console.log(`[BilsoftActions] Cari ${cariIdStr} (${match.faturaUnvan}) zaten başka lead'e atandı, atlanıyor.`);
+             continue;
+           }
+           
+           // Zaten bu lead'e erpId atanmış mı?
+           if (lead.erpId && existingErpIds.has(lead.erpId)) {
+             console.log(`[BilsoftActions] Lead ${lead.id} zaten erpId'ye sahip (${lead.erpId}), atlanıyor.`);
+             continue;
+           }
 
-          await tx.lead.update({
-            where: { id: lead.id },
-            data: {
-              erpId: String(match.id),
-              erpCode: match.cariKod,
-              status: lead.status === 'PROSPECT' ? newStatus : lead.status, // Sadece Prospect ise güncelle
-              score: { increment: scoreBonus },
-              updatedAt: new Date(),
-            },
-          });
+           usedCariIds.add(cariIdStr);
+           matchedCount++;
+           
+           // VIP Kontrolü
+           const isVip = match.grup === 'VIP' || (match.bakiye && match.bakiye > 100000);
+           const newStatus = isVip ? 'VIP' : 'ACTIVE';
 
-          // Etkileşim Logu Ekle
-          await tx.interaction.create({
-            data: {
-              leadId: lead.id,
-              type: 'ERP_SYNC',
-              scoreAdded: scoreBonus,
-              description: `Bilsoft ile eşleşti: ${match.faturaUnvan} (${match.cariKod})`,
-            },
-          });
-        }
-      }
-    });
+           await tx.lead.update({
+             where: { id: lead.id },
+             data: {
+               erpId: cariIdStr,
+               erpCode: match.cariKod,
+               status: lead.status === 'PROSPECT' ? newStatus : lead.status, // Sadece Prospect ise güncelle
+               score: { increment: scoreBonus },
+               updatedAt: new Date(),
+             },
+           });
+
+           // Etkileşim Logu Ekle
+           await tx.interaction.create({
+             data: {
+               leadId: lead.id,
+               type: 'ERP_SYNC',
+               scoreAdded: scoreBonus,
+               description: `Bilsoft ile eşleşti: ${match.faturaUnvan} (${match.cariKod})`,
+             },
+           });
+         }
+       }
+     });
 
     revalidatePath('/leads');
     
@@ -169,6 +190,7 @@ export async function getBilsoftStatus() {
  */
 export async function getBilsoftConfig() {
   try {
+    const db = getSecuredPrisma("teknikel");
     const config = await db.bilsoftConfig.findUnique({
       where: { tenantId: 'teknikel' }
     });
@@ -183,6 +205,7 @@ export async function getBilsoftConfig() {
  */
 export async function updateBilsoftConfig(data: any) {
   try {
+    const db = getSecuredPrisma("teknikel");
     const config = await db.bilsoftConfig.upsert({
       where: { tenantId: 'teknikel' },
       update: data,

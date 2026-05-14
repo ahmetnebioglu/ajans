@@ -1,13 +1,14 @@
 'use strict';
 'use server';
 
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 import { sendSms } from '@ajans/core';
 import { sendOutreachEmail } from '@/lib/email';
 import { revalidatePath } from 'next/cache';
 
 export async function scheduleCall(leadId: string) {
   try {
+    const db = getSecuredPrisma("teknikel");
     const lead = await db.lead.findUnique({ where: { id: leadId } });
 
     if (!lead) return { success: false, error: 'Lead bulunamadı.' };
@@ -43,7 +44,7 @@ export async function scheduleCall(leadId: string) {
       }
     });
 
-    // 4. Log Kaydı
+    // 4. Log Kaydı (createdById: 'system' yerine null kullanıyoruz çünkü bu sistem işlemi)
     await db.leadActivity.create({
       data: {
         leadId: leadId,
@@ -64,6 +65,7 @@ export async function scheduleCall(leadId: string) {
 
 export async function toggleCommunication(id: string) {
   try {
+    const db = getSecuredPrisma("teknikel");
     const lead = await db.lead.findUnique({ where: { id } });
     if (!lead) return { success: false };
 
@@ -81,6 +83,7 @@ export async function toggleCommunication(id: string) {
 
 export async function calculateLeadScore(id: string) {
   try {
+    const db = getSecuredPrisma("teknikel");
     const lead = await db.lead.findUnique({ 
       where: { id },
       include: { interactionSummaries: true }
@@ -126,6 +129,7 @@ export async function calculateLeadScore(id: string) {
 
 export async function checkChurnStatus(id: string) {
   try {
+    const db = getSecuredPrisma("teknikel");
     const lead = await db.lead.findUnique({
       where: { id },
       include: { interactionSummaries: { orderBy: { lastSeen: 'desc' }, take: 1 } }
@@ -160,8 +164,11 @@ export async function checkChurnStatus(id: string) {
 
 export async function deleteLead(id: string) {
   try {
-    await db.lead.delete({
-      where: { id }
+    const db = getSecuredPrisma("teknikel");
+    // SOFT DELETE: agent.md kuralı - fiziksel silme yasak
+    await db.lead.update({
+      where: { id },
+      data: { deletedAt: new Date() }
     });
     revalidatePath('/leads');
     return { success: true };
@@ -172,6 +179,7 @@ export async function deleteLead(id: string) {
 
 export async function toggleVipStatus(id: string, currentStatus: string) {
   try {
+    const db = getSecuredPrisma("teknikel");
     const newStatus = currentStatus === 'VIP' ? 'PROSPECT' : 'VIP';
     await db.lead.update({
       where: { id },

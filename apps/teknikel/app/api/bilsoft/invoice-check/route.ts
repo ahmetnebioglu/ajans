@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
     // Sipariş kalemlerini çıkar
     const items = (order.orderItems || []).map((item: any) => ({
-      sku: item.sku || item.productCode || '',
+      sku: item.productSku || item.sku || item.productCode || '',
       name: item.name || item.productName || '',
       quantity: item.quantity || 1,
       price: item.price || 0,

@@ -1,6 +1,6 @@
 'use server';
 
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 
 /**
  * IdeaSoft entegrasyon durumunu döner.
@@ -8,6 +8,7 @@ import { unsecured_prisma as db } from '@ajans/db';
  */
 export async function getIdeasoftStatus() {
   try {
+    const db = getSecuredPrisma("teknikel");
     const token = await db.apiToken.findUnique({
       where: { provider: 'ideasoft' },
     });
@@ -56,6 +57,7 @@ export async function getIdeasoftStatus() {
  */
 export async function disconnectIdeasoft() {
   try {
+    const db = getSecuredPrisma("teknikel");
     await db.apiToken.delete({
       where: { provider: 'ideasoft' },
     });

@@ -1,6 +1,6 @@
 'use server'
 
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 import { revalidatePath } from 'next/cache';
 import { clearSettingsCache } from '@ajans/core';
 
@@ -9,6 +9,7 @@ import { clearSettingsCache } from '@ajans/core';
  * API anahtarlarını sızdırmadan sadece varlık kontrolü yapar.
  */
 export async function getIntegrationStatuses() {
+  const db = getSecuredPrisma("teknikel");
   const settings = await db.siteSettings.findUnique({ where: { id: 'global' } });
   const bilsoft = await db.bilsoftConfig.findUnique({ where: { tenantId: 'teknikel' } });
 
@@ -26,6 +27,7 @@ export async function getIntegrationStatuses() {
  * Mevcut entegrasyon ayarlarını getirir.
  */
 export async function getIntegrationSettings() {
+  const db = getSecuredPrisma("teknikel");
   return await db.siteSettings.findUnique({ where: { id: 'global' } });
 }
 
@@ -34,6 +36,7 @@ export async function getIntegrationSettings() {
  */
 export async function updateIntegrationSettings(data: any) {
   try {
+    const db = getSecuredPrisma("teknikel");
     // Sadece izin verilen alanları güncelle (Güvenlik için)
     const allowedFields = [
       'googlePlacesApiKey', 

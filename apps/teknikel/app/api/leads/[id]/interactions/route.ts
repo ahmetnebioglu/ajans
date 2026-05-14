@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const db = getSecuredPrisma("teknikel");
     const { id } = await params;
 
     if (!id) {

@@ -484,14 +484,17 @@ model Lead {
   score        Int            @default(0)
   interactionScore Int        @default(0)
   lastActivityAt DateTime?
-  
+
   // Bilsoft Integration
   erpId        String?        @unique
   erpCode      String?
-  
+
+  // Google Places Integration
+  placeId      String?        @unique  // Google Places unique ID
+
   // KVKK & Compliance
   communicationOptIn Boolean  @default(true)
-  
+
   // Advanced CRM Data
   googleRating       Float?     @default(0)
   userRatingsTotal   Int?       @default(0)
@@ -499,7 +502,7 @@ model Lead {
   district           String?
   tags               String[]   @default([])
   lastInteractionDate DateTime  @default(now())
-  
+
   tenantId     String?
   activities   LeadActivity[]
   interactions LeadInteraction[]
@@ -509,6 +512,7 @@ model Lead {
   updatedAt    DateTime       @updatedAt
 
   @@index([tenantId])
+  @@index([placeId])
 }
 
 model LeadInteraction {

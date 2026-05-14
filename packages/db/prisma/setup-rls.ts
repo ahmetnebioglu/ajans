@@ -6,13 +6,21 @@ import * as path from "path";
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 const TABLES_TO_PROTECT = [
-  "User",
   "Lead",
   "LeadActivity",
+  "LeadInteraction",
+  "Company",
+  "Folder",
+  "Report",
+  "AuditLog",
   "Classroom",
   "Student",
   "ParentStudent",
   "PermissionRequest",
+  "JobPosting",
+  "Candidate",
+  "LeaveRequest",
+  "ServiceAccount",
   "NewsletterSubscriber"
 ];
 

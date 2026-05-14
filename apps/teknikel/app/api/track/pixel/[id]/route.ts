@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const db = getSecuredPrisma("teknikel");
   const { id } = await params;
 
   try {

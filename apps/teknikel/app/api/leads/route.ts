@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET(req: Request) {
   try {
+    const db = getSecuredPrisma("teknikel");
     const { searchParams } = new URL(req.url);
     const isVipOnly = searchParams.get('vip') === 'true';
 

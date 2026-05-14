@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { unsecured_prisma as db } from '@ajans/db';
+import { getSecuredPrisma } from '@ajans/db';
 
 export async function GET(req: NextRequest) {
+  const db = getSecuredPrisma("teknikel");
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id');
   const url = searchParams.get('url');
