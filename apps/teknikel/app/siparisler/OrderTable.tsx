@@ -1,7 +1,16 @@
 "use client";
 
 import React from "react";
-import { Input, Select, Button, Dropdown, Modal, Radio } from "antd";
+import {
+  Input,
+  Select,
+  Button,
+  Dropdown,
+  Modal,
+  Radio,
+  Card,
+  Flex,
+} from "antd";
 import type { MenuProps } from "antd";
 import {
   SearchOutlined,
@@ -289,7 +298,7 @@ export default function OrderTable({
           gap: "12px",
           marginBottom: "16px",
         }}
-        className="mx-2 sticky top-2 z-10 p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-600 rounded-sm"
+        className="w-full sticky top-0 z-10 p-4 backdrop-blur-lg border-b border-gray-200 dark:border-gray-900"
       >
         {/* Başlık */}
         <div>
@@ -475,25 +484,27 @@ export default function OrderTable({
         )}
 
         {/* Sipariş Kartları */}
-        <div>
-          {filteredOrders.length === 0 ? (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "48px",
-                color: c.mutedText,
-                background: c.emptyBg,
-                border: `1px solid ${c.emptyBorder}`,
-                borderRadius: "8px",
-              }}
-            >
-              Sipariş bulunamadı.
-            </div>
-          ) : (
-            filteredOrders.map((order) => (
-              <OrderCard key={order.id} order={order} />
-            ))
-          )}
+        <div className="border border-slate-100 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900/50 rounded-sm p-5">
+          <Flex vertical align="stretch" justify="center" gap={26}>
+            {filteredOrders.length === 0 ? (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "48px",
+                  color: c.mutedText,
+                  background: c.emptyBg,
+                  border: `1px solid ${c.emptyBorder}`,
+                  borderRadius: "8px",
+                }}
+              >
+                Sipariş bulunamadı.
+              </div>
+            ) : (
+              filteredOrders.map((order) => (
+                <OrderCard key={order.id} order={order} />
+              ))
+            )}
+          </Flex>
         </div>
 
         {/* Alt Sayfalama */}

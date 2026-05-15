@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Divider } from "antd";
+import { Button, Divider, Card, Tag } from "antd";
 import {
   CalendarOutlined,
   UserOutlined,
@@ -12,10 +12,8 @@ import {
   UpOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { useTheme } from "next-themes";
 import PrintButton from "./PrintButton";
 import InvoiceCreatorButton from "./InvoiceCreatorButton";
-import { Divide } from "lucide-react";
 
 interface Order {
   id: number;
@@ -104,135 +102,129 @@ interface OrderCardProps {
 
 export default function OrderCard({ order }: OrderCardProps) {
   const [showItems, setShowItems] = useState(false);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
 
   const c = {
-    cardBg: isDark ? "#0f172a" : "#ffffff",
-    cardBorder: isDark ? "#1e293b" : "#e5e7eb",
-    divider: isDark ? "#1e293b" : "#f3f4f6",
-    titleColor: isDark ? "#f8fafc" : "#111827",
-    bodyColor: isDark ? "#e2e8f0" : "#374151",
-    mutedColor: isDark ? "#94a3b8" : "#6b7280",
-    iconColor: isDark ? "#64748b" : "#9ca3af",
-    itemsBg: isDark ? "#020617" : "#fafafa",
-    priceBadgeBg: isDark ? "rgba(22,163,74,0.15)" : "#f0fdf4",
-    detailBtnBorder: "#dc2626",
-    detailBtnColor: "#dc2626",
+    cardBg: "transparent",
+    cardBorder: "border-slate-100 dark:border-slate-800",
+    divider: "border-slate-100 dark:border-slate-800",
+    titleColor: "text-slate-800 dark:text-slate-100",
+    bodyColor: "text-slate-700 dark:text-slate-300",
+    mutedColor: "text-slate-500 dark:text-slate-400",
+    iconColor: "text-slate-400 dark:text-slate-500",
+    itemsBg: "bg-slate-50 dark:bg-slate-800/20",
+    priceBadgeBg: "bg-emerald-50 dark:bg-emerald-900/20",
   };
 
   const statusBg = getStatusBgColor(order.status);
   const statusLabel = getStatusLabel(order.status);
 
   return (
-    <div
-      style={{
-        background: c.cardBg,
-        border: `1px solid ${c.cardBorder}`,
-        borderRadius: "8px",
-        marginBottom: "12px",
-        overflow: "hidden",
-        transition: "background 0.2s, border-color 0.2s",
+    <Card
+      size="small"
+      className="border-slate-100 dark:border-slate-800 shadow-sm bg-transparent mb-3"
+      styles={{
+        body: { padding: "0" },
       }}
     >
-      {/* Kart Üst Kısım */}
-      <div
-        style={{
-          padding: "16px 20px",
-          borderBottom: `1px solid ${c.divider}`,
-        }}
-      >
+      <div className="overflow-hidden">
+        {/* Kart Üst Kısım */}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "12px",
+            padding: "16px 20px",
+            borderBottom: `1px solid ${c.divider}`,
           }}
         >
-          {/* Sol: Sipariş No + Tarih */}
-          <div>
-            <span
-              style={{
-                fontSize: "18px",
-                fontWeight: 700,
-                color: c.titleColor,
-              }}
-            >
-              Sipariş #{order.id}
-            </span>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                marginTop: "4px",
-                color: c.mutedColor,
-                fontSize: "13px",
-              }}
-            >
-              <CalendarOutlined />
-              <span>{formatDate(order.createdAt)}</span>
-            </div>
-          </div>
-
-          {/* Sağ: Butonlar */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              justifyContent: "space-between",
               flexWrap: "wrap",
+              gap: "12px",
             }}
           >
-            {/* Durum Badge */}
-            <span
+            {/* Sol: Sipariş No + Tarih */}
+            <div>
+              <span
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  color: c.titleColor,
+                }}
+              >
+                Sipariş #{order.id}
+              </span>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  marginTop: "4px",
+                  color: c.mutedColor,
+                  fontSize: "13px",
+                }}
+              >
+                <CalendarOutlined />
+                <span>{formatDate(order.createdAt)}</span>
+              </div>
+            </div>
+
+            {/* Sağ: Butonlar */}
+            <div
               style={{
-                backgroundColor: statusBg,
-                color: "#fff",
-                padding: "5px 14px",
-                borderRadius: "6px",
-                fontSize: "13px",
-                fontWeight: 600,
-                display: "inline-flex",
+                display: "flex",
                 alignItems: "center",
-                gap: "6px",
+                gap: "8px",
+                flexWrap: "wrap",
               }}
             >
-              <span style={{ fontSize: "14px" }}>🏷</span>
-              {statusLabel}
-            </span>
+              {/* Durum Badge */}
+              <span
+                style={{
+                  backgroundColor: statusBg,
+                  color: "#fff",
+                  padding: "5px 14px",
+                  borderRadius: "6px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <span style={{ fontSize: "14px" }}>🏷</span>
+                {statusLabel}
+              </span>
 
-            {/* Fiyat Badge */}
-            <span
-              style={{
-                border: "1.5px solid #16a34a",
-                color: "#16a34a",
-                padding: "5px 14px",
-                borderRadius: "6px",
-                fontSize: "13px",
-                fontWeight: 600,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "4px",
-                background: c.priceBadgeBg,
-              }}
-            >
-              <span style={{ fontSize: "13px" }}>₺</span>
-              {formatPrice(order.finalAmount)}
-            </span>
+              {/* Fiyat Badge */}
+              <span
+                style={{
+                  border: "1.5px solid #16a34a",
+                  color: "#16a34a",
+                  padding: "5px 14px",
+                  borderRadius: "6px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  background: c.priceBadgeBg,
+                }}
+              >
+                <span style={{ fontSize: "13px" }}>₺</span>
+                {formatPrice(order.finalAmount)}
+              </span>
 
-            {/* Yazdır */}
-            <PrintButton order={order as any} size="middle" />
+              {/* Yazdır */}
+              <PrintButton order={order as any} size="middle" />
 
-            {/* Fatura Oluştur */}
-            <InvoiceCreatorButton order={order as any} size="middle" />
+              {/* Fatura Oluştur */}
+              <InvoiceCreatorButton order={order as any} size="middle" />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Kart Orta Kısım: Müşteri + Ödeme Bilgileri */}
+        {/* Kart Orta Kısım: Müşteri + Ödeme Bilgileri */}
       <div
         style={{
           display: "grid",
@@ -597,12 +589,6 @@ export default function OrderCard({ order }: OrderCardProps) {
                     gap: "12px",
                     padding: "10px 0",
                     borderBottom: `1px solid ${c.divider}`,
-                    backgroundColor:
-                      idx % 2 === 0
-                        ? "transparent"
-                        : isDark
-                          ? "rgba(255,255,255,0.02)"
-                          : "rgba(0,0,0,0.01)",
                   }}
                 >
                   <div style={{ fontSize: "13px", color: c.bodyColor }}>
@@ -737,22 +723,23 @@ export default function OrderCard({ order }: OrderCardProps) {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 640px) {
-          .order-card-info-grid {
-            grid-template-columns: 1fr !important;
+        <style>{`
+          @media (max-width: 640px) {
+            .order-card-info-grid {
+              grid-template-columns: 1fr !important;
+            }
+            .order-card-info-grid > div:first-child {
+              padding-right: 0 !important;
+              border-right: none !important;
+              padding-bottom: 12px;
+              margin-bottom: 12px;
+            }
+            .order-card-info-grid > div:last-child {
+              padding-left: 0 !important;
+            }
           }
-          .order-card-info-grid > div:first-child {
-            padding-right: 0 !important;
-            border-right: none !important;
-            padding-bottom: 12px;
-            margin-bottom: 12px;
-          }
-          .order-card-info-grid > div:last-child {
-            padding-left: 0 !important;
-          }
-        }
-      `}</style>
-    </div>
+        `}</style>
+      </div>
+    </Card>
   );
 }

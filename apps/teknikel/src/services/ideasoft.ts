@@ -89,11 +89,11 @@ const _getIdeasoftCustomers = async (): Promise<IdeasoftCustomer[]> => {
   return allCustomers;
 };
 
-// Cache 24 saat
+// Cache 8 saat
 export const getIdeasoftCustomers = unstable_cache(
   _getIdeasoftCustomers,
-  ['ideasoft-customers'],
-  { revalidate: 86400, tags: ['ideasoft-customers'] }
+  ['ideasoft-musteriler'],
+  { revalidate: 28800, tags: ['ideasoft-musteriler'] }
 );
 
 export async function getIdeasoftCustomerById(id: number): Promise<IdeasoftCustomer | null> {
@@ -149,12 +149,12 @@ interface IdeasoftProductsResponse {
   };
 }
 
-export async function getIdeasoftProducts(
+const _getIdeasoftProducts = async (
   sort: string = '-id',
   page: number = 1,
   limit: number = 30,
   searchTerm?: string
-): Promise<IdeasoftProductsResponse> {
+): Promise<IdeasoftProductsResponse> => {
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   const params = new URLSearchParams();
@@ -196,7 +196,14 @@ export async function getIdeasoftProducts(
       totalPages: totalCount ? Math.ceil(parseInt(totalCount) / limit) : 0,
     },
   };
-}
+};
+
+// Cache 24 saat
+export const getIdeasoftProducts = unstable_cache(
+  _getIdeasoftProducts,
+  ['ideasoft-urunler'],
+  { revalidate: 86400, tags: ['ideasoft-urunler'] }
+);
 
 export async function getIdeasoftProductById(id: number): Promise<IdeasoftProduct | null> {
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
@@ -263,12 +270,12 @@ interface IdeasoftOrdersResponse {
   };
 }
 
-export async function getIdeasoftOrders(
+const _getIdeasoftOrders = async (
   sort: string = '-id',
   page: number = 1,
   limit: number = 50,
   status?: string
-): Promise<IdeasoftOrdersResponse> {
+): Promise<IdeasoftOrdersResponse> => {
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   const params = new URLSearchParams();
@@ -310,7 +317,14 @@ export async function getIdeasoftOrders(
       totalPages: totalCount ? Math.ceil(parseInt(totalCount) / limit) : 0,
     },
   };
-}
+};
+
+// Cache 2 saat
+export const getIdeasoftOrders = unstable_cache(
+  _getIdeasoftOrders,
+  ['ideasoft-siparisler'],
+  { revalidate: 7200, tags: ['ideasoft-siparisler'] }
+);
 
 export async function getIdeasoftOrderById(id: number): Promise<IdeasoftOrder | null> {
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';

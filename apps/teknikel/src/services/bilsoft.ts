@@ -1,5 +1,6 @@
 import { unsecured_prisma as db } from '@ajans/db';
 import { getValidToken as getCentralValidToken } from './tokenManager';
+import { unstable_cache } from 'next/cache';
 
 // ============================================================
 // SKU NORMALIZATION & CACHING
@@ -217,11 +218,11 @@ export async function getValidToken(): Promise<string> {
  * @param page Sayfa numarası (1-indexed)
  * @param pageSize Sayfa başına kayıt sayısı
  */
-export async function getBilsoftCariler(
+const _getBilsoftCariler = async (
   searchTerm: string = "", 
   page: number = 1, 
   pageSize: number = 50
-): Promise<{ data: BilsoftCari[], totalCount: number }> {
+): Promise<{ data: BilsoftCari[], totalCount: number }> => {
   try {
     const token = await getValidToken();
     
@@ -277,7 +278,14 @@ export async function getBilsoftCariler(
     console.error('[BilsoftService] Fetch Currents Error:', error);
     return { data: [], totalCount: 0 };
   }
-}
+};
+
+// Cache 24 saat
+export const getBilsoftCariler = unstable_cache(
+  _getBilsoftCariler,
+  ['bilsoft-cariler'],
+  { revalidate: 86400, tags: ['bilsoft-cariler'] }
+);
 
 /**
  * Bilsoft'tan ID ile tekil cari detayı çeker.
@@ -400,11 +408,11 @@ export interface BilsoftFaturaKalem {
 /**
  * Bilsoft'tan fatura listesini çeker (Server-Side Pagination & Search).
  */
-export async function getBilsoftFaturalar(
+const _getBilsoftFaturalar = async (
   searchTerm: string = "",
   page: number = 1,
   pageSize: number = 50
-): Promise<{ data: BilsoftFatura[]; totalCount: number }> {
+): Promise<{ data: BilsoftFatura[]; totalCount: number }> => {
   try {
     const token = await getValidToken();
 
@@ -457,7 +465,14 @@ export async function getBilsoftFaturalar(
     console.error('[BilsoftService] Fetch Faturalar Error:', error);
     return { data: [], totalCount: 0 };
   }
-}
+};
+
+// Cache 2 saat
+export const getBilsoftFaturalar = unstable_cache(
+  _getBilsoftFaturalar,
+  ['bilsoft-faturalar'],
+  { revalidate: 7200, tags: ['bilsoft-faturalar'] }
+);
 
 /**
  * Bilsoft'tan ID ile tekil fatura detayı çeker.
@@ -524,11 +539,11 @@ export interface BilsoftStokKarti {
 /**
  * Bilsoft'tan stok kartı listesini çeker (Server-Side Pagination & Search).
  */
-export async function getBilsoftStokKartlari(
+const _getBilsoftStokKartlari = async (
   searchTerm: string = "",
   page: number = 1,
   pageSize: number = 50
-): Promise<{ data: BilsoftStokKarti[]; totalCount: number }> {
+): Promise<{ data: BilsoftStokKarti[]; totalCount: number }> => {
   try {
     const token = await getValidToken();
 
@@ -584,7 +599,14 @@ export async function getBilsoftStokKartlari(
     console.error('[BilsoftService] Fetch StokKartlari Error:', error);
     return { data: [], totalCount: 0 };
   }
-}
+};
+
+// Cache 12 saat
+export const getBilsoftStokKartlari = unstable_cache(
+  _getBilsoftStokKartlari,
+  ['bilsoft-stoklar'],
+  { revalidate: 43200, tags: ['bilsoft-stoklar'] }
+);
 
 /**
  * Bilsoft'tan stok kodu ile tekil stok kartı detayı çeker.
