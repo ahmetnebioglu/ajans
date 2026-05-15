@@ -137,6 +137,83 @@ async function refreshIdeasoftToken(refreshToken?: string | null): Promise<Token
 }
 
 /**
+ * IdeaSoft API çağrılarında hata gelirse (401/403) token yenile ve tekrar dene
+ * Reactive retry pattern: hata gelince refresh et, bir kez daha dene
+ */
+export async function fetchWithIdeasoftRetry(
+  url: string,
+  options: RequestInit = {}
+): Promise<Response> {
+  // 1. Mevcut token'ı al (proaktif yenileme de yapılır)
+  let token = await getValidToken('ideasoft');
+
+  // 2. İlk isteği yap
+  let response = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  // 3. 401 veya 403 gelirse → token yenile → tekrar dene
+  if (response.status === 401 || response.status === 403) {
+    console.log(
+      '[TokenManager] IdeaSoft 401/403 hatası, refresh token deneniyor...'
+    );
+
+    // DB'den refresh_token al
+    const tokenRecord = await db.apiToken.findUnique({
+      where: { provider: 'ideasoft' },
+    });
+
+    if (!tokenRecord?.refreshToken) {
+      throw new Error(
+        'IdeaSoft refresh token bulunamadı. Lütfen IdeaSoft entegrasyonunu yeniden başlatın.'
+      );
+    }
+
+    try {
+      // Yeni token al
+      const newTokenData = await refreshIdeasoftToken(
+        tokenRecord.refreshToken
+      );
+
+      // DB'ye yaz
+      await db.apiToken.update({
+        where: { provider: 'ideasoft' },
+        data: {
+          accessToken: newTokenData.accessToken,
+          refreshToken: newTokenData.refreshToken,
+          expiresAt: newTokenData.expiresAt,
+        },
+      });
+
+      // 4. Yeni token ile tekrar dene (tek seferlik retry)
+      response = await fetch(url, {
+        ...options,
+        headers: {
+          ...options.headers,
+          Authorization: `Bearer ${newTokenData.accessToken}`,
+        },
+      });
+
+      console.log(
+        '[TokenManager] Retry başarılı, yeni token ile istek tekrarlandı.'
+      );
+    } catch (refreshError: any) {
+      console.error(
+        '[TokenManager] Token yenileme başarısız:',
+        refreshError.message
+      );
+      throw refreshError;
+    }
+  }
+
+  return response;
+}
+
+/**
  * Bilsoft Login Akışı (Bilsoft'ta refresh token yerine login kullanılır)
  */
 async function refreshBilsoftToken(): Promise<TokenData> {

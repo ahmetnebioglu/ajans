@@ -1,4 +1,4 @@
-import { getValidToken } from './tokenManager';
+import { getValidToken, fetchWithIdeasoftRetry } from './tokenManager';
 import { unstable_cache } from 'next/cache';
 
 /**
@@ -43,7 +43,6 @@ interface IdeasoftCustomer {
 }
 
 const _getIdeasoftCustomers = async (): Promise<IdeasoftCustomer[]> => {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   let allCustomers: IdeasoftCustomer[] = [];
@@ -51,14 +50,13 @@ const _getIdeasoftCustomers = async (): Promise<IdeasoftCustomer[]> => {
   const limit = 100;
 
   while (true) {
-    const response = await fetch(
+    const response = await fetchWithIdeasoftRetry(
       `${domain}/admin-api/members?limit=${limit}&page=${page}&sort=-id`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -99,15 +97,13 @@ export const getIdeasoftCustomers = unstable_cache(
 );
 
 export async function getIdeasoftCustomerById(id: number): Promise<IdeasoftCustomer | null> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
-  const response = await fetch(`${domain}/admin-api/members/${id}`, {
+  const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/members/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -159,7 +155,6 @@ export async function getIdeasoftProducts(
   limit: number = 30,
   searchTerm?: string
 ): Promise<IdeasoftProductsResponse> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   const params = new URLSearchParams();
@@ -171,12 +166,11 @@ export async function getIdeasoftProducts(
     params.append('s', searchTerm);
   }
 
-  const response = await fetch(`${domain}/admin-api/products?${params.toString()}`, {
+  const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/products?${params.toString()}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -205,15 +199,13 @@ export async function getIdeasoftProducts(
 }
 
 export async function getIdeasoftProductById(id: number): Promise<IdeasoftProduct | null> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
-  const response = await fetch(`${domain}/admin-api/products/${id}`, {
+  const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/products/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -277,7 +269,6 @@ export async function getIdeasoftOrders(
   limit: number = 50,
   status?: string
 ): Promise<IdeasoftOrdersResponse> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   const params = new URLSearchParams();
@@ -289,12 +280,11 @@ export async function getIdeasoftOrders(
     params.append('status', status);
   }
 
-  const response = await fetch(`${domain}/admin-api/orders?${params.toString()}`, {
+  const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/orders?${params.toString()}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -323,15 +313,13 @@ export async function getIdeasoftOrders(
 }
 
 export async function getIdeasoftOrderById(id: number): Promise<IdeasoftOrder | null> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
-  const response = await fetch(`${domain}/admin-api/orders/${id}`, {
+  const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/orders/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -348,7 +336,6 @@ export async function updateIdeasoftOrderStatus(
   status: string,
   trackingNumber?: string
 ): Promise<IdeasoftOrder | null> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   const body: any = { status };
@@ -358,12 +345,11 @@ export async function updateIdeasoftOrderStatus(
     body.cargoTrackingUrl = `https://www.suratkargo.com.tr/tr/online-servisler/gonderi-sorgula?code=${trackingNumber}`;
   }
 
-  const response = await fetch(`${domain}/admin-api/orders/${id}`, {
+  const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/orders/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(body),
   });
@@ -384,16 +370,14 @@ export async function updateIdeasoftOrderStatus(
  * SKU'ya göre Ideasoft ürünü bulur.
  */
 export async function getIdeasoftProductBySku(sku: string): Promise<IdeasoftProduct | null> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   try {
-    const response = await fetch(`${domain}/admin-api/products?s=${encodeURIComponent(sku)}`, {
+    const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/products?s=${encodeURIComponent(sku)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -421,7 +405,6 @@ export async function getIdeasoftProductBySku(sku: string): Promise<IdeasoftProd
 export async function getIdeasoftAllProducts(
   limit: number = 100
 ): Promise<IdeasoftProduct[]> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   let allProducts: IdeasoftProduct[] = [];
@@ -429,14 +412,13 @@ export async function getIdeasoftAllProducts(
 
   try {
     while (true) {
-      const response = await fetch(
+      const response = await fetchWithIdeasoftRetry(
         `${domain}/admin-api/products?limit=${limit}&page=${page}&sort=-id`,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -479,16 +461,14 @@ export async function updateIdeasoftProduct(
     price3?: number;
   }
 ): Promise<IdeasoftProduct | null> {
-  const token = await getValidToken('ideasoft');
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   try {
-    const response = await fetch(`${domain}/admin-api/products/${id}`, {
+    const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/products/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
