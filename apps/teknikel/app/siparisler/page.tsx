@@ -3,7 +3,6 @@ import { authOptions } from "@/auth";
 import { redirect } from "next/navigation";
 import { getIdeasoftOrders } from "@/src/services/ideasoft";
 import { revalidateSiparisler } from "@/app/actions/revalidate";
-import { CacheRevalidateButton } from "@/app/components/CacheRevalidateButton";
 import OrderTable from "./OrderTable";
 
 export default async function SiparislerPage({
@@ -38,18 +37,7 @@ export default async function SiparislerPage({
   const safeOrders = JSON.parse(JSON.stringify(orders));
 
   return (
-    <div className="p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-            Siparisler (Ideasoft)
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Ideasoft üzerinden alınan sipariş listesi
-          </p>
-        </div>
-        <CacheRevalidateButton onRevalidate={revalidateSiparisler} label="Siparisler Önbelleğini Yenile" />
-      </div>
+    <>
       <OrderTable
         initialData={safeOrders}
         totalCount={totalCount}
@@ -58,7 +46,8 @@ export default async function SiparislerPage({
         statusFilter={status}
         sort={sort}
         error={error}
+        onRevalidate={revalidateSiparisler}
       />
-    </div>
+    </>
   );
 }

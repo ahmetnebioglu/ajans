@@ -14,7 +14,6 @@ import {
 import type { MenuProps } from "antd";
 import {
   SearchOutlined,
-  ReloadOutlined,
   LeftOutlined,
   RightOutlined,
   DoubleLeftOutlined,
@@ -27,6 +26,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 import { printEmptyOrder } from "./utils/printOrder";
 import OrderCard from "./OrderCard";
+import { CacheRevalidateButton } from "@/app/components/CacheRevalidateButton";
 
 interface IdeasoftOrder {
   id: number;
@@ -68,6 +68,7 @@ interface OrderTableProps {
   statusFilter: string;
   sort: string;
   error?: string | null;
+  onRevalidate: () => Promise<{ success: boolean; error?: string }>;
 }
 
 const getStatusLabel = (status: string | undefined) => {
@@ -128,11 +129,11 @@ export default function OrderTable({
   statusFilter,
   sort,
   error,
+  onRevalidate,
 }: OrderTableProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [loading, setLoading] = React.useState(false);
   const [searchText, setSearchText] = React.useState("");
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
@@ -180,12 +181,6 @@ export default function OrderTable({
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", page.toString());
     router.push(`${pathname}?${params.toString()}`);
-  };
-
-  const handleRefresh = () => {
-    setLoading(true);
-    router.refresh();
-    setTimeout(() => setLoading(false), 1000);
   };
 
   const handleEmptyPrint = () => {
@@ -345,22 +340,15 @@ export default function OrderTable({
             </Button>
           </Dropdown>
 
-          <Button
-            icon={<FileAddOutlined />}
-            onClick={() => setEmptyPrintOpen(true)}
-            size="large"
-          >
-            Boş Şablon
-          </Button>
+           <Button
+             icon={<FileAddOutlined />}
+             onClick={() => setEmptyPrintOpen(true)}
+             size="large"
+           >
+             Boş Şablon
+           </Button>
 
-          <Button
-            icon={<ReloadOutlined />}
-            onClick={handleRefresh}
-            loading={loading}
-            size="large"
-          >
-            Yenile
-          </Button>
+           <CacheRevalidateButton onRevalidate={onRevalidate} label="Yenile" />
         </div>
       </div>
 
