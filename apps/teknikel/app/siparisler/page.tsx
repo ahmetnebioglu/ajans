@@ -17,11 +17,20 @@ export default async function SiparislerPage({
     redirect("/login");
   }
 
-  const {
-    data: orders,
-    totalCount,
-    pagination,
-  } = await getIdeasoftOrders(sort, currentPage, 50, status);
+  let orders: any[] = [];
+  let totalCount = 0;
+  let pagination = { totalPages: 0 };
+  let error: string | null = null;
+
+  try {
+    const result = await getIdeasoftOrders(sort, currentPage, 50, status);
+    orders = result.data;
+    totalCount = result.totalCount;
+    pagination = result.pagination;
+  } catch (err: any) {
+    console.error("Siparisler sayfası - IdeaSoft API hatası:", err);
+    error = err?.message || "IdeaSoft bağlantı hatası";
+  }
 
   // Veriyi sterilize et (Server -> Client geçişi için)
   const safeOrders = JSON.parse(JSON.stringify(orders));
@@ -34,6 +43,7 @@ export default async function SiparislerPage({
       totalPages={pagination.totalPages}
       statusFilter={status}
       sort={sort}
+      error={error}
     />
   );
 }

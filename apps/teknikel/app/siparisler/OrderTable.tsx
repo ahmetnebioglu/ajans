@@ -58,6 +58,7 @@ interface OrderTableProps {
   totalPages: number;
   statusFilter: string;
   sort: string;
+  error?: string | null;
 }
 
 const getStatusLabel = (status: string | undefined) => {
@@ -117,6 +118,7 @@ export default function OrderTable({
   totalPages,
   statusFilter,
   sort,
+  error,
 }: OrderTableProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -237,6 +239,47 @@ export default function OrderTable({
 
   return (
     <>
+      {/* Hata Mesajı */}
+      {error && (
+        <div
+          style={{
+            marginBottom: "16px",
+            padding: "12px 16px",
+            backgroundColor: "#fee2e2",
+            border: "1px solid #fecaca",
+            borderRadius: "6px",
+            color: "#991b1b",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+          className="mx-2"
+        >
+          <span style={{ fontSize: "18px" }}>⚠️</span>
+          <div>
+            <div style={{ fontWeight: "600" }}>IdeaSoft Bağlantı Hatası</div>
+            <div style={{ fontSize: "14px", marginTop: "4px" }}>{error}</div>
+            <div style={{ fontSize: "12px", marginTop: "8px" }}>
+              Lütfen{" "}
+              <button
+                onClick={() => router.push("/settings")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dc2626",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}
+              >
+                Ayarlar
+              </button>{" "}
+              sayfasından IdeaSoft entegrasyonunu kontrol edin.
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Üst Toolbar */}
       <div
         style={{

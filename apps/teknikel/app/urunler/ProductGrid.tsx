@@ -37,6 +37,7 @@ interface ProductGridProps {
   totalPages: number;
   searchTerm: string;
   sort: string;
+  error?: string | null;
 }
 
 const formatPrice = (price: number | null | undefined) => {
@@ -72,6 +73,7 @@ export default function ProductGrid({
   totalPages,
   searchTerm,
   sort,
+  error,
 }: ProductGridProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -111,6 +113,45 @@ export default function ProductGrid({
 
   return (
     <div className="space-y-4">
+      {/* Hata Mesajı */}
+      {error && (
+        <div
+          style={{
+            padding: "12px 16px",
+            backgroundColor: "#fee2e2",
+            border: "1px solid #fecaca",
+            borderRadius: "6px",
+            color: "#991b1b",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
+          <span style={{ fontSize: "18px" }}>⚠️</span>
+          <div>
+            <div style={{ fontWeight: "600" }}>IdeaSoft Bağlantı Hatası</div>
+            <div style={{ fontSize: "14px", marginTop: "4px" }}>{error}</div>
+            <div style={{ fontSize: "12px", marginTop: "8px" }}>
+              Lütfen{" "}
+              <button
+                onClick={() => router.push("/settings")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dc2626",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}
+              >
+                Ayarlar
+              </button>{" "}
+              sayfasından IdeaSoft entegrasyonunu kontrol edin.
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Arama ve Filtreler */}
       <Card className="shadow-sm border-slate-100 dark:border-slate-800">
         <div className="flex flex-col gap-4">

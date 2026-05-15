@@ -98,10 +98,62 @@ export default async function SiparisDetailPage({
     redirect("/login");
   }
 
-  const order = await getIdeasoftOrderById(Number(id));
+  let order: any = null;
+  let error: string | null = null;
 
-  if (!order) {
+  try {
+    order = await getIdeasoftOrderById(Number(id));
+  } catch (err: any) {
+    console.error("Sipariş detay sayfası - IdeaSoft API hatası:", err);
+    error = err?.message || "IdeaSoft bağlantı hatası";
+  }
+
+  if (!order && !error) {
     notFound();
+  }
+
+  // Hata varsa error sayfası göster
+  if (error) {
+    return (
+      <div className="p-6 max-w-6xl mx-auto">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/siparisler">
+              <Button icon={<ArrowLeftOutlined />} />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-0">
+                Sipariş Detayı
+              </h1>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            padding: "24px",
+            backgroundColor: "#fee2e2",
+            border: "1px solid #fecaca",
+            borderRadius: "8px",
+            color: "#991b1b",
+          }}
+        >
+          <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: "12px" }}>
+            ⚠️ IdeaSoft Bağlantı Hatası
+          </div>
+          <div style={{ fontSize: "14px", marginBottom: "16px" }}>
+            {error}
+          </div>
+          <div style={{ fontSize: "14px" }}>
+            Lütfen{" "}
+            <Link href="/settings" style={{ color: "#dc2626", textDecoration: "underline", fontWeight: "600" }}>
+              Ayarlar
+            </Link>{" "}
+            sayfasından IdeaSoft entegrasyonunu kontrol edin.
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Veriyi sterilize et

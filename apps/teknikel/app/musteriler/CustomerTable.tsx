@@ -48,6 +48,7 @@ interface CustomerTableProps {
   initialData: IdeasoftCustomer[];
   totalCount: number;
   currentPage: number;
+  error?: string | null;
 }
 
 const formatDate = (dateString: string | null | undefined) => {
@@ -96,6 +97,7 @@ export default function CustomerTable({
   initialData,
   totalCount,
   currentPage,
+  error,
 }: CustomerTableProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -257,9 +259,50 @@ export default function CustomerTable({
   ];
 
   return (
-    <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <Input.Search
+    <>
+      {/* Hata Mesajı */}
+      {error && (
+        <div
+          style={{
+            marginBottom: "16px",
+            padding: "12px 16px",
+            backgroundColor: "#fee2e2",
+            border: "1px solid #fecaca",
+            borderRadius: "6px",
+            color: "#991b1b",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
+          <span style={{ fontSize: "18px" }}>⚠️</span>
+          <div>
+            <div style={{ fontWeight: "600" }}>IdeaSoft Bağlantı Hatası</div>
+            <div style={{ fontSize: "14px", marginTop: "4px" }}>{error}</div>
+            <div style={{ fontSize: "12px", marginTop: "8px" }}>
+              Lütfen{" "}
+              <button
+                onClick={() => router.push("/settings")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dc2626",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}
+              >
+                Ayarlar
+              </button>{" "}
+              sayfasından IdeaSoft entegrasyonunu kontrol edin.
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <Input.Search
           placeholder="Ad, soyad, e-posta, telefon ile ara..."
           onSearch={handleSearch}
           value={searchTerm}
@@ -267,18 +310,18 @@ export default function CustomerTable({
           allowClear
           enterButton
           className="max-w-md"
-        />
-        <div className="text-sm text-slate-500 dark:text-slate-400">
-          Toplam <strong>{totalCount}</strong> müşteri
-          {searchTerm && (
-            <span className="ml-2">
-              ({filteredData.length} sonuç)
-            </span>
-          )}
+          />
+          <div className="text-sm text-slate-500 dark:text-slate-400">
+            Toplam <strong>{totalCount}</strong> müşteri
+            {searchTerm && (
+              <span className="ml-2">
+                ({filteredData.length} sonuç)
+              </span>
+            )}
+          </div>
         </div>
-      </div>
 
-      <Table
+        <Table
         columns={columns}
         dataSource={filteredData}
         rowKey="id"
@@ -292,8 +335,9 @@ export default function CustomerTable({
           onClick: () => router.push(`/musteriler/${record.id}`),
           style: { cursor: 'pointer' },
         })}
-        className="customer-table"
-      />
-    </Card>
+          className="customer-table"
+        />
+      </Card>
+    </>
   );
 }

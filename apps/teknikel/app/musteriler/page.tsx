@@ -17,7 +17,15 @@ export default async function MusterilerPage({
     redirect("/login");
   }
 
-  const customers = await getIdeasoftCustomers();
+  let customers: any[] = [];
+  let error: string | null = null;
+
+  try {
+    customers = await getIdeasoftCustomers();
+  } catch (err: any) {
+    console.error("Müşteriler sayfası - IdeaSoft API hatası:", err);
+    error = err?.message || "IdeaSoft bağlantı hatası";
+  }
 
   // Veriyi sterilize et (Server -> Client geçişi için)
   const safeCustomers = JSON.parse(JSON.stringify(customers));
@@ -37,6 +45,7 @@ export default async function MusterilerPage({
         initialData={safeCustomers}
         totalCount={safeCustomers.length}
         currentPage={currentPage}
+        error={error}
       />
     </div>
   );

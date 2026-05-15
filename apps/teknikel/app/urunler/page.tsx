@@ -17,12 +17,20 @@ export default async function UrunlerPage({
     redirect("/login");
   }
 
-  const { data: products, totalCount, pagination } = await getIdeasoftProducts(
-    sort,
-    currentPage,
-    30,
-    s
-  );
+  let products: any[] = [];
+  let totalCount = 0;
+  let pagination = { totalPages: 0 };
+  let error: string | null = null;
+
+  try {
+    const result = await getIdeasoftProducts(sort, currentPage, 30, s);
+    products = result.data;
+    totalCount = result.totalCount;
+    pagination = result.pagination;
+  } catch (err: any) {
+    console.error("Ürünler sayfası - IdeaSoft API hatası:", err);
+    error = err?.message || "IdeaSoft bağlantı hatası";
+  }
 
   // Veriyi sterilize et (Server -> Client geçişi için)
   const safeProducts = JSON.parse(JSON.stringify(products));
@@ -45,6 +53,7 @@ export default async function UrunlerPage({
         totalPages={pagination.totalPages}
         searchTerm={s}
         sort={sort}
+        error={error}
       />
     </div>
   );
