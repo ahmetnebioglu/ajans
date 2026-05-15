@@ -39,7 +39,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           minHeight: "100vh"
         }}
       >
-        <Content className="min-h-screen overflow-hidden">
+        <Content className="min-h-screen">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
