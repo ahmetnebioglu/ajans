@@ -11,12 +11,16 @@ const databaseUrl =
   process.env.POSTGRES_URL_NON_POOLING ||
   process.env.CUSTOM_PRISMA_URL;
 
+if (databaseUrl) {
+  process.env.DATABASE_URL = databaseUrl;
+}
+
 export default defineConfig({
   schema: 'prisma/schema.prisma',
   migrations: {
     path: 'prisma/migrations',
   },
   datasource: {
-    url: databaseUrl,
+    url: env('DATABASE_URL'),
   },
 });
