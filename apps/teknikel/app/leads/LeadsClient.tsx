@@ -50,7 +50,13 @@ import {
   Link,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { scheduleCall, toggleVipStatus, toggleCommunication, calculateLeadScore, checkChurnStatus } from "./actions";
+import {
+  scheduleCall,
+  toggleVipStatus,
+  toggleCommunication,
+  calculateLeadScore,
+  checkChurnStatus,
+} from "./actions";
 import { syncAndScoreLeads } from "../actions/bilsoft-actions";
 import { revalidateLeads } from "../actions/revalidate";
 import { scrapeLeads } from "../actions/scrape-leads";
@@ -96,7 +102,9 @@ export default function LeadsPage() {
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      antdMessage.error("Sunucuya ulaşılamadı, lütfen internetinizi kontrol edin.");
+      antdMessage.error(
+        "Sunucuya ulaşılamadı, lütfen internetinizi kontrol edin.",
+      );
     } finally {
       setLoading(false);
     }
@@ -179,9 +187,11 @@ export default function LeadsPage() {
   const handleToggleCommunication = async (id: string) => {
     const res = await toggleCommunication(id);
     if (res.success) {
-      antdMessage.success("İletişim izni güncellendi.");
+      const { message } = await import("antd");
+      message.success("İletişim izni güncellendi.");
       loadLeads();
-      if (selectedLead) setSelectedLead({ ...selectedLead, communicationOptIn: res.enabled });
+      if (selectedLead)
+        setSelectedLead({ ...selectedLead, communicationOptIn: res.enabled });
     }
   };
 
@@ -194,7 +204,7 @@ export default function LeadsPage() {
         // @ts-ignore
         title: "Kayıp Müşteri Riski!",
         description: `Bu müşteri ${res.days} gündür pasif. Otomatik geri kazanım SMS'i gönderildi.`,
-        icon: <AlertCircle className="text-amber-500" />
+        icon: <AlertCircle className="text-amber-500" />,
       } as any);
       loadLeads();
     } else {
@@ -215,7 +225,9 @@ export default function LeadsPage() {
     try {
       const res = await syncAndScoreLeads();
       if (res.success) {
-        antdMessage.success(`Eşleştirme tamamlandı: ${res.matchedCount} müşteri Bilsoft ile eşleşti.`);
+        antdMessage.success(
+          `Eşleştirme tamamlandı: ${res.matchedCount} müşteri Bilsoft ile eşleşti.`,
+        );
         await loadLeads();
         router.refresh();
       } else {
@@ -232,7 +244,10 @@ export default function LeadsPage() {
     setIsScraping(true);
     try {
       // Server Action kullanarak tarama yap (X-Service-Token gerektirmez, session ile korunur)
-      const result = await scrapeLeads({ query: values.query, location: values.location });
+      const result = await scrapeLeads({
+        query: values.query,
+        location: values.location,
+      });
 
       if (result.success) {
         await revalidateLeads();
@@ -240,7 +255,9 @@ export default function LeadsPage() {
         api.success({
           // @ts-ignore
           title: "Tarama Başarılı",
-          description: result.message || `${result.count || 0} yeni lead bulundu ve sisteme eklendi.`,
+          description:
+            result.message ||
+            `${result.count || 0} yeni lead bulundu ve sisteme eklendi.`,
           placement: "topRight",
           icon: <CheckCircle2 className="text-emerald-500" />,
         } as any);
@@ -251,7 +268,9 @@ export default function LeadsPage() {
         api.error({
           // @ts-ignore
           title: "Tarama Hatası",
-          description: result.error || "Google Places verileri çekilirken bir sorun oluştu.",
+          description:
+            result.error ||
+            "Google Places verileri çekilirken bir sorun oluştu.",
           icon: <AlertCircle className="text-rose-500" />,
         } as any);
       }
@@ -316,7 +335,7 @@ export default function LeadsPage() {
         items.push({
           color: color,
           dot: icon,
-          children: (
+          content: (
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <Text
@@ -391,7 +410,10 @@ export default function LeadsPage() {
             {source}
           </span>
           {record.tags?.map((tag: string) => (
-            <Tag key={tag} className="text-[9px] font-black border-none bg-emerald-500/10 text-emerald-600 m-0 w-fit px-1">
+            <Tag
+              key={tag}
+              className="text-[9px] font-black border-none bg-emerald-500/10 text-emerald-600 m-0 w-fit px-1"
+            >
               {tag}
             </Tag>
           ))}
@@ -420,14 +442,26 @@ export default function LeadsPage() {
       sorter: (a: any, b: any) =>
         (a.status || "").localeCompare(b.status || ""),
       render: (status: string, record: any) => {
-        const displayStatus = status || 'PROSPECT';
+        const displayStatus = status || "PROSPECT";
         return (
           <div className="flex flex-col gap-1">
-            <Tag color={displayStatus === 'CHURN_ALARM' ? 'warning' : 'blue'} className="text-[10px] font-bold uppercase rounded m-0 w-fit">
-              {displayStatus === 'PROSPECT' ? 'Yeni Aday' : displayStatus === 'ACTIVE' ? 'Aktif Müşteri' : displayStatus === 'CHURN_ALARM' ? 'Pasifleşmiş' : displayStatus}
+            <Tag
+              color={displayStatus === "CHURN_ALARM" ? "warning" : "blue"}
+              className="text-[10px] font-bold uppercase rounded m-0 w-fit"
+            >
+              {displayStatus === "PROSPECT"
+                ? "Yeni Aday"
+                : displayStatus === "ACTIVE"
+                  ? "Aktif Müşteri"
+                  : displayStatus === "CHURN_ALARM"
+                    ? "Pasifleşmiş"
+                    : displayStatus}
             </Tag>
             {record.communicationOptIn === false && (
-              <Tag color="default" className="text-[9px] font-bold uppercase rounded m-0 w-fit opacity-60">
+              <Tag
+                color="default"
+                className="text-[9px] font-bold uppercase rounded m-0 w-fit opacity-60"
+              >
                 MESAJ İSTEMİYOR
               </Tag>
             )}
@@ -517,7 +551,12 @@ export default function LeadsPage() {
           </Button>
           <Button
             type="default"
-            icon={<ShieldCheck size={14} className={isSyncing ? "animate-pulse" : ""} />}
+            icon={
+              <ShieldCheck
+                size={14}
+                className={isSyncing ? "animate-pulse" : ""}
+              />
+            }
             size="small"
             onClick={handleBilsoftSync}
             loading={isSyncing}
@@ -698,7 +737,7 @@ export default function LeadsPage() {
                             : "hsl(var(--primary))",
                         fontWeight: "800",
                         fontSize: "32px",
-                      }
+                      },
                     }}
                     prefix={<TrendingUp size={24} className="mb-1" />}
                     suffix={
@@ -747,10 +786,12 @@ export default function LeadsPage() {
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-500">İletişim İzni:</span>
-                    <Switch 
-                      size="small" 
+                    <Switch
+                      size="small"
                       checked={selectedLead.communicationOptIn}
-                      onChange={() => handleToggleCommunication(selectedLead.id)}
+                      onChange={() =>
+                        handleToggleCommunication(selectedLead.id)
+                      }
                     />
                   </div>
                   <div className="flex justify-between">

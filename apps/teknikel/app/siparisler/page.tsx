@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { redirect } from "next/navigation";
 import { getIdeasoftOrders } from "@/src/services/ideasoft";
+import { isIdeasoftRefreshMissing } from "@/src/services/tokenManager";
 import { revalidateSiparisler } from "@/app/actions/revalidate";
 import OrderTable from "./OrderTable";
 
@@ -30,7 +31,12 @@ export default async function SiparislerPage({
     pagination = result.pagination;
   } catch (err: any) {
     console.error("Siparisler sayfası - IdeaSoft API hatası:", err);
-    error = err?.message || "IdeaSoft bağlantı hatası";
+    if (isIdeasoftRefreshMissing(err)) {
+      error =
+        "IdeaSoft refresh token bulunamadı. Lütfen Ayarlar > Sistem Bağlantıları sayfasından IdeaSoft entegrasyonunu başlatın.";
+    } else {
+      error = err?.message || "IdeaSoft bağlantı hatası";
+    }
   }
 
   // Veriyi sterilize et (Server -> Client geçişi için)
