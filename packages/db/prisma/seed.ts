@@ -85,6 +85,7 @@ async function main() {
         appliedForId: jobs[i % jobs.length].id,
         status: ["NEW", "REVIEW", "INTERVIEW", "REJECTED", "HIRED"][i % 5] as any,
         tenantId: "mercan",
+        communicationOptIn: true,
       }
     });
   }
@@ -109,11 +110,11 @@ async function main() {
   for (let i = 1; i <= 15; i++) {
     await prisma.lead.create({
       data: {
-        fullName: `Müşteri Adayı ${i}`,
+        name: `Müşteri Adayı ${i}`,
         email: `lead${i}@company.com`,
         source: i % 2 === 0 ? "MERCAN_WEBSITE" : "REFERRAL",
         message: "Hizmetleriniz hakkında bilgi almak istiyoruz.",
-        status: ["NEW", "CONTACTED", "PROPOSAL_SENT", "CLOSED_WON"][i % 4],
+        status: ["NEW", "CONTACTED", "HOT", "PROSPECT"][i % 4] as any,
         tenantId: "mercan",
       }
     });

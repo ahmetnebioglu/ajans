@@ -72,6 +72,7 @@ export async function addCandidate(data: {
       data: {
         ...data,
         status: CandidateStatus.NEW,
+        communicationOptIn: true,
       },
     });
   });

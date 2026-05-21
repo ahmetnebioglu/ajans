@@ -19,10 +19,11 @@ model User {
   password         String?
   accounts         Account[]
   auditLogs        AuditLog[]
-  createdCompanies Company[]       @relation("CompanyCreatedBy")
+  communicationOptIn Boolean      @default(true)
   companyAccess    CompanyAccess[]
   notifications    Notification[]
   reports          Report[]
+  createdCompanies Company[]       @relation("CompanyCreatedBy")
   sessions         Session[]
   companies        Company[]       @relation("CompanyToExpert")
   
@@ -583,6 +584,7 @@ model Candidate {
   lastName     String
   email        String
   phone        String?
+  communicationOptIn Boolean      @default(true)
   cvUrl        String?
   status       CandidateStatus @default(NEW)
   appliedForId String

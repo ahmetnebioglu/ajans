@@ -57,6 +57,7 @@ export async function submitApplication(formData: FormData) {
           phone,
           cvUrl,
           status: "NEW",
+            communicationOptIn: true,
           appliedForId,
           tenantId: "mercan",
         },
