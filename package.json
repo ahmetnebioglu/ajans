@@ -10,6 +10,7 @@
     "db:generate": "turbo db:generate",
     "db:push": "turbo db:push",
     "db:seed": "turbo db:seed",
+    "vercel-build": "npm run db:push && turbo build",
     "db:ensure-lead-placeid": "tsx scripts/ensure-lead-placeid-column.ts",
     "start": "turbo start",
     "stop": "taskkill /f /im node.exe 2>nul || exit 0",
