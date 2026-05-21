@@ -7,7 +7,13 @@ import * as path from "path";
 // Çevresel değişkenlerin yüklendiğinden emin ol
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
-const rawUrl = process.env.DATABASE_URL;
+const rawUrl =
+  process.env.DATABASE_URL ||
+  process.env.DATABASE_POSTGRES_PRISMA_URL ||
+  process.env.POSTGRES_PRISMA_URL ||
+  process.env.POSTGRES_URL_NON_POOLING ||
+  process.env.CUSTOM_PRISMA_URL;
+
 if (!rawUrl) {
   console.warn(">>> [DBClient] DATABASE_URL is not set. Using fallback for local development.");
 }
