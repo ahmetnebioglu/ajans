@@ -7,7 +7,7 @@ interface NaceCode {
   id: string;
   code: string;
   description: string;
-  hazardClass: string;
+  dangerClass: string;
 }
 
 export default function NaceSearch({ initialData }: { initialData: NaceCode[] }) {
@@ -22,7 +22,7 @@ export default function NaceSearch({ initialData }: { initialData: NaceCode[] })
     
     if (selectedHazard) {
       result = result.filter(item => {
-        const cls = item.hazardClass.toUpperCase();
+        const cls = item.dangerClass.toUpperCase();
         return cls.includes(selectedHazard.toUpperCase());
       });
     }
@@ -59,8 +59,15 @@ export default function NaceSearch({ initialData }: { initialData: NaceCode[] })
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const getHazardBadge = (hazardClass: string) => {
-    const cls = hazardClass.toUpperCase();
+  const getHazardBadge = (dangerClass: string | undefined) => {
+    if (!dangerClass) {
+      return (
+        <span className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-500 rounded-full text-[10px] font-black uppercase tracking-widest border border-slate-200 whitespace-nowrap">
+          Belirtilmemiş
+        </span>
+      );
+    }
+    const cls = dangerClass.toUpperCase();
     if (cls.includes("ÇOK TEHLİKELİ") || cls.includes("COK TEHLIKELI")) {
       return (
         <span className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-100 text-rose-700 rounded-full text-[10px] font-black uppercase tracking-widest border border-rose-200 whitespace-nowrap">
@@ -162,7 +169,7 @@ export default function NaceSearch({ initialData }: { initialData: NaceCode[] })
                         <tr key={item.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
                            <td className="p-5 font-black text-slate-900 text-sm whitespace-nowrap">{item.code}</td>
                            <td className="p-5 text-sm font-medium text-slate-600 leading-relaxed">{item.description}</td>
-                           <td className="p-5 text-right flex justify-end">{getHazardBadge(item.hazardClass)}</td>
+                           <td className="p-5 text-right flex justify-end">{getHazardBadge(item.dangerClass)}</td>
                         </tr>
                      ))
                   ) : (

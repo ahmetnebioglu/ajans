@@ -1,7 +1,7 @@
 
 import React from "react";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@ajans/auth";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import DashboardClientLayout from "./dashboard-client-layout";
 

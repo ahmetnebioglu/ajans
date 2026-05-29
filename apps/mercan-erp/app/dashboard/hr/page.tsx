@@ -1,6 +1,6 @@
 import React from "react";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@ajans/auth";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import HRDashboardClient from "./hr-client-page";
 

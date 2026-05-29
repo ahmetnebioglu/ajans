@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { unsecured_prisma as prisma } from "@ajans/db";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@ajans/auth";
+import { authOptions } from "@/lib/auth";
 
 export async function setActiveCompany(companyId: string) {
   const session = await getServerSession(authOptions);
