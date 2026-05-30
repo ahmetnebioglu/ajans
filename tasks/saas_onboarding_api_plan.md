@@ -45,3 +45,14 @@ Dış projenin bizim sistemimizde otomatik hesap oluşturabilmesi için yazılac
 
 #### apps/mercan-erp/app/api/external/suspend/route.ts
 - **POST /api/external/suspend**: Abonelik iptali veya ödeme çekilememesi durumunda hesabın (ve bağlı kullanıcıların) erişimini donduracak servis.
+
+---
+
+### 4. API Dokümantasyonu (Dış Geliştirici İçin)
+Oluşturulacak bu endpointler, harici satış projesini geliştiren ekibin kolayca entegre olabilmesi için dokümante edilecektir.
+
+#### API Dokümantasyon Çıktıları
+- İstek (Request) ve Yanıt (Response) gövdelerinin JSON şemaları.
+- Güvenlik token'ının (API Key) istek başlıklarına (Headers) nasıl ekleneceği bilgisi.
+- Hata kodları ve açıklamaları (Örn: 400 Bad Request, 401 Unauthorized, 500 Internal Server Error).
+- Örnek cURL veya Postman koleksiyonu ile test edilebilecek hazır yapılar.
