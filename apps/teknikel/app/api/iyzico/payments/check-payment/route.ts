@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Dynamic import for iyzipay (CommonJS module)
-async function getIyzipay() {
-  const Iyzipay = (await import('iyzipay')).default;
-  return Iyzipay;
-}
+import axios from 'axios';
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,51 +29,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const Iyzipay = await getIyzipay();
-
-    const iyzipay = new Iyzipay({
-      apiKey: apiKey,
-      secretKey: secretKey,
-      uri: baseUrl,
-    });
-
-    const retrievePayment = (opts: any) =>
-      new Promise((resolve, reject) => {
-        iyzipay.payment.retrieve(opts, (err: any, result: any) => {
-          if (err) return reject(err);
-          resolve(result);
-        });
-      });
+    // Use Iyzico REST API directly instead of SDK
+    const retrievePayment = async (paymentId: string) => {
+      try {
+        const response = await axios.post(
+          `${baseUrl}/payment/detail`,
+          {
+            locale: 'tr',
+            conversationId: paymentId,
+          },
+          {
+            auth: {
+              username: apiKey,
+              password: secretKey,
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    };
 
     let lastError = null;
 
-    // Try by paymentId (transactionId)
+    // Try by transactionId
     if (transactionId) {
       try {
-        const r = await retrievePayment({ paymentId: String(transactionId) });
-        if (r && (String((r as any).status).toLowerCase() === 'success' || (r as any).status)) {
+        const r = await retrievePayment(String(transactionId));
+        if (r && (r.status === 'success' || r.status)) {
           return NextResponse.json({
             success: true,
             found: true,
-            source: 'iyzipay-sdk',
+            source: 'iyzico-api',
             data: r,
-          });
-        }
-      } catch (e) {
-        lastError = e;
-      }
-
-      // Try by conversationId
-      try {
-        const r2 = await retrievePayment({
-          conversationId: String(transactionId),
-        });
-        if (r2 && (String((r2 as any).status).toLowerCase() === 'success' || (r2 as any).status)) {
-          return NextResponse.json({
-            success: true,
-            found: true,
-            source: 'iyzipay-sdk',
-            data: r2,
           });
         }
       } catch (e) {
@@ -86,16 +73,16 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Try by conversationId using orderId
+    // Try by orderId
     if (orderId) {
       try {
-        const r3 = await retrievePayment({ conversationId: String(orderId) });
-        if (r3 && (String((r3 as any).status).toLowerCase() === 'success' || (r3 as any).status)) {
+        const r = await retrievePayment(String(orderId));
+        if (r && (r.status === 'success' || r.status)) {
           return NextResponse.json({
             success: true,
             found: true,
-            source: 'iyzipay-sdk',
-            data: r3,
+            source: 'iyzico-api',
+            data: r,
           });
         }
       } catch (e) {
@@ -106,7 +93,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       found: false,
-      message: 'No Iyzico payment found via API (SDK)',
+      message: 'No Iyzico payment found via API',
       lastError: lastError ? String((lastError as any).message || lastError) : null,
     });
   } catch (error: any) {
