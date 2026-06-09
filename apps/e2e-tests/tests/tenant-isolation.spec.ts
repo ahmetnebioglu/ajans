@@ -22,7 +22,7 @@ test.describe('Tenant İzolasyon Testi', () => {
     await mercanContext.close();
   });
 
-  test('Okul Admin, Mercan ERP verilerini görememeli', async ({ browser }) => {
+  test('Okul Admin, ERP verilerini görememeli', async ({ browser }) => {
     const okulContext = await browser.newContext({ storageState: 'storageState/okul-admin.json' });
     const page = await okulContext.newPage();
 

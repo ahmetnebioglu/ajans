@@ -55,16 +55,16 @@ async function main() {
   console.log(`Customer user created: ${customerEmail}`);
 
   // 3. Grant Access
-  await prisma.companyAccess.upsert({
-    where: { userId_companyId: { userId: customer.id, companyId: company1.id } },
+  await prisma.workspaceUsers.upsert({
+    where: { userId_workspaceId: { userId: customer.id, workspaceId: company1.id } },
     update: {},
-    create: { userId: customer.id, companyId: company1.id }
+    create: { userId: customer.id, workspaceId: company1.id }
   });
 
-  await prisma.companyAccess.upsert({
-    where: { userId_companyId: { userId: customer.id, companyId: company2.id } },
+  await prisma.workspaceUsers.upsert({
+    where: { userId_workspaceId: { userId: customer.id, workspaceId: company2.id } },
     update: {},
-    create: { userId: customer.id, companyId: company2.id }
+    create: { userId: customer.id, workspaceId: company2.id }
   });
 
   console.log("Company access granted.");

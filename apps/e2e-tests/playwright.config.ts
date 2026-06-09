@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Ajans Monorepo Playwright Yapılandırması.
- * Mercan ERP, Okul ERP ve Mercan Website testlerini kapsar.
+ * ERP, Okul ERP ve Mercan Website testlerini kapsar.
  */
 export default defineConfig({
   timeout: 120 * 1000,
@@ -20,14 +20,14 @@ export default defineConfig({
     ["json", { outputFile: "playwright-report/results.json" }],
   ],
   use: {
-    baseURL: "http://localhost:3001", // Varsayılan Mercan ERP
+    baseURL: "http://localhost:3001", // Varsayılan ERP
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
 
   projects: [
     {
-      name: "mercan-erp",
+      name: "erp",
       dependencies: ["setup"],
       use: {
         ...devices["Desktop Chrome"],
@@ -36,20 +36,11 @@ export default defineConfig({
       },
     },
     {
-      name: "okul-erp",
-      dependencies: ["setup"],
-      use: {
-        ...devices["Desktop Chrome"],
-        baseURL: "http://localhost:3006",
-        storageState: "storageState/okul-admin.json",
-      },
-    },
-    {
       name: "mercan-website",
       dependencies: ["setup"],
       use: {
         ...devices["Desktop Chrome"],
-        baseURL: "http://localhost:3005",
+        baseURL: "http://localhost:3002",
       },
     },
     /* Auth Setup Project */

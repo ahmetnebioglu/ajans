@@ -3,7 +3,7 @@ node_modules
 .turbo
 apps/e2e-tests
 apps/ecommerce-hub
-apps/mercan-erp
+apps/erp
 apps/mercan-website
 apps/okul-erp
 apps/teknikel/.next

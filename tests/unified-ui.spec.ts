@@ -41,7 +41,7 @@ test.describe("Unified OS: Arayüz ve Navigasyon", () => {
     // Dropdown menüde modüllerin listelendiğini doğrula
     const switcher = page.locator(".ant-dropdown-menu");
     await expect(switcher).toBeVisible();
-    await expect(switcher).toContainText("MERCAN ERP");
+    await expect(switcher).toContainText("ERP");
     await expect(switcher).toContainText("MERCAN CMS");
     await expect(switcher).toContainText("MERCAN HR");
     await expect(switcher).toContainText("MERCAN CRM");

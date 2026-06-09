@@ -6,6 +6,24 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  SUPER_ADMIN
+  SYSTEM_SUPPORT
+  ADMIN
+  EXPERT
+  CLIENT
+  HR_MANAGER
+  CUSTOMER
+}
+
+enum AppModule {
+  DRIVE
+  CMS
+  HR
+  CRM
+}
+
 model User {
   id               String          @id @default(cuid())
   name             String?
@@ -20,12 +38,12 @@ model User {
   accounts         Account[]
   auditLogs        AuditLog[]
   communicationOptIn Boolean      @default(true)
-  companyAccess    CompanyAccess[]
+  workspaceUsers   WorkspaceUser[]
   notifications    Notification[]
   reports          Report[]
-  createdCompanies Company[]       @relation("CompanyCreatedBy")
+  createdWorkspaces Workspace[]     @relation("WorkspaceCreatedBy")
   sessions         Session[]
-  companies        Company[]       @relation("CompanyToExpert")
+  workspaces       Workspace[]      @relation("WorkspaceToExpert")
   
   // Okul ERP Relations
   managedClasses       Classroom[]         @relation("TeacherToClass")
@@ -72,7 +90,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-enum CompanyStatus {
+enum WorkspaceStatus {
   PROSPECT
   ACTIVE
   PASSIVE
@@ -81,7 +99,7 @@ enum CompanyStatus {
   CHURN_ALARM
 }
 
-model Company {
+model Workspace {
   id            String          @id @default(cuid())
   name          String
   createdAt     DateTime        @default(now())
@@ -92,45 +110,64 @@ model Company {
   phone         String?
   driveFolderId String?         @unique
   createdById   String?
-  tenantId      String          @default("mercan")
+  tenantId      String          @unique @default(cuid())
   
+  activeModules AppModule[]     @default([DRIVE, CMS, HR, CRM])
+
   // CRM & Compliance
-  status             CompanyStatus @default(PROSPECT)
-  communicationOptIn Boolean       @default(true)
+  status             WorkspaceStatus @default(PROSPECT)
+  communicationOptIn Boolean         @default(true)
 
   auditLogs     AuditLog[]
-  createdBy     User?           @relation("CompanyCreatedBy", fields: [createdById], references: [id])
-  userAccess    CompanyAccess[]
+  createdBy     User?           @relation("WorkspaceCreatedBy", fields: [createdById], references: [id])
+  users         WorkspaceUser[]
+  roles         WorkspaceRole[]
   folders       Folder[]
   reports       Report[]
-  experts       User[]          @relation("CompanyToExpert")
+  experts       User[]          @relation("WorkspaceToExpert")
 
   @@index([tenantId])
 }
 
-model CompanyAccess {
-  id        String   @id @default(cuid())
-  userId    String
-  companyId String
-  createdAt DateTime @default(now())
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model WorkspaceRole {
+  id          String   @id @default(cuid())
+  name        String   // Örn: "İK Yöneticisi", "Sadece Okur"
+  workspaceId String
+  permissions String[] // Örn: ["HR_READ", "HR_WRITE", "CRM_READ"]
+  isDefault   Boolean  @default(false) 
+  
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  users       WorkspaceUser[]
+  
+  @@unique([workspaceId, name])
+}
 
-  @@unique([userId, companyId])
+model WorkspaceUser {
+  id          String   @id @default(cuid())
+  userId      String
+  workspaceId String
+  roleId      String?
+  createdAt   DateTime @default(now())
+
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        WorkspaceRole?  @relation(fields: [roleId], references: [id])
+
+  @@unique([userId, workspaceId])
 }
 
 model Folder {
-  id        String   @id @default(cuid())
-  name      String
-  companyId String
-  parentId  String?
-  tenantId  String   @default("mercan")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  parent    Folder?  @relation("SubFolders", fields: [parentId], references: [id])
-  children  Folder[] @relation("SubFolders")
-  reports   Report[]
+  id          String   @id @default(cuid())
+  name        String
+  workspaceId String
+  parentId    String?
+  tenantId    String   
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  parent      Folder?    @relation("SubFolders", fields: [parentId], references: [id])
+  children    Folder[]   @relation("SubFolders")
+  reports     Report[]
 
   @@index([tenantId])
 }
@@ -139,8 +176,8 @@ model Report {
   id           String   @id @default(cuid())
   title        String
   fileUrl      String?
-  companyId    String
-  tenantId     String   @default("mercan")
+  workspaceId  String
+  tenantId     String   
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   category     String?  @default("Genel")
@@ -150,25 +187,25 @@ model Report {
   uploadedById String?
   driveFileId  String?
   fileName     String?
-  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  folder       Folder?  @relation(fields: [folderId], references: [id])
-  uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
+  workspace    Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  folder       Folder?    @relation(fields: [folderId], references: [id])
+  uploadedBy   User?      @relation(fields: [uploadedById], references: [id])
 
   @@index([tenantId])
 }
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  userId    String?
-  action    String
-  details   String?
-  ipAddress String?
-  level     String   @default("INFO")
-  createdAt DateTime @default(now())
-  companyId String?
-  tenantId  String   @default("mercan")
-  company   Company? @relation(fields: [companyId], references: [id])
-  user      User?    @relation(fields: [userId], references: [id])
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String
+  details     String?
+  ipAddress   String?
+  level       String   @default("INFO")
+  createdAt   DateTime @default(now())
+  workspaceId String?
+  tenantId    String   
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  user        User?      @relation(fields: [userId], references: [id])
 
   @@index([tenantId])
 }
@@ -435,15 +472,6 @@ model PermissionRequest {
   updatedAt     DateTime  @updatedAt
 
   @@index([tenantId])
-}
-
-enum Role {
-  USER
-  ADMIN
-  EXPERT
-  CLIENT
-  HR_MANAGER
-  CUSTOMER
 }
 
 enum LeadStatus {
