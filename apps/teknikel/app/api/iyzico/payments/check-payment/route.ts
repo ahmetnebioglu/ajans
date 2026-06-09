@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
+import { getSecuredPrisma } from '@ajans/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,9 +16,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const baseUrl = (process.env.IYZICO_BASE_URL || '').replace(/\/$/, '');
-    const apiKey = process.env.IYZICO_API_KEY || '';
-    const secretKey = process.env.IYZICO_SECRET_KEY || '';
+    // DB'den Iyzico ayarlarını oku, yoksa env'dan oku
+    let baseUrl = process.env.IYZICO_BASE_URL || '';
+    let apiKey = process.env.IYZICO_API_KEY || '';
+    let secretKey = process.env.IYZICO_SECRET_KEY || '';
+
+    try {
+      const db = getSecuredPrisma('teknikel');
+      const settings = await db.siteSettings.findUnique({ where: { id: 'global' } });
+      if (settings) {
+        baseUrl = settings.iyzicoBaseUrl || baseUrl;
+        apiKey = settings.iyzicoApiKey || apiKey;
+        secretKey = settings.iyzicoSecretKey || secretKey;
+      }
+    } catch (dbError) {
+      console.warn('Could not fetch Iyzico settings from DB, using env variables:', dbError);
+    }
+
+    baseUrl = baseUrl.replace(/\/$/, '');
 
     if (!baseUrl || !apiKey || !secretKey) {
       return NextResponse.json(

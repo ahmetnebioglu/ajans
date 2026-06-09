@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import dbConnect from '@/lib/dbConnect';
 import IyzicoPayment from '@/lib/models/IyzicoPayment';
+import { getSecuredPrisma } from '@ajans/db';
 
 function verifyIyzicoSignature(payload: any, signature: string, secretKey: string): boolean {
   const hmac = crypto.createHmac('sha256', secretKey);
@@ -35,11 +36,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify signature
+    // Verify signature - DB'den oku, yoksa env'dan oku
     const signature = request.headers.get('x-iyzico-signature') || request.headers.get('x-signature');
-    const secretKey = process.env.IYZICO_SECRET_KEY;
+    let secretKey = process.env.IYZICO_SECRET_KEY;
 
     console.warn(`[${requestId}] 🔐 Signature: ${signature ? 'Present' : 'Missing'}`);
+
+    // DB'den secret key'i oku
+    try {
+      const db = getSecuredPrisma('teknikel');
+      const settings = await db.siteSettings.findUnique({ where: { id: 'global' } });
+      if (settings?.iyzicoSecretKey) {
+        secretKey = settings.iyzicoSecretKey;
+      }
+    } catch (dbError) {
+      console.warn(`[${requestId}] Could not fetch secret key from DB, using env:`, dbError);
+    }
 
     if (signature && secretKey) {
       const isValid = verifyIyzicoSignature(body, signature, secretKey);

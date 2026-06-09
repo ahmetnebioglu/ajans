@@ -20,6 +20,7 @@ export async function getIntegrationStatuses() {
     database: true,
     netgsm: (!!settings?.netgsmUsercode && !!settings?.netgsmPassword) || (!!process.env.NETGSM_USERCODE && !!process.env.NETGSM_PASSWORD),
     bilsoft: !!bilsoft || (!!process.env.BILSOFT_USER && !!process.env.BILSOFT_PASSWORD),
+    iyzico: (!!settings?.iyzicoApiKey && !!settings?.iyzicoSecretKey && !!settings?.iyzicoBaseUrl) || (!!process.env.IYZICO_API_KEY && !!process.env.IYZICO_SECRET_KEY && !!process.env.IYZICO_BASE_URL),
   };
 }
 
@@ -47,7 +48,10 @@ export async function updateIntegrationSettings(data: any) {
       'googleDriveFolderId',
       'resendApiKey', 
       'netgsmUsercode', 
-      'netgsmPassword'
+      'netgsmPassword',
+      'iyzicoApiKey',
+      'iyzicoSecretKey',
+      'iyzicoBaseUrl'
     ];
     
     const filteredData: any = {};

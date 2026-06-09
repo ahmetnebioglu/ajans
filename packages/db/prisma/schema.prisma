@@ -395,6 +395,9 @@ model SiteSettings {
   resendApiKey       String?
   netgsmUsercode     String?
   netgsmPassword     String?
+  iyzicoApiKey       String?
+  iyzicoSecretKey    String?
+  iyzicoBaseUrl      String?
   updatedAt          DateTime @updatedAt
 }
 
