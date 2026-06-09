@@ -27,6 +27,7 @@
     "axios": "latest",
     "bcryptjs": "^3.0.3",
     "clsx": "latest",
+    "iyzipay": "^2.0.50",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "mongoose": "^9.6.1",

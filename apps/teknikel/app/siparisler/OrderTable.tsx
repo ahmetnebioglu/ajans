@@ -206,6 +206,24 @@ export default function OrderTable({
         label: "Sepet Ara",
         onClick: () => router.push("/sepet-ara"),
       },
+      {
+        type: "divider",
+      },
+      {
+        key: "hatali-siparisler",
+        label: "Hatalı Siparişler",
+        onClick: () => router.push("/siparisler/hatali"),
+      },
+      {
+        key: "islemde-siparisler",
+        label: "İşlemdeki Siparişler",
+        onClick: () => router.push("/siparisler/islemde"),
+      },
+      {
+        key: "odemeler",
+        label: "Iyzico Ödemeleri",
+        onClick: () => router.push("/odemeler"),
+      },
     ],
   };
 
