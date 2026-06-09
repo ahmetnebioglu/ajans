@@ -19,7 +19,8 @@ async function protectedAction<T>(fn: (ctx: { db: any, user: any }) => Promise<T
   }
   
   try {
-    const result = await fn({ db, user: session.user });
+    const user = session.user as any;
+    const result = await fn({ db, user });
     return { success: true, data: result };
   } catch (error: any) {
     console.error("[ACTION ERROR]:", error.message);

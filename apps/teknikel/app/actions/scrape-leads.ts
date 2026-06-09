@@ -32,6 +32,7 @@ export async function scrapeLeads(
   if (!session?.user) {
     return { success: false, error: "Yetkisiz erişim. Lütfen giriş yapın." };
   }
+  const user = session.user as any;
 
   const { query, location } = input;
 
@@ -43,7 +44,7 @@ export async function scrapeLeads(
   }
 
   console.log(
-    `[SCRAPE] Başlatıldı: Query="${query}", Location="${location || "Belirtilmedi"}", User="${session.user.email}"`,
+    `[SCRAPE] Başlatıldı: Query="${query}", Location="${location || "Belirtilmedi"}", User="${user.email}"`,
   );
 
   try {
@@ -110,7 +111,7 @@ export async function scrapeLeads(
             type: "CREATED",
             metadata: {
               scoreAdded: 0,
-              description: `Sisteme eklendi (Google Places) — Tarayan: ${session.user.email}`,
+              description: `Sisteme eklendi (Google Places) — Tarayan: ${user.email}`,
             },
           });
 

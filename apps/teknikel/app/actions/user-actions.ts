@@ -17,10 +17,11 @@ export async function updateProfile(formData: FormData) {
       return { success: false, error: "Oturum bulunamadı." };
     }
 
+    const user = session.user as any;
     const name = formData.get("name") as string;
     const file = formData.get("avatar") as File;
     
-    let imageUrl = session.user.image || "";
+    let imageUrl = user.image || "";
 
     // Eğer yeni bir dosya yüklendiyse
     if (file && file.size > 0 && file.name !== "undefined") {
@@ -31,7 +32,7 @@ export async function updateProfile(formData: FormData) {
       try {
         const driveFile = await uploadToDrive(
           buffer,
-          `profile_${session.user.email.split('@')[0]}_${Date.now()}.jpg`,
+          `profile_${user.email.split('@')[0]}_${Date.now()}.jpg`,
           file.type,
           process.env.GOOGLE_DRIVE_FOLDER_ID
         );
@@ -52,15 +53,15 @@ export async function updateProfile(formData: FormData) {
     // Veritabanını güncelle (SQL Transaction kullanarak - Kalıcı Senkronizasyon)
     await db.$transaction(async (tx) => {
       await tx.user.update({
-        where: { email: session.user.email }, 
+        where: { email: user.email }, 
         data: {
-          name: name || session.user.name,
+          name: name || user.name,
           image: imageUrl
         }
       });
     });
 
-    console.log(`[ProfileAction] Profile updated for ${session.user.email}`);
+    console.log(`[ProfileAction] Profile updated for ${user.email}`);
 
     // Next.js Cache Patlatma
     revalidatePath("/profile");
@@ -82,6 +83,7 @@ export async function changePassword(newPassword: string) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) return { success: false, error: "Yetkisiz" };
 
+    const user = session.user as any;
     if (!newPassword || newPassword.length < 6) {
       return { success: false, error: "Şifre en az 6 karakter olmalıdır." };
     }
@@ -91,11 +93,11 @@ export async function changePassword(newPassword: string) {
 
     // Veritabanında güncelle
     await db.user.update({
-      where: { email: session.user.email },
+      where: { email: user.email },
       data: { password: hashedPassword },
     });
 
-    console.log(`[PasswordAction] Password updated for ${session.user.email}`);
+    console.log(`[PasswordAction] Password updated for ${user.email}`);
     return { success: true };
   } catch (error: any) {
     console.error("[PasswordAction] Error:", error);
