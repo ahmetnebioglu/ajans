@@ -1,4 +1,15 @@
 import { authOptions as commonAuthOptions } from "@ajans/auth";
+import type { Session } from "next-auth";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: string;
+      tenantId: string;
+    } & Session["user"];
+  }
+}
 
 export const authOptions = {
   ...commonAuthOptions,
@@ -24,4 +35,4 @@ export const authOptions = {
       return session;
     }
   },
-};
+} as const;
