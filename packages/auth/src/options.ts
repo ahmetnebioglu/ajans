@@ -26,14 +26,7 @@ export const authOptions: NextAuthOptions = {
         // VIP Pass for E2E Tests
         if (credentials.email.endsWith("@mercan.test")) {
           const prefix = credentials.email.split('@')[0].toLowerCase();
-          const roleMap: Record<string, string> = {
-            admin: "ADMIN",
-            customer: "CUSTOMER",
-            expert: "EXPERT",
-            uzman: "EXPERT",
-            hr: "HR_MANAGER"
-          };
-          const assignedRole = roleMap[prefix] || "USER";
+          const assignedRole = "USER";
           
           return await prisma.$transaction(async (tx) => {
             return await tx.user.upsert({
@@ -54,7 +47,15 @@ export const authOptions: NextAuthOptions = {
         }
 
         let user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: { email: credentials.email },
+          include: {
+            workspaceUsers: {
+              include: {
+                workspace: true,
+                role: true
+              }
+            }
+          }
         });
 
         // AUTO-SEED MANTIĞI: Admin kullanıcısı yoksa anında oluştur
@@ -66,8 +67,13 @@ export const authOptions: NextAuthOptions = {
               email: credentials.email,
               name: "Admin Teknikel",
               password: hashedPassword,
-              role: "ADMIN" as any,
+              role: "SUPER_ADMIN" as any,
               tenantId: "mercan",
+            },
+            include: {
+              workspaceUsers: {
+                include: { workspace: true, role: true }
+              }
             }
           });
         }
@@ -81,12 +87,27 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Hatalı şifre.");
         }
 
+        const availableWorkspaces = user.workspaceUsers.map((wu: any) => ({
+          id: wu.workspaceId,
+          name: wu.workspace.name,
+          roleId: wu.roleId,
+          tenantId: wu.workspace.tenantId
+        }));
+
+        const currentWorkspace = user.workspaceUsers[0];
+        const currentWorkspaceId = currentWorkspace?.workspaceId || null;
+        const tenantId = currentWorkspace?.workspace?.tenantId || user.tenantId;
+        const permissions = currentWorkspace?.role?.permissions || [];
+
         return {
           id: user.id,
           name: user.name,
           email: user.email,
           role: user.role,
-          tenantId: user.tenantId,
+          tenantId,
+          currentWorkspaceId,
+          permissions,
+          availableWorkspaces,
           image: user.image
         } as any;
       }
@@ -96,18 +117,32 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      // Allow updating session (e.g. Workspace Switch)
+      if (trigger === "update" && session?.currentWorkspaceId) {
+        token.currentWorkspaceId = session.currentWorkspaceId;
+        token.permissions = session.permissions || [];
+      }
+
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
         token.tenantId = (user as any).tenantId;
+        token.currentWorkspaceId = (user as any).currentWorkspaceId;
+        token.permissions = (user as any).permissions;
+        token.availableWorkspaces = (user as any).availableWorkspaces;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token && session.user) {
-        // @ts-ignore (Tip hatalarını geçici ezmek için, session tipini sonra düzeltiriz)
-        session.user.id = token.id;
+      const user = session.user as any;
+      if (token && user) {
+        user.id = token.id as string;
+        user.role = token.role as any;
+        user.tenantId = token.tenantId as string | null;
+        user.currentWorkspaceId = token.currentWorkspaceId as string | null;
+        user.permissions = token.permissions as string[];
+        user.availableWorkspaces = token.availableWorkspaces as any;
       }
       return session;
     },

@@ -3,9 +3,16 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import * as dotenv from "dotenv";
 import * as path from "path";
+import * as fs from "fs";
 
-// Çevresel değişkenlerin yüklendiğinden emin ol
-dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
+// Çevresel değişkenlerini yükle: önce .env.local (varsa), sonra .env
+const envLocalPath = path.resolve(__dirname, "../../../.env.local");
+const envPath = path.resolve(__dirname, "../../../.env");
+if (fs.existsSync(envLocalPath)) {
+  dotenv.config({ path: envLocalPath });
+} else {
+  dotenv.config({ path: envPath });
+}
 
 const rawUrl =
   process.env.DATABASE_URL ||
@@ -15,15 +22,26 @@ const rawUrl =
   process.env.CUSTOM_PRISMA_URL;
 
 if (!rawUrl) {
-  console.warn(">>> [DBClient] DATABASE_URL is not set. Using fallback for local development.");
+  console.warn(
+    ">>> [DBClient] DATABASE_URL is not set. Using fallback for local development.",
+  );
 }
 
 // Windows'ta 'localhost' yerine '127.0.0.1' kullanımı daha stabildir (IPv6 çakışmalarını önler)
-let connectionString = (rawUrl || "postgresql://root:rootpassword@127.0.0.1:5433/agency_master_db?schema=public").replace("localhost", "127.0.0.1");
+let connectionString = (
+  rawUrl ||
+  "postgresql://root:rootpassword@127.0.0.1:5433/agency_master_db?schema=public"
+).replace("localhost", "127.0.0.1");
 
 // pg v8.12+ 'require' alias uyarısını susturmak ve mevcut davranışı (verify-full) korumak için
-if (connectionString.includes("sslmode=require") && !connectionString.includes("verify-full")) {
-  connectionString = connectionString.replace("sslmode=require", "sslmode=verify-full");
+if (
+  connectionString.includes("sslmode=require") &&
+  !connectionString.includes("verify-full")
+) {
+  connectionString = connectionString.replace(
+    "sslmode=require",
+    "sslmode=verify-full",
+  );
 }
 
 const pool = new pg.Pool({
@@ -44,7 +62,10 @@ export const basePrisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     adapter,
-    log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "error", "warn"]
+        : ["error"],
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = basePrisma;
@@ -78,7 +99,7 @@ export function getSecuredPrisma(tenantId: string) {
  */
 export async function getServicePrisma(serviceToken: string) {
   const account = await basePrisma.serviceAccount.findUnique({
-    where: { serviceToken }
+    where: { serviceToken },
   });
 
   if (!account) {

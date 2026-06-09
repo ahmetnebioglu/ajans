@@ -7,7 +7,9 @@ import { Resend } from "resend";
 const getResend = () => {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.warn("UYARI: RESEND_API_KEY bulunamadı. E-posta gönderimi yapılamayacak.");
+    console.warn(
+      "UYARI: RESEND_API_KEY bulunamadı. E-posta gönderimi yapılamayacak.",
+    );
     return null;
   }
   return new Resend(apiKey);
@@ -20,7 +22,9 @@ export async function createReferenceRequest(data: {
   sector: string;
 }) {
   try {
-    const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const token =
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
 
     // Önce talebi veritabanına kaydet
     const request = await db.referenceRequest.create({
@@ -38,12 +42,12 @@ export async function createReferenceRequest(data: {
     try {
       const resend = getResend();
       if (resend) {
-        const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005'}/verify?token=${token}&type=reference`;
+        const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002"}/verify?token=${token}&type=reference`;
 
         await resend.emails.send({
-          from: 'Mercan OSGB <onboarding@resend.dev>',
+          from: "Mercan OSGB <onboarding@resend.dev>",
           to: [data.email],
-          subject: 'Referans Talebinizi Doğrulayın',
+          subject: "Referans Talebinizi Doğrulayın",
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; border: 1px solid #e2e8f0; border-radius: 24px;">
               <h1 style="color: #0f172a; font-size: 24px; font-weight: 800; text-transform: uppercase; font-style: italic; margin-bottom: 24px;">Merhaba ${data.fullName},</h1>
@@ -58,14 +62,16 @@ export async function createReferenceRequest(data: {
                 Mercan OSGB Kurumsal Çözüm Ortağınız.
               </p>
             </div>
-          `
+          `,
         });
-        console.log(`BİLGİ: ${data.email} adresine referans doğrulama maili gönderildi.`);
+        console.log(
+          `BİLGİ: ${data.email} adresine referans doğrulama maili gönderildi.`,
+        );
 
         // 2. YÖNETİCİYE BİLDİRİM MAİLİ GÖNDER
-        const adminEmail = process.env.ADMIN_EMAIL || 'ahmetnebioglu@gmail.com';
+        const adminEmail = process.env.ADMIN_EMAIL || "ahmetnebioglu@gmail.com";
         await resend.emails.send({
-          from: 'Mercan OSGB Sistem <system@resend.dev>',
+          from: "Mercan OSGB Sistem <system@resend.dev>",
           to: [adminEmail],
           subject: `Yeni Referans Talebi: ${data.companyName}`,
           html: `
@@ -94,12 +100,12 @@ export async function createReferenceRequest(data: {
                </table>
 
                <div style="margin-top: 40px; text-align: center;">
-                  <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005'}/dashboard/cms/talepler" style="display: inline-block; background-color: #0c4a6e; color: #ffffff; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+                  <a href="${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002"}/dashboard/cms/talepler" style="display: inline-block; background-color: #0c4a6e; color: #ffffff; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
                      Panelden Detayları Gör
                   </a>
                </div>
             </div>
-          `
+          `,
         });
       }
     } catch (mailError) {
@@ -111,7 +117,7 @@ export async function createReferenceRequest(data: {
             userId: null,
             type: "WARNING",
             message: `Referans Talebi Bildirimi Hatası: ${data.companyName} firmasının talebi için yönetici bildirimi iletilemedi.`,
-          }
+          },
         });
       } catch (dbError) {
         console.error("NOTIFICATION_DB_ERROR:", dbError);
@@ -125,4 +131,3 @@ export async function createReferenceRequest(data: {
     return { success: false, error: "Talep oluşturulurken bir hata oluştu." };
   }
 }
-

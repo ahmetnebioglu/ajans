@@ -1,43 +1,25 @@
-import { DefaultSession } from "next-auth";
-
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      role: string;
-      tenantId: string;
-    } & DefaultSession["user"]
-  }
-
-  interface User {
-    id: string;
-    role: string;
-    tenantId: string;
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    id: string;
-    role: string;
-    tenantId: string;
-  }
-}
-
 import { getServerSession } from "next-auth";
 import { authOptions } from "@ajans/auth/options";
 import { getSecuredPrisma } from "@ajans/db";
 import { Session } from "next-auth";
 
-/**
- * Güvenlik Kapısı (Interceptor):
- * Session kontrolü, auth doğrulaması ve merkezi hata yakalama işlemlerini yürütür.
- */
+export interface AuthenticatedUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  role: string;
+  tenantId: string | null;
+  currentWorkspaceId: string | null;
+  permissions: string[];
+  availableWorkspaces: { id: string; name: string; roleId: string | null }[];
+}
 
 export interface ActionContext {
   session: Session;
-  user: Session["user"];
+  user: AuthenticatedUser;
   tenantId: string;
+  currentWorkspaceId: string | null;
+  permissions: string[];
   db: ReturnType<typeof getSecuredPrisma>;
 }
 
@@ -55,8 +37,10 @@ export async function protectedAction<T>(
       throw new Error("UNAUTHORIZED");
     }
 
-    const user = session.user;
-    const tenantId = user.tenantId || "mercan"; // Varsayılan kiracı
+    const user = session.user as any;
+    const tenantId = user.tenantId || "mercan"; // Fallback for edge cases
+    const currentWorkspaceId = user.currentWorkspaceId || null;
+    const permissions = user.permissions || [];
 
     const db = getSecuredPrisma(tenantId);
 
@@ -64,6 +48,8 @@ export async function protectedAction<T>(
       session, 
       user, 
       tenantId, 
+      currentWorkspaceId,
+      permissions,
       db 
     });
 

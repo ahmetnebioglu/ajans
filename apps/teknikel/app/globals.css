@@ -93,7 +93,7 @@
   }
 }
 
-/* Ant Design Global Overrides (Mirroring Mercan ERP) */
+/* Ant Design Global Overrides (Mirroring ERP) */
 .ant-layout { 
   background: hsl(var(--background)) !important; 
 }

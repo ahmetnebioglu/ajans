@@ -90,17 +90,17 @@ async function main() {
   });
 
   // 4. Yetki Tanımla (Uzmanı Şirkete Bağla)
-  await prisma.companyAccess.upsert({
+  await prisma.workspaceUser.upsert({
     where: {
-      userId_companyId: {
+      userId_workspaceId: {
         userId: expert.id,
-        companyId: company.id,
+        workspaceId: company.id,
       },
     },
     update: {},
     create: {
       userId: expert.id,
-      companyId: company.id,
+      workspaceId: company.id,
     },
   });
 

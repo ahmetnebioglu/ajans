@@ -145,7 +145,7 @@ async function main() {
         title: `${reportCategories[i % reportCategories.length]} Raporu - ${2025 + (i % 2)} / ${i}`,
         category: reportCategories[i % reportCategories.length],
         status: reportStatuses[i % reportStatuses.length] as any,
-        companyId: `stress-comp-${(i % 25) + 1}`,
+        workspaceId: `stress-comp-${(i % 25) + 1}`,
         uploadedById: expert.id,
         fileUrl: `https://drive.google.com/file/d/dummy-${uuidv4()}`,
         tenantId: "mercan",

@@ -134,7 +134,7 @@ export default async function CorporatePage() {
                 Güvenli Bir Gelecek <br/><span className="text-emerald-400">İçin Bize Katılın</span>
               </h3>
               <p className="text-slate-400 font-medium">
-                Mercan ERP ile tüm İSG süreçlerinizi tek noktadan, şeffaf ve hatasız yönetin.
+                ERP ile tüm İSG süreçlerinizi tek noktadan, şeffaf ve hatasız yönetin.
               </p>
             </div>
             <div className="flex flex-col gap-4 relative z-10">

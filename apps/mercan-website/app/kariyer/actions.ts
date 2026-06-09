@@ -35,7 +35,7 @@ export async function submitApplication(formData: FormData) {
       // Güvenli Dosya Kaydı (UUID ile isimlendirme - KVKK Uyumu)
       const buffer = Buffer.from(await cvFile.arrayBuffer());
       const fileName = `${uuidv4()}.pdf`;
-      const uploadDir = path.join(process.cwd(), "..", "mercan-erp", "public", "uploads", "cvs");
+      const uploadDir = path.join(process.cwd(), "..", "erp", "public", "uploads", "cvs");
       
       // Dizin kontrolü (Yoksa oluştur)
       await mkdir(uploadDir, { recursive: true });

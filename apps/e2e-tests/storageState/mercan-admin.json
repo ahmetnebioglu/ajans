@@ -21,7 +21,7 @@
       "sameSite": "Lax"
     },
     {
-      "name": "mercan-erp.session-token",
+      "name": "erp.session-token",
       "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..8hLIQcb3LE3HJ0UA.DX6ryy5DJgj7555EP9naoOm3yvJ_FCM0Cb3lgSIMA1rf_2UQygXdB9P5eGcqXdPtPJAxHWQlBDCUosY8IXmE9Nm7-MkZW-A-W6w7-hXAGzeFMAAwLAPr2o9xbW4-ncKIsQfBnIdSCbGWaJLWu_t-0h_FOzIJkBpqEG7nHCWdcRkBiQ7uZauo3dCyH-PFZTqOQJKIHmfwvKttIV0n05iQQOSa4tSJMSAuDGiYab2I9jJ8vVVMio4lkd_YrVM5YkiGzenrsLsoc1_ZkYMEQM3taEQ5gezvmQrZGpGvUtvYZplOpoFK3zmZdLrTjkwdHTxkFAgtR1hG.8upUjSzxm4CNlnRK_-Y3FQ",
       "domain": "localhost",
       "path": "/",

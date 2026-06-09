@@ -24,7 +24,7 @@ async function main() {
   await prisma.auditLog.deleteMany();
   await prisma.report.deleteMany();
   await prisma.folder.deleteMany();
-  await prisma.companyAccess.deleteMany();
+  await prisma.workspaceUser.deleteMany();
   await prisma.company.deleteMany();
   await prisma.user.deleteMany();
 
@@ -132,14 +132,14 @@ async function main() {
     },
   });
 
-  await prisma.companyAccess.create({
-    data: { userId: mercanExpert.id, companyId: company.id }
+  await prisma.workspaceUser.create({
+    data: { userId: mercanExpert.id, workspaceId: company.id }
   });
 
   await prisma.report.create({
     data: {
       title: "Yıllık Risk Değerlendirmesi",
-      companyId: company.id,
+      workspaceId: company.id,
       status: "ONAYLANDI",
       category: "Risk Analizi",
       uploadedById: mercanExpert.id,
