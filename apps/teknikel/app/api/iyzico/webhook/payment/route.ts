@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import dbConnect from '@/lib/dbConnect';
-import IyzicoPayment from '@/lib/models/IyzicoPayment';
 import { getSecuredPrisma } from '@ajans/db';
 
 function verifyIyzicoSignature(payload: any, signature: string, secretKey: string): boolean {
@@ -43,8 +41,8 @@ export async function POST(request: NextRequest) {
     console.warn(`[${requestId}] 🔐 Signature: ${signature ? 'Present' : 'Missing'}`);
 
     // DB'den secret key'i oku
+    const db = getSecuredPrisma('teknikel');
     try {
-      const db = getSecuredPrisma('teknikel');
       const settings = await db.siteSettings.findUnique({ where: { id: 'global' } });
       if (settings?.iyzicoSecretKey) {
         secretKey = settings.iyzicoSecretKey;
@@ -93,14 +91,10 @@ export async function POST(request: NextRequest) {
     console.warn(`[${requestId}]   Order: ${orderReferenceCode}`);
     console.warn(`[${requestId}]   Status: ${status}`);
 
-    // Connect to DB
-    await dbConnect();
-    console.warn(`[${requestId}] ✅ DB Connected`);
-
     // Check for existing payment
-    const existingPayment = await IyzicoPayment.findOne({
-      orderReferenceCode: orderReferenceCode,
-    } as any);
+    const existingPayment = await db.iyzicoPayment.findUnique({
+      where: { orderReferenceCode },
+    });
     console.warn(`[${requestId}] 🔍 Existing: ${!!existingPayment}`);
 
     const paymentData = {
@@ -109,7 +103,7 @@ export async function POST(request: NextRequest) {
       subscriptionReferenceCode,
       iyziReferenceCode,
       iyziEventType,
-      iyziEventTime,
+      iyziEventTime: BigInt(iyziEventTime),
       eventDate: new Date(iyziEventTime),
       status,
       rawWebhookData: body,
@@ -121,7 +115,7 @@ export async function POST(request: NextRequest) {
       console.warn(`[${requestId}] 🔄 Updating existing record`);
 
       const logEntry = {
-        action: 'updated' as const,
+        action: 'updated',
         previousStatus: existingPayment.status,
         newStatus: status,
         changes: {
@@ -138,11 +132,16 @@ export async function POST(request: NextRequest) {
         webhookData: body,
       };
 
-      existingPayment.logs.push(logEntry);
-      Object.assign(existingPayment, paymentData);
-      existingPayment.updatedAt = new Date();
+      const currentLogs = Array.isArray(existingPayment.logs) ? existingPayment.logs : [];
 
-      paymentRecord = await existingPayment.save();
+      paymentRecord = await db.iyzicoPayment.update({
+        where: { orderReferenceCode },
+        data: {
+          ...paymentData,
+          logs: [...currentLogs, logEntry],
+          updatedAt: new Date(),
+        },
+      });
       console.warn(`[${requestId}] ✅ Updated with log`);
     } else {
       console.warn(`[${requestId}] ➕ Creating new record`);
@@ -151,7 +150,7 @@ export async function POST(request: NextRequest) {
         ...paymentData,
         logs: [
           {
-            action: 'created' as const,
+            action: 'created',
             newStatus: status,
             timestamp: new Date(),
             webhookData: body,
@@ -159,63 +158,85 @@ export async function POST(request: NextRequest) {
         ],
       };
 
-      paymentRecord = await IyzicoPayment.create(newPaymentData);
+      paymentRecord = await db.iyzicoPayment.create({
+        data: newPaymentData,
+      });
       console.warn(`[${requestId}] ✅ Created new record`);
     }
 
-    console.warn(`[${requestId}] 💾 DB ID: ${paymentRecord._id}`);
+    console.warn(`[${requestId}] 💾 DB ID: ${paymentRecord.id}`);
 
     // Handle event type
     switch (iyziEventType) {
       case 'subscription.order.success':
         console.warn(`[${requestId}] ✅ Subscription Order Success`);
-        paymentRecord.processed = true;
-        paymentRecord.processedAt = new Date();
-        await paymentRecord.save();
+        await db.iyzicoPayment.update({
+          where: { id: paymentRecord.id },
+          data: {
+            processed: true,
+            processedAt: new Date(),
+          },
+        });
         break;
 
       case 'subscription.order.failure':
         console.error(`[${requestId}] ❌ Subscription Order Failed`);
-        paymentRecord.error = {
-          hasError: true,
-          errorMessage: 'Subscription order failed',
-          errorAt: new Date(),
-        };
-        await paymentRecord.save();
+        await db.iyzicoPayment.update({
+          where: { id: paymentRecord.id },
+          data: {
+            errorHasError: true,
+            errorMessage: 'Subscription order failed',
+            errorAt: new Date(),
+          },
+        });
         break;
 
       case 'payment.success':
         console.warn(`[${requestId}] ✅ Payment Success`);
-        paymentRecord.processed = true;
-        paymentRecord.processedAt = new Date();
-        await paymentRecord.save();
+        await db.iyzicoPayment.update({
+          where: { id: paymentRecord.id },
+          data: {
+            processed: true,
+            processedAt: new Date(),
+          },
+        });
         break;
 
       case 'payment.failure':
         console.error(`[${requestId}] ❌ Payment Failed`);
-        paymentRecord.error = {
-          hasError: true,
-          errorMessage: 'Payment failed',
-          errorAt: new Date(),
-        };
-        await paymentRecord.save();
+        await db.iyzicoPayment.update({
+          where: { id: paymentRecord.id },
+          data: {
+            errorHasError: true,
+            errorMessage: 'Payment failed',
+            errorAt: new Date(),
+          },
+        });
         break;
 
       case 'refund':
         console.warn(`[${requestId}] 🔙 Refund Processing`);
-        paymentRecord.refund = {
-          refundId: iyziReferenceCode,
-          refundedAt: new Date(),
-        };
-        paymentRecord.status = 'refunded';
-        paymentRecord.logs.push({
-          action: 'refund' as const,
-          previousStatus: paymentRecord.status,
-          newStatus: 'refunded',
-          timestamp: new Date(),
-          webhookData: body,
+        const currentLogs = Array.isArray(paymentRecord.logs) ? paymentRecord.logs : [];
+        await db.iyzicoPayment.update({
+          where: { id: paymentRecord.id },
+          data: {
+            refund: {
+              refundId: iyziReferenceCode,
+              refundedAt: new Date(),
+            },
+            status: 'refunded',
+            logs: [
+              ...currentLogs,
+              {
+                action: 'refund',
+                previousStatus: paymentRecord.status,
+                newStatus: 'refunded',
+                timestamp: new Date(),
+                webhookData: body,
+              },
+            ],
+          },
         });
-        await paymentRecord.save();
         break;
 
       default:

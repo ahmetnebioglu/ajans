@@ -699,12 +699,42 @@ model ApiToken {
   createdAt    DateTime @default(now())
 }
 model ServiceAccount {
-  id           String   @id @default(cuid())
-  name         String
-  serviceToken String   @unique
-  tenantId     String
-  role         String   @default("BOT")
-  createdAt    DateTime @default(now())
+   id           String   @id @default(cuid())
+   name         String
+   serviceToken String   @unique
+   tenantId     String
+   role         String   @default("BOT")
+   createdAt    DateTime @default(now())
 
-  @@index([tenantId])
+   @@index([tenantId])
+}
+
+model IyzicoPayment {
+   id                        String   @id @default(cuid())
+   orderReferenceCode        String   @unique
+   customerReferenceCode     String
+   subscriptionReferenceCode String?
+   iyziReferenceCode         String
+   iyziEventType             String
+   iyziEventTime             BigInt
+   eventDate                 DateTime?
+   status                    String   @default("unknown")
+   paymentDetails            Json?
+   customerDetails           Json?
+   orderDetails              Json?
+   refund                    Json?
+   rawWebhookData            Json?
+   logs                      Json     @default("[]")
+   processed                 Boolean  @default(false)
+   processedAt               DateTime?
+   errorHasError             Boolean  @default(false)
+   errorMessage              String?
+   errorAt                   DateTime?
+   createdAt                 DateTime @default(now())
+   updatedAt                 DateTime @updatedAt
+
+   @@index([orderReferenceCode])
+   @@index([customerReferenceCode])
+   @@index([iyziReferenceCode])
+   @@index([createdAt])
 }

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import IyzicoPayment from '@/lib/models/IyzicoPayment';
+import { getSecuredPrisma } from '@ajans/db';
 
 export async function GET(request: NextRequest) {
   try {
-    await dbConnect();
+    const db = getSecuredPrisma('teknikel');
 
     const searchParams = request.nextUrl.searchParams;
     const page = parseInt(searchParams.get('page') || '1', 10);
@@ -16,32 +15,52 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build filter
-    const filter: any = {};
+    const where: any = {};
 
     if (search) {
-      filter.$or = [
-        { orderReferenceCode: { $regex: search, $options: 'i' } },
-        { customerReferenceCode: { $regex: search, $options: 'i' } },
-        { subscriptionReferenceCode: { $regex: search, $options: 'i' } },
-        { iyziReferenceCode: { $regex: search, $options: 'i' } },
+      where.OR = [
+        { orderReferenceCode: { contains: search, mode: 'insensitive' } },
+        { customerReferenceCode: { contains: search, mode: 'insensitive' } },
+        { subscriptionReferenceCode: { contains: search, mode: 'insensitive' } },
+        { iyziReferenceCode: { contains: search, mode: 'insensitive' } },
       ];
     }
 
     if (status) {
-      filter.status = status;
+      where.status = status;
     }
 
     if (eventType) {
-      filter.iyziEventType = eventType;
+      where.iyziEventType = eventType;
     }
 
-    const total = await IyzicoPayment.countDocuments(filter);
-    const payments = await IyzicoPayment.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .select('-rawWebhookData -logs')
-      .lean();
+    const [payments, total] = await Promise.all([
+      db.iyzicoPayment.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        select: {
+          id: true,
+          orderReferenceCode: true,
+          customerReferenceCode: true,
+          subscriptionReferenceCode: true,
+          iyziReferenceCode: true,
+          iyziEventType: true,
+          iyziEventTime: true,
+          eventDate: true,
+          status: true,
+          paymentDetails: true,
+          processed: true,
+          processedAt: true,
+          errorHasError: true,
+          errorMessage: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      }),
+      db.iyzicoPayment.count({ where }),
+    ]);
 
     const totalPages = Math.ceil(total / limit);
 
