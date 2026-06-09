@@ -151,9 +151,9 @@ export default function SettingsPage() {
   const [integrationModalOpen, setIntegrationModalOpen] = React.useState(false);
   const [integrationConfigLoading, setIntegrationConfigLoading] =
     React.useState(false);
-  const [activeIntegration, setActiveIntegration] = React.useState<
-    "google" | "resend" | "netgsm" | null
-  >(null);
+   const [activeIntegration, setActiveIntegration] = React.useState<
+     "google" | "resend" | "netgsm" | "iyzico" | null
+   >(null);
 
   const [netgsmForm] = Form.useForm();
   const [bilsoftForm] = Form.useForm();
@@ -244,7 +244,7 @@ export default function SettingsPage() {
   };
 
   const handleOpenIntegrationModal = async (
-    type: "google" | "resend" | "netgsm",
+    type: "google" | "resend" | "netgsm" | "iyzico",
   ) => {
     setIsLoading(true);
     setActiveIntegration(type);
@@ -841,41 +841,46 @@ export default function SettingsPage() {
       <div className="my-4" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[
-          {
-            name: "Google Places API",
-            status: statuses.googlePlaces ? "CONNECTED" : "DISCONNECTED",
-            icon: <ApiOutlined />,
-          },
-          {
-            name: "Google Drive API",
-            status: statuses.googleDrive ? "CONNECTED" : "DISCONNECTED",
-            icon: <ApiOutlined />,
-          },
-          {
-            name: "Resend Email API",
-            status: statuses.resend ? "CONNECTED" : "DISCONNECTED",
-            icon: <ApiOutlined />,
-          },
-          {
-            name: "NetGSM SMS API",
-            status: statuses.netgsm ? "CONNECTED" : "DISCONNECTED",
-            icon: <MobileOutlined />,
-          },
-          {
-            name: "Prisma DB Engine",
-            status: statuses.database ? "CONNECTED" : "DISCONNECTED",
-            icon: <SettingOutlined />,
-          },
-          {
-            name: "Bilsoft Ön Muhasebe API",
-            status: statuses.bilsoft ? "CONNECTED" : "DISCONNECTED",
-            icon: <CloudServerOutlined />,
-            details: bilsoftDetails?.expiry
-              ? `Geçerlilik: ${dayjs(bilsoftDetails.expiry).format("DD/MM/YYYY HH:mm")}`
-              : "Token bilgisi henüz alınmadı",
-          },
-        ].map((api) => (
+       {[
+           {
+             name: "Google Places API",
+             status: statuses.googlePlaces ? "CONNECTED" : "DISCONNECTED",
+             icon: <ApiOutlined />,
+           },
+           {
+             name: "Google Drive API",
+             status: statuses.googleDrive ? "CONNECTED" : "DISCONNECTED",
+             icon: <ApiOutlined />,
+           },
+           {
+             name: "Resend Email API",
+             status: statuses.resend ? "CONNECTED" : "DISCONNECTED",
+             icon: <ApiOutlined />,
+           },
+           {
+             name: "NetGSM SMS API",
+             status: statuses.netgsm ? "CONNECTED" : "DISCONNECTED",
+             icon: <MobileOutlined />,
+           },
+           {
+             name: "Iyzico Ödeme API",
+             status: (statuses as any).iyzico ? "CONNECTED" : "DISCONNECTED",
+             icon: <CreditCard />,
+           },
+           {
+             name: "Prisma DB Engine",
+             status: statuses.database ? "CONNECTED" : "DISCONNECTED",
+             icon: <SettingOutlined />,
+           },
+           {
+             name: "Bilsoft Ön Muhasebe API",
+             status: statuses.bilsoft ? "CONNECTED" : "DISCONNECTED",
+             icon: <CloudServerOutlined />,
+             details: bilsoftDetails?.expiry
+               ? `Geçerlilik: ${dayjs(bilsoftDetails.expiry).format("DD/MM/YYYY HH:mm")}`
+               : "Token bilgisi henüz alınmadı",
+           },
+         ].map((api) => (
           <Card
             key={api.name}
             size="small"
@@ -914,32 +919,35 @@ export default function SettingsPage() {
                     api.details || "Detay bilgisi yok"
                   )}
                 </div>
-                {(api.name === "Bilsoft Ön Muhasebe API" ||
-                  api.name === "Google Places API" ||
-                  api.name === "Google Drive API" ||
-                  api.name === "Resend Email API" ||
-                  api.name === "NetGSM SMS API") && (
-                  <Button
-                    size="small"
-                    type="link"
-                    className="p-0 h-auto text-[10px]"
-                    onClick={() => {
-                      if (api.name === "Bilsoft Ön Muhasebe API")
-                        handleOpenBilsoftModal();
-                      else if (
-                        api.name === "Google Places API" ||
-                        api.name === "Google Drive API"
-                      )
-                        handleOpenIntegrationModal("google");
-                      else if (api.name === "Resend Email API")
-                        handleOpenIntegrationModal("resend");
-                      else if (api.name === "NetGSM SMS API")
-                        handleOpenIntegrationModal("netgsm");
-                    }}
-                  >
-                    Yapılandır
-                  </Button>
-                )}
+                 {(api.name === "Bilsoft Ön Muhasebe API" ||
+                   api.name === "Google Places API" ||
+                   api.name === "Google Drive API" ||
+                   api.name === "Resend Email API" ||
+                   api.name === "NetGSM SMS API" ||
+                   api.name === "Iyzico Ödeme API") && (
+                   <Button
+                     size="small"
+                     type="link"
+                     className="p-0 h-auto text-[10px]"
+                     onClick={() => {
+                       if (api.name === "Bilsoft Ön Muhasebe API")
+                         handleOpenBilsoftModal();
+                       else if (
+                         api.name === "Google Places API" ||
+                         api.name === "Google Drive API"
+                       )
+                         handleOpenIntegrationModal("google");
+                       else if (api.name === "Resend Email API")
+                         handleOpenIntegrationModal("resend");
+                       else if (api.name === "NetGSM SMS API")
+                         handleOpenIntegrationModal("netgsm");
+                       else if (api.name === "Iyzico Ödeme API")
+                         handleOpenIntegrationModal("iyzico");
+                     }}
+                   >
+                     Yapılandır
+                   </Button>
+                 )}
               </div>
             </div>
           </Card>
@@ -1436,24 +1444,44 @@ export default function SettingsPage() {
             </>
           )}
 
-          {activeIntegration === "netgsm" && (
-            <>
-              <Form.Item name="netgsmUsercode" label="NetGSM Kullanıcı Kodu">
-                <Input placeholder="Örn: 850308..." />
-              </Form.Item>
-              <Form.Item name="netgsmPassword" label="NetGSM Şifre">
-                <Input.Password placeholder="****" />
-              </Form.Item>
-              <Alert
-                type="info"
-                showIcon
-                message="NetGSM API erişim şifrenizi girin. Bu şifre panel giriş şifresinden farklı olabilir."
-                className="mb-4"
-              />
-            </>
-          )}
+           {activeIntegration === "netgsm" && (
+             <>
+               <Form.Item name="netgsmUsercode" label="NetGSM Kullanıcı Kodu">
+                 <Input placeholder="Örn: 850308..." />
+               </Form.Item>
+               <Form.Item name="netgsmPassword" label="NetGSM Şifre">
+                 <Input.Password placeholder="****" />
+               </Form.Item>
+               <Alert
+                 type="info"
+                 showIcon
+                 message="NetGSM API erişim şifrenizi girin. Bu şifre panel giriş şifresinden farklı olabilir."
+                 className="mb-4"
+               />
+             </>
+           )}
 
-          <div className="flex justify-end gap-2 mt-6">
+           {activeIntegration === "iyzico" && (
+             <>
+               <Form.Item name="iyzicoBaseUrl" label="Iyzico Base URL">
+                 <Input placeholder="https://api.iyzipay.com" />
+               </Form.Item>
+               <Form.Item name="iyzicoApiKey" label="Iyzico API Key">
+                 <Input.Password placeholder="API anahtarınızı girin" />
+               </Form.Item>
+               <Form.Item name="iyzicoSecretKey" label="Iyzico Secret Key">
+                 <Input.Password placeholder="Secret anahtarınızı girin" />
+               </Form.Item>
+               <Alert
+                 type="info"
+                 showIcon
+                 message="Iyzico panelinden aldığınız API ve Secret anahtarlarını buraya girin. Bu bilgiler webhook imzası doğrulaması için kullanılır."
+                 className="mb-4"
+               />
+             </>
+           )}
+
+           <div className="flex justify-end gap-2 mt-6">
             <Button onClick={() => setIntegrationModalOpen(false)}>
               İptal
             </Button>
