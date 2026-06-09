@@ -1,4 +1,4 @@
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@ajans/auth/options";
 import { getSecuredPrisma } from "@ajans/db";
 import { Session } from "next-auth";
@@ -15,7 +15,7 @@ export interface AuthenticatedUser {
 }
 
 export interface ActionContext {
-  session: Session;
+  session: Session | null;
   user: AuthenticatedUser;
   tenantId: string;
   currentWorkspaceId: string | null;
@@ -31,7 +31,7 @@ export async function protectedAction<T>(
   action: (context: ActionContext) => Promise<T>
 ): Promise<ActionResponse<T>> {
   try {
-    const session = await getServerSession(authOptions);
+    const session = (await getServerSession(authOptions as any)) as Session | null;
 
     if (!session || !session.user) {
       throw new Error("UNAUTHORIZED");

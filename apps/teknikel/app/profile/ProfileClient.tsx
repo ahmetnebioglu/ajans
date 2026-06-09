@@ -185,7 +185,7 @@ export default function ProfilePage() {
             
             <div className="flex flex-col gap-2 px-4">
               <Tag color="red" className="m-0 font-black uppercase tracking-widest text-[10px] py-1 border-none bg-red-50 dark:bg-red-900/20 text-primary">
-                {session?.user?.role || "PERSONEL"}
+                {(session?.user as any)?.role || "PERSONEL"}
               </Tag>
               <div className="bg-slate-50 dark:bg-zinc-950 p-3 rounded-lg border border-slate-100 dark:border-zinc-800 mt-2">
                 <div className="flex justify-between items-center mb-1">

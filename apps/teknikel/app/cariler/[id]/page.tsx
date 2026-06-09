@@ -14,6 +14,7 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
+import type { Session } from "next-auth";
 
 export default async function CariDetailPage({
   params,
@@ -21,7 +22,7 @@ export default async function CariDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
 
   if (!session) {
     redirect("/login");

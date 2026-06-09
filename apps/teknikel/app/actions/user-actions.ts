@@ -6,13 +6,14 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+import type { Session } from "next-auth";
 
 /**
  * Profil bilgilerini ve resmi günceller
  */
 export async function updateProfile(formData: FormData) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = (await getServerSession(authOptions)) as Session | null;
     if (!session?.user?.email) {
       return { success: false, error: "Oturum bulunamadı." };
     }
@@ -80,7 +81,7 @@ export async function updateProfile(formData: FormData) {
  */
 export async function changePassword(newPassword: string) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = (await getServerSession(authOptions)) as Session | null;
     if (!session?.user?.email) return { success: false, error: "Yetkisiz" };
 
     const user = session.user as any;

@@ -5,6 +5,7 @@ import { authOptions } from "@/auth";
 import { getSecuredPrisma } from "@ajans/db";
 import { searchBusinesses } from "@ajans/google-api";
 import { revalidatePath } from "next/cache";
+import type { Session } from "next-auth";
 
 export interface ScrapeLeadsInput {
   query: string;
@@ -28,7 +29,7 @@ export async function scrapeLeads(
   input: ScrapeLeadsInput,
 ): Promise<ScrapeLeadsResult> {
   // 1. Oturum kontrolü
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
   if (!session?.user) {
     return { success: false, error: "Yetkisiz erişim. Lütfen giriş yapın." };
   }

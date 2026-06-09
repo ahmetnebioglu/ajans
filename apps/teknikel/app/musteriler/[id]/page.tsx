@@ -23,6 +23,7 @@ import {
   CheckCircleOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
+import type { Session } from "next-auth";
 
 const formatDate = (dateString: string | null | undefined) => {
   if (!dateString) return "-";

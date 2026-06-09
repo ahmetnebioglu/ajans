@@ -5,6 +5,7 @@ import { getBilsoftFaturalar } from "@/src/services/bilsoft";
 import { revalidateFaturalar } from "@/app/actions/revalidate";
 import { CacheRevalidateButton } from "@/app/components/CacheRevalidateButton";
 import FaturaTable from "./FaturaTable";
+import type { Session } from "next-auth";
 
 export default async function FaturalarPage({
   searchParams,
@@ -13,7 +14,7 @@ export default async function FaturalarPage({
 }) {
   const { q = "", page = "1" } = await searchParams;
   const currentPage = Number(page) || 1;
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
 
   if (!session) {
     redirect("/login");

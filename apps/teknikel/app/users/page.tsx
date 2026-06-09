@@ -3,12 +3,13 @@ import { authOptions } from "@/auth";
 import { unsecured_prisma as db } from "@ajans/db"; 
 import { redirect } from "next/navigation";
 import UserTable from "./UserTable";
+import type { Session } from "next-auth";
 
 // NEXT.JS'E EMİR: Bu sayfayı asla önbelleğe alma, her girişte canlı veri çek!
 export const dynamic = "force-dynamic";
 
 export default async function UsersPage() {
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
 
   // Admin değilse dışarı at
   if ((session?.user as any)?.role !== "ADMIN") {

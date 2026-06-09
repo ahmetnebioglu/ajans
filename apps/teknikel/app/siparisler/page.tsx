@@ -5,6 +5,7 @@ import { getIdeasoftOrders } from "@/src/services/ideasoft";
 import { isIdeasoftRefreshMissing } from "@/src/services/tokenManager";
 import { revalidateSiparisler } from "@/app/actions/revalidate";
 import OrderTable from "./OrderTable";
+import type { Session } from "next-auth";
 
 export default async function SiparislerPage({
   searchParams,
@@ -13,7 +14,7 @@ export default async function SiparislerPage({
 }) {
   const { sort = "-id", page = "1", status = "" } = await searchParams;
   const currentPage = Number(page) || 1;
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
 
   if (!session) {
     redirect("/login");

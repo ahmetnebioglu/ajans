@@ -4,12 +4,13 @@ import { revalidatePath } from "next/cache";
 import { unsecured_prisma as db } from "@ajans/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import type { Session } from "next-auth";
 
 /**
  * Güvenli aksiyon sarmalayıcısı (Teknikel özel basitleştirilmiş sürüm)
  */
 async function protectedAction<T>(fn: (ctx: { db: any, user: any }) => Promise<T>) {
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
   if (!session || !session.user) {
     console.warn("[AUTH WARNING]: Session not found in getServerSession", { 
       hasSession: !!session, 

@@ -5,6 +5,7 @@ import { getIdeasoftCustomers } from "@/src/services/ideasoft";
 import { revalidateMusteriler } from "@/app/actions/revalidate";
 import { CacheRevalidateButton } from "@/app/components/CacheRevalidateButton";
 import CustomerTable from "./CustomerTable";
+import type { Session } from "next-auth";
 
 export default async function MusterilerPage({
   searchParams,
@@ -13,7 +14,7 @@ export default async function MusterilerPage({
 }) {
   const { q = "", page = "1" } = await searchParams;
   const currentPage = Number(page) || 1;
-  const session = await getServerSession(authOptions);
+  const session = (await getServerSession(authOptions)) as Session | null;
 
   if (!session) {
     redirect("/login");
