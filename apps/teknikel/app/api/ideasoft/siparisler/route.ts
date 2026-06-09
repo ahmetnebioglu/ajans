@@ -1,12 +1,12 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/auth';
-import { getIdeasoftOrders } from '@/src/services/ideasoft';
+import { getIdeasoftOrders, getIdeasoftFilteredOrders } from '@/src/services/ideasoft';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * GET /api/ideasoft/siparisler
  * IdeaSoft siparişlerini listeler
- * Query params: sort, limit, page, status
+ * Query params: sort, limit, page, status, paymentProviderCode, paymentStatus
  */
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -24,7 +24,22 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50', 10);
     const page = parseInt(searchParams.get('page') || '1', 10);
     const status = searchParams.get('status') || undefined;
+    const paymentProviderCode = searchParams.get('paymentProviderCode') || undefined;
+    const paymentStatus = searchParams.get('paymentStatus') || undefined;
 
+    // Eğer ödeme filtresi varsa, server-side filtreleme yap
+    if (paymentProviderCode || paymentStatus) {
+      const result = await getIdeasoftFilteredOrders(
+        sort,
+        page,
+        limit,
+        paymentProviderCode,
+        paymentStatus
+      );
+      return NextResponse.json(result);
+    }
+
+    // Aksi takdirde normal sorguyu yap
     const result = await getIdeasoftOrders(sort, page, limit, status);
 
     return NextResponse.json(result);
@@ -39,3 +54,5 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+

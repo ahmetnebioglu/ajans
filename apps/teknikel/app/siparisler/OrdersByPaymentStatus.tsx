@@ -81,59 +81,70 @@ export default function OrdersByPaymentStatus({
   const [totalPages, setTotalPages] = useState(1);
   const localLimit = params.limit || 100;
 
-  const fetchOrders = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+   const fetchOrders = useCallback(async () => {
+     setLoading(true);
+     setError(null);
 
-    try {
-      const res = await axios.get("/api/ideasoft/siparisler", {
-        params: {
-          sort: "-id",
-          limit: localLimit,
-          page,
-          ...params,
-        },
-      });
+     try {
+       const res = await axios.get("/api/ideasoft/siparisler", {
+         params: {
+           sort: "-id",
+           limit: localLimit,
+           page,
+           ...params,
+         },
+       });
 
-      let dataArr: IdeasoftOrder[] = [];
-      if (Array.isArray(res.data)) dataArr = res.data;
-      else if (Array.isArray(res.data?.data)) dataArr = res.data.data;
-      else if (Array.isArray(res.data?.orders)) dataArr = res.data.orders;
-      else if (Array.isArray(res.data?.result)) dataArr = res.data.result;
+       let dataArr: IdeasoftOrder[] = [];
+       let totalCount = 0;
+       let totalPages = 1;
 
-      const filtered = dataArr.filter(
-        (o) =>
-          (o?.paymentProviderCode === "Iyzico" ||
-            o?.paymentProviderName === "Iyzico") &&
-          (params.paymentStatus ? o?.paymentStatus === params.paymentStatus : true)
-      );
+       // Server artık filtrelenmiş veri döndürüyor
+       if (Array.isArray(res.data)) {
+         dataArr = res.data;
+       } else if (res.data?.data) {
+         dataArr = Array.isArray(res.data.data) ? res.data.data : [];
+         totalCount = res.data.totalCount || 0;
+         totalPages = res.data.pagination?.totalPages || 1;
+       } else if (Array.isArray(res.data?.orders)) {
+         dataArr = res.data.orders;
+       } else if (Array.isArray(res.data?.result)) {
+         dataArr = res.data.result;
+       }
 
-      setOrders(filtered);
+       setOrders(dataArr);
 
-      try {
-        const src = res.data || {};
-        const total =
-          src.total ||
-          src.totalCount ||
-          src.count ||
-          src.totalRecords ||
-          src.meta?.total ||
-          src.pagination?.total ||
-          null;
-        if (total != null)
-          setTotalPages(Math.max(1, Math.ceil(total / localLimit)));
-        else setTotalPages(1);
-      } catch (e) {
-        setTotalPages(1);
-      }
-    } catch (err: any) {
-      console.error("Orders fetch error:", err);
-      setError(err.response?.data?.message || err.message || "Hata oluştu");
-      setOrders([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [params, page, localLimit]);
+       // Server-side filtreleme yapıldığı için totalCount'u doğrudan kullan
+       if (totalCount > 0) {
+         setTotalPages(totalPages);
+       } else {
+         // Fallback: eski yöntemle hesapla
+         try {
+           const src = res.data || {};
+           const total =
+             src.total ||
+             src.totalCount ||
+             src.count ||
+             src.totalRecords ||
+             src.meta?.total ||
+             src.pagination?.total ||
+             null;
+           if (total != null)
+             setTotalPages(Math.max(1, Math.ceil(total / localLimit)));
+           else setTotalPages(1);
+         } catch (e) {
+           setTotalPages(1);
+         }
+       }
+     } catch (err: any) {
+       console.error("Orders fetch error:", err);
+       setError(err.response?.data?.message || err.message || "Hata oluştu");
+       setOrders([]);
+     } finally {
+       setLoading(false);
+     }
+   }, [params, page, localLimit]);
+
 
   useEffect(() => {
     fetchOrders();

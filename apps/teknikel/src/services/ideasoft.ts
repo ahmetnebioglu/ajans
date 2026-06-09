@@ -326,7 +326,113 @@ export const getIdeasoftOrders = unstable_cache(
   { revalidate: 7200, tags: ['ideasoft-siparisler'] }
 );
 
+/**
+ * Tüm siparişleri çeker ve server-side olarak filtreler
+ * paymentProviderCode ve paymentStatus'a göre filtreleme yapar
+ * Pagination doğru şekilde hesaplanır
+ */
+const _getIdeasoftFilteredOrders = async (
+  sort: string = '-id',
+  page: number = 1,
+  limit: number = 50,
+  paymentProviderCode?: string,
+  paymentStatus?: string
+): Promise<IdeasoftOrdersResponse> => {
+  const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
+
+  let allOrders: IdeasoftOrder[] = [];
+  let currentPage = 1;
+  const fetchLimit = 100; // Ideasoft'tan çekerken daha büyük limit kullan
+
+  // Tüm siparişleri çek ve filtrele
+  while (true) {
+    const params = new URLSearchParams();
+    params.append('sort', sort);
+    params.append('limit', fetchLimit.toString());
+    params.append('page', currentPage.toString());
+
+    const response = await fetchWithIdeasoftRetry(
+      `${domain}/admin-api/orders?${params.toString()}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Ideasoft Orders API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText,
+      });
+      throw new Error(`Failed to fetch orders: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const pageData = Array.isArray(data) ? data : [];
+
+    if (pageData.length === 0) {
+      break;
+    }
+
+    // Filtreleme yap
+    const filtered = pageData.filter((order) => {
+      let matches = true;
+
+      if (paymentProviderCode) {
+        matches =
+          matches &&
+          (order.paymentProviderCode === paymentProviderCode ||
+            order.paymentProviderName === paymentProviderCode);
+      }
+
+      if (paymentStatus) {
+        matches = matches && order.paymentStatus === paymentStatus;
+      }
+
+      return matches;
+    });
+
+    allOrders = allOrders.concat(filtered);
+
+    // Eğer istenen sayfaya ulaştıysak ve yeterli veri varsa dur
+    if (allOrders.length >= page * limit) {
+      break;
+    }
+
+    // Eğer bu sayfa dolu değilse, daha fazla veri yok demektir
+    if (pageData.length < fetchLimit) {
+      break;
+    }
+
+    currentPage++;
+  }
+
+  // Pagination yap
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedOrders = allOrders.slice(startIndex, endIndex);
+
+  return {
+    data: paginatedOrders,
+    totalCount: allOrders.length,
+    pagination: {
+      currentPage: page,
+      perPage: limit,
+      totalPages: Math.ceil(allOrders.length / limit),
+    },
+  };
+};
+
+// Cache yok çünkü filtre parametreleri dinamik
+export const getIdeasoftFilteredOrders = _getIdeasoftFilteredOrders;
+
 export async function getIdeasoftOrderById(id: number): Promise<IdeasoftOrder | null> {
+
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 
   const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/orders/${id}`, {
