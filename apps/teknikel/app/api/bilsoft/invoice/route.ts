@@ -67,7 +67,8 @@ export async function POST(request: Request) {
     await fetchAndCacheBilsoftStocks(true);
 
     // Sipariş kalemlerini fatura kalemleri formatına çevir
-    const faturaKalemleri = await prepareFaturaItems(order.orderItems || [], cariInfo, order);
+    const bilsoftToken = (session as any)?.user?.bilsoftToken || '';
+    const faturaKalemleri = await prepareFaturaItems(order.orderItems || [], cariInfo, order, bilsoftToken);
 
     // Fatura tutarlarını hesapla
     const tutarlar = calculateInvoiceTotals(order, faturaKalemleri, cariInfo);
@@ -228,7 +229,7 @@ function selectCariByMemberGroup(memberGroupName: string | undefined) {
 /**
  * Sipariş kalemlerini fatura kalemleri formatına çevirir
  */
-async function prepareFaturaItems(items: any[], cariInfo: any, order: any) {
+async function prepareFaturaItems(items: any[], cariInfo: any, order: any, bilsoftToken: string) {
   const faturaKalemleri: any[] = [];
 
   for (const item of items) {
@@ -394,7 +395,7 @@ async function prepareFaturaItems(items: any[], cariInfo: any, order: any) {
           'https://apiv3.bilsoft.com/api/Stok/getbyid?id=1800',
           {
             headers: {
-              Authorization: `Bearer ${(session as any)?.user?.bilsoftToken || ''}`,
+              Authorization: `Bearer ${bilsoftToken}`,
             },
           }
         );
@@ -469,7 +470,7 @@ async function prepareFaturaItems(items: any[], cariInfo: any, order: any) {
           'https://apiv3.bilsoft.com/api/Stok/getbyid?id=2421',
           {
             headers: {
-              Authorization: `Bearer ${(session as any)?.user?.bilsoftToken || ''}`,
+              Authorization: `Bearer ${bilsoftToken}`,
             },
           }
         );
