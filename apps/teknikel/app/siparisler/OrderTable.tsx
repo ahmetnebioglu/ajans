@@ -192,19 +192,14 @@ export default function OrderTable({
   const otherPagesMenu: MenuProps = {
     items: [
       {
-        key: "musteriler",
-        label: "Müşteriler",
-        onClick: () => router.push("/musteriler"),
+        key: "terk-edilen-sepetler",
+        label: "Terk Edilen Sepetler",
+        onClick: () => router.push("/siparisler/terk-edilen-sepetler"),
       },
       {
-        key: "urunler",
-        label: "Ürünler",
-        onClick: () => router.push("/urunler"),
-      },
-      {
-        key: "sepet-ara",
-        label: "Sepet Ara",
-        onClick: () => router.push("/sepet-ara"),
+        key: "terk-edilen-siparisler",
+        label: "Terk Edilen Siparişler",
+        onClick: () => router.push("/siparisler/terk-edilen-siparisler"),
       },
       {
         type: "divider",

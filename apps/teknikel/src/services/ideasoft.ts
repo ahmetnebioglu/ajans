@@ -413,6 +413,162 @@ export async function getIdeasoftProductBySku(sku: string): Promise<IdeasoftProd
   }
 }
 
+// ============================================================================
+// TERK EDİLEN SEPETLER (Abandoned Carts)
+// ============================================================================
+
+interface AbandonedCart {
+  cart?: { id: number };
+  member?: { id: number; firstname: string; surname: string; email: string };
+  sessionId?: string;
+  mailStatus?: number;
+  priceWithTax?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;
+}
+
+interface AbandonedCartsResponse {
+  data: AbandonedCart[];
+  totalCount: number;
+  pagination: {
+    currentPage: number;
+    perPage: number;
+    totalPages: number;
+  };
+}
+
+const _getIdeasoftAbandonedCarts = async (
+  sort: string = '-id',
+  page: number = 1,
+  limit: number = 50
+): Promise<AbandonedCartsResponse> => {
+  const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
+
+  const params = new URLSearchParams();
+  params.append('sort', sort);
+  params.append('limit', limit.toString());
+  params.append('page', page.toString());
+
+  const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/abandoned_carts?${params.toString()}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Ideasoft Abandoned Carts API Error:', {
+      status: response.status,
+      statusText: response.statusText,
+      body: errorText,
+    });
+    throw new Error(`Failed to fetch abandoned carts: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  const totalCount = response.headers.get('total_count') || response.headers.get('x-total-count');
+
+  return {
+    data: Array.isArray(data) ? data : [],
+    totalCount: totalCount ? parseInt(totalCount) : 0,
+    pagination: {
+      currentPage: page,
+      perPage: limit,
+      totalPages: totalCount ? Math.ceil(parseInt(totalCount) / limit) : 0,
+    },
+  };
+};
+
+// Cache 24 saat
+export const getIdeasoftAbandonedCarts = unstable_cache(
+  _getIdeasoftAbandonedCarts,
+  ['ideasoft-terk-edilen-sepetler'],
+  { revalidate: 86400, tags: ['ideasoft-terk-edilen-sepetler'] }
+);
+
+// ============================================================================
+// TERK EDİLEN SİPARİŞLER (Abandoned Orders)
+// ============================================================================
+
+interface AbandonedOrder {
+  cart?: { id: number };
+  preOrderInfo?: { id: number };
+  member?: { id: number };
+  customerFirstname?: string;
+  customerSurname?: string;
+  customerEmail?: string;
+  sessionId?: string;
+  mailStatus?: number;
+  priceWithTax?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;
+}
+
+interface AbandonedOrdersResponse {
+  data: AbandonedOrder[];
+  totalCount: number;
+  pagination: {
+    currentPage: number;
+    perPage: number;
+    totalPages: number;
+  };
+}
+
+const _getIdeasoftAbandonedOrders = async (
+  sort: string = '-id',
+  page: number = 1,
+  limit: number = 50
+): Promise<AbandonedOrdersResponse> => {
+  const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
+
+  const params = new URLSearchParams();
+  params.append('sort', sort);
+  params.append('limit', limit.toString());
+  params.append('page', page.toString());
+
+  const response = await fetchWithIdeasoftRetry(`${domain}/admin-api/abandoned_orders?${params.toString()}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Ideasoft Abandoned Orders API Error:', {
+      status: response.status,
+      statusText: response.statusText,
+      body: errorText,
+    });
+    throw new Error(`Failed to fetch abandoned orders: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  const totalCount = response.headers.get('total_count') || response.headers.get('x-total-count');
+
+  return {
+    data: Array.isArray(data) ? data : [],
+    totalCount: totalCount ? parseInt(totalCount) : 0,
+    pagination: {
+      currentPage: page,
+      perPage: limit,
+      totalPages: totalCount ? Math.ceil(parseInt(totalCount) / limit) : 0,
+    },
+  };
+};
+
+// Cache 24 saat
+export const getIdeasoftAbandonedOrders = unstable_cache(
+  _getIdeasoftAbandonedOrders,
+  ['ideasoft-terk-edilen-siparisler'],
+  { revalidate: 86400, tags: ['ideasoft-terk-edilen-siparisler'] }
+);
+
 /**
  * Tüm Ideasoft ürünlerini toplu olarak çeker (sayfalı).
  */
