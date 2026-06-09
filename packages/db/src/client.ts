@@ -1,18 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
-import * as dotenv from "dotenv";
-import * as path from "path";
-import * as fs from "fs";
-
-// Çevresel değişkenlerini yükle: önce .env.local (varsa), sonra .env
-const envLocalPath = path.resolve(__dirname, "../../../.env.local");
-const envPath = path.resolve(__dirname, "../../../.env");
-if (fs.existsSync(envLocalPath)) {
-  dotenv.config({ path: envLocalPath });
-} else {
-  dotenv.config({ path: envPath });
-}
 
 const rawUrl =
   process.env.DATABASE_URL ||
