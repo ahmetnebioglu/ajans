@@ -66,7 +66,7 @@ async function KanbanLoader() {
   const { getServerSession } = await import("next-auth");
   const { authOptions } = await import("@ajans/auth/options");
 
-  const session = await getServerSession(authOptions);
+  const session: any = await getServerSession(authOptions as any);
   const tenantId = (session?.user as any)?.tenantId || "mercan";
 
   const leadsRes = await getLeads(tenantId);

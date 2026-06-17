@@ -45,7 +45,7 @@ function toSessionUser(
     currentWorkspaceId,
     permissions,
     availableWorkspaces,
-  };
+  } as any;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -214,7 +214,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user, trigger, session: updateSession }) {
+    async jwt({ token, user, trigger, session: updateSession }: any) {
       // Workspace switcher: session.update() ile tetiklenir
       if (trigger === "update" && updateSession?.currentWorkspaceId) {
         token.currentWorkspaceId = updateSession.currentWorkspaceId;
@@ -230,7 +230,7 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       const u = session.user as any;
       if (token && u) {
         u.id = token.id as string;

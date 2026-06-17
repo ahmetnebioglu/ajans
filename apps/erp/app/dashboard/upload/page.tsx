@@ -122,19 +122,19 @@ export default function MobileUploadPage() {
                     </div>
                   ) : companies.map((company) => (
                       <button
-                        key={workspace.id}
-                        onClick={() => setSelectedCompanyId(workspace.id)}
+                        key={company.id}
+                        onClick={() => setSelectedCompanyId(company.id)}
                         className={`w-full p-4 rounded-[4px] border transition-all flex items-center justify-between group ${
-                          selectedCompanyId === workspace.id 
+                          selectedCompanyId === company.id 
                           ? "bg-zinc-950 dark:bg-blue-600 border-zinc-950 dark:border-blue-600 text-white shadow-xl translate-x-1" 
                           : "bg-slate-50 dark:bg-zinc-800 border-slate-100 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300 dark:hover:border-zinc-600"
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                           <Users size={16} className={selectedCompanyId === workspace.id ? "text-blue-200" : "text-slate-400"} />
-                           <span className="font-black text-xs uppercase tracking-tighter">{workspace.name}</span>
+                           <Users size={16} className={selectedCompanyId === company.id ? "text-blue-200" : "text-slate-400"} />
+                           <span className="font-black text-xs uppercase tracking-tighter">{company.name}</span>
                         </div>
-                        {selectedCompanyId === workspace.id && <CheckCircle2 size={16} />}
+                        {selectedCompanyId === company.id && <CheckCircle2 size={16} />}
                       </button>
                   ))}
                 </div>

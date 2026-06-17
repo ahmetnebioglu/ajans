@@ -171,7 +171,7 @@ export default function CompanyDetailPage() {
     setLoading(true);
     const res = await getCompanyDetails(id, currentFolderId);
     if (res.success) {
-      setCompany(res.data.workspace);
+      setCompany(res.data.company);
       setCurrentFolderName(res.data.currentFolderName || "Kök Dizin");
       setSelectedReportIds([]);
     }
@@ -201,12 +201,12 @@ export default function CompanyDetailPage() {
 
   const currentFolders = useMemo(() => {
     if (!company) return [];
-    return workspace.folders.filter((f: any) => f.parentId === currentFolderId);
+    return company.folders.filter((f: any) => f.parentId === currentFolderId);
   }, [company, currentFolderId]);
 
   const currentReports = useMemo(() => {
     if (!company) return [];
-    return workspace.reports;
+    return company.reports;
   }, [company]);
 
   // PDF Generation Function
@@ -223,7 +223,7 @@ export default function CompanyDetailPage() {
 
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text(`Firma: ${workspace.name}`, 15, 28);
+    doc.text(`Firma: ${company.name}`, 15, 28);
     doc.text(`Konum: ${currentFolderName}`, 15, 33);
     doc.text(`Tarih: ${dateStr}`, 15, 38);
 
@@ -279,11 +279,11 @@ export default function CompanyDetailPage() {
     }
 
     doc.save(
-      `${workspace.name.replace(/\s+/g, "_")}_Denetim_Raporu_${dateStr.replace(/\./g, "_")}.pdf`,
+      `${company.name.replace(/\s+/g, "_")}_Denetim_Raporu_${dateStr.replace(/\./g, "_")}.pdf`,
     );
 
     // Log the PDF generation
-    await logPdfGeneration(id, workspace.name);
+    await logPdfGeneration(id, company.name);
   };
 
   const toggleSelect = (reportId: string) => {
@@ -481,7 +481,7 @@ export default function CompanyDetailPage() {
             </div>
           </div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none not-italic">
-            {workspace.name}
+            {company.name}
           </h1>
         </div>
       </div>
@@ -1007,11 +1007,11 @@ export default function CompanyDetailPage() {
                 </div>
               </button>
               <div className="space-y-1.5 mt-2">
-                {workspace.folders.filter((f: any) => !f.parentId).map((folder: any) => (
+                {company.folders.filter((f: any) => !f.parentId).map((folder: any) => (
                   <FolderTreeItem
                     key={folder.id}
                     folder={folder}
-                    allFolders={workspace.folders}
+                    allFolders={company.folders}
                     onSelect={handleMoveOperation}
                     selectedFolderId={showMoveModal.folderId}
                     isProcessing={isProcessing}

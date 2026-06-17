@@ -14,7 +14,7 @@ const openai = createOpenAI({
 });
 
 export async function streamCrmInsights(userInput: string) {
-  const session = await getServerSession(authOptions);
+  const session: any = await getServerSession(authOptions as any);
   const tenantId = (session?.user as any)?.tenantId || DEFAULT_TENANT_ID;
 
   const result = await streamUI({

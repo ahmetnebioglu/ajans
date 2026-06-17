@@ -54,6 +54,9 @@
     "db:push": {
       "cache": false
     },
+    "db:seed": {
+      "cache": false
+    },
     "start": {
       "dependsOn": ["build"],
       "cache": false,

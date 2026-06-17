@@ -71,7 +71,7 @@ export default function UserManagementPage() {
 
   const openAssignmentModal = (user: any) => {
     setSelectedUser(user);
-    setUserAccessIds(user.workspaceUsers.map((a: any) => a.workspaceId || a.workspace.id));
+    setUserAccessIds(user.workspaceUsers.map((a: any) => a.workspaceId || a.company.id));
   };
 
   const handleToggleAccess = async (userId: string, workspaceId: string) => {
@@ -172,8 +172,8 @@ export default function UserManagementPage() {
                     <div className="flex flex-wrap gap-1.5 max-w-[250px]">
                       {user.workspaceUsers?.length > 0 ? (
                         user.workspaceUsers.map((access: any) => (
-                          <span key={access.workspace.id} className="px-2 py-0.5 bg-slate-50 dark:bg-zinc-800 text-slate-500 dark:text-slate-400 text-[8px] font-black uppercase tracking-tighter rounded-[4px] border border-slate-100 dark:border-zinc-700">
-                            {access.workspace.name}
+                          <span key={access.company.id} className="px-2 py-0.5 bg-slate-50 dark:bg-zinc-800 text-slate-500 dark:text-slate-400 text-[8px] font-black uppercase tracking-tighter rounded-[4px] border border-slate-100 dark:border-zinc-700">
+                            {access.company.name}
                           </span>
                         ))
                       ) : (
@@ -231,20 +231,20 @@ export default function UserManagementPage() {
 
               <div className="p-6 max-h-[400px] overflow-y-auto space-y-2">
                  {companies.map((company) => {
-                    const hasAccess = userAccessIds.includes(workspace.id);
+                    const hasAccess = userAccessIds.includes(company.id);
                     return (
-                      <div key={workspace.id} className={`p-3 rounded-[4px] border flex items-center justify-between transition-all ${hasAccess ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-900/50 shadow-inner" : "bg-white dark:bg-zinc-800 border-slate-100 dark:border-zinc-700"}`}>
+                      <div key={company.id} className={`p-3 rounded-[4px] border flex items-center justify-between transition-all ${hasAccess ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-900/50 shadow-inner" : "bg-white dark:bg-zinc-800 border-slate-100 dark:border-zinc-700"}`}>
                         <div className="flex items-center gap-3">
                           <div className={`w-8 h-8 rounded-[4px] flex items-center justify-center ${hasAccess ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20" : "bg-slate-100 dark:bg-zinc-700 text-slate-400 dark:text-zinc-500"}`}>
                             <Building size={14} />
                           </div>
                           <div>
-                            <div className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">{workspace.name}</div>
-                            <div className="text-[8px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">{workspace._count?.reports || 0} Dosya</div>
+                            <div className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">{company.name}</div>
+                            <div className="text-[8px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest">{company._count?.reports || 0} Dosya</div>
                           </div>
                         </div>
                         <button
-                          onClick={() => handleToggleAccess(selectedUser.id, workspace.id)}
+                          onClick={() => handleToggleAccess(selectedUser.id, company.id)}
                           className={`px-3 py-1.5 rounded-[4px] text-[8px] font-black uppercase tracking-widest transition-all ${hasAccess ? "bg-zinc-900 dark:bg-zinc-700 text-white" : "bg-blue-600 text-white"}`}
                         >
                           {hasAccess ? "YETKİ KALDIR" : "YETKİ VER"}

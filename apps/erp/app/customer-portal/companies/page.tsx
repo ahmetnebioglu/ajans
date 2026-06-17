@@ -39,7 +39,7 @@ export default function CompaniesListPage() {
 
       <Row gutter={[24, 24]}>
         {COMPANIES.map((company) => (
-          <Col xs={24} lg={12} key={workspace.id}>
+          <Col xs={24} lg={12} key={company.id}>
              <Card 
                className="group hover:border-indigo-500 transition-all border-slate-200 dark:border-zinc-800 dark:bg-zinc-900 shadow-xl overflow-hidden"
                bodyStyle={{ padding: 0 }}
@@ -51,23 +51,23 @@ export default function CompaniesListPage() {
                    <div className="flex-1 p-6 space-y-4">
                       <div className="flex justify-between items-start">
                          <div className="space-y-1">
-                            <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase leading-none tracking-tight">{workspace.name}</h3>
-                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">VKN: {workspace.taxNumber}</div>
+                            <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase leading-none tracking-tight">{company.name}</h3>
+                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">VKN: {company.taxNumber}</div>
                          </div>
-                         <Tag color="green" className="m-0 font-black text-[9px] uppercase tracking-widest border-none px-3">{workspace.status}</Tag>
+                         <Tag color="green" className="m-0 font-black text-[9px] uppercase tracking-widest border-none px-3">{company.status}</Tag>
                       </div>
 
                       <div className="space-y-2">
                          <div className="flex items-center gap-2 text-[11px] text-slate-500 italic">
-                            <MapPin size={14} className="text-indigo-500" /> {workspace.address}
+                            <MapPin size={14} className="text-indigo-500" /> {company.address}
                          </div>
                          <div className="flex items-center gap-2 text-[11px] text-slate-500 italic">
-                            <Phone size={14} className="text-indigo-500" /> {workspace.phone}
+                            <Phone size={14} className="text-indigo-500" /> {company.phone}
                          </div>
                       </div>
 
                       <div className="pt-4 flex gap-3 border-t border-slate-100 dark:border-zinc-800">
-                         <Link href={`/customer-portal/companies/${workspace.id}`} className="flex-1">
+                         <Link href={`/customer-portal/companies/${company.id}`} className="flex-1">
                             <Button block type="primary" className="h-10 bg-indigo-600 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2">
                                DETAYLARI YÖNET <ExternalLink size={14} />
                             </Button>

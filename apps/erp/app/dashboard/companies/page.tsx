@@ -84,10 +84,10 @@ export default function CompaniesPage() {
     }
   };
 
-  const openExpertManager = async (workspace: any) => {
+  const openExpertManager = async (company: any) => {
     setSelectedCompany(company);
     setModalLoading(true);
-    const res = await getWorkspaceAccess(workspace.id);
+    const res = await getWorkspaceAccess(company.id);
     if (res.success) {
       setAuthorizedUserIds(res.data?.map((a: any) => a.userId) || []);
     }
@@ -193,23 +193,23 @@ export default function CompaniesPage() {
                     <tr><td colSpan={3} className="p-16 text-center text-slate-400 dark:text-zinc-700 font-medium italic">Henüz firma bulunmuyor.</td></tr>
                   ) : (
                     companies.map((company) => (
-                        <tr key={workspace.id} className="group hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-all">
+                        <tr key={company.id} className="group hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-all">
                         <td className="p-8">
-                           <Link href={`/dashboard/companies/${workspace.id}`} className="block group/link">
+                           <Link href={`/dashboard/companies/${company.id}`} className="block group/link">
                               <div className="font-black text-slate-900 dark:text-white uppercase tracking-tighter text-xs mb-0.5 group-hover/link:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex items-center gap-2">
-                                 {workspace.name}
+                                 {company.name}
                                  <ArrowUpRight size={12} className="opacity-0 group-hover/link:opacity-100 transition-all" />
                               </div>
-                              <div className="text-[9px] font-mono text-slate-400 dark:text-zinc-600 font-medium">ID: {workspace.id?.slice(-8)}</div>
+                              <div className="text-[9px] font-mono text-slate-400 dark:text-zinc-600 font-medium">ID: {company.id?.slice(-8)}</div>
                            </Link>
                         </td>
                         <td className="p-8">
                            <div className="flex items-center gap-3">
                               <span className="flex items-center gap-1 text-[10px] font-black text-slate-500 dark:text-slate-400 italic">
-                                 <Users size={12} className="text-blue-500 dark:text-blue-400" /> {workspace._count?.users || 0}
+                                 <Users size={12} className="text-blue-500 dark:text-blue-400" /> {company._count?.users || 0}
                               </span>
                               <span className="flex items-center gap-1 text-[10px] font-black text-slate-500 dark:text-slate-400 italic">
-                                 <Building2 size={12} className="text-zinc-400 dark:text-slate-600" /> {workspace._count?.reports || 0}
+                                 <Building2 size={12} className="text-zinc-400 dark:text-slate-600" /> {company._count?.reports || 0}
                               </span>
                            </div>
                         </td>
@@ -225,7 +225,7 @@ export default function CompaniesPage() {
                               </button>
                             )}
                             <a 
-                              href={`https://drive.google.com/drive/folders/${workspace.driveFolderId}`} 
+                              href={`https://drive.google.com/drive/folders/${company.driveFolderId}`} 
                               target="_blank" 
                               className="p-2 text-slate-400 dark:text-zinc-700 hover:text-blue-600 transition-colors"
                               title="Drive Gözat"
@@ -234,7 +234,7 @@ export default function CompaniesPage() {
                             </a>
                             {isAdmin && (
                               <button 
-                                onClick={() => handleDelete(workspace.id)} 
+                                onClick={() => handleDelete(company.id)} 
                                 className="p-2 text-slate-400 dark:text-zinc-700 hover:text-rose-600 transition-colors"
                                 title="Sil"
                               >
