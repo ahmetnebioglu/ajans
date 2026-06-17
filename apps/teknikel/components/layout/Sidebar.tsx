@@ -19,7 +19,11 @@ import {
   ShieldCheck,
   Users,
   FileText,
-  Package
+  Package,
+  MessageCircle,
+  BarChart3,
+  History,
+  Send
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -35,18 +39,49 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
   const isDark = theme === "dark" || (theme === "system" && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
    const menuItems: MenuProps['items'] = [
-     { key: "/", icon: <LayoutDashboard size={18} />, label: "Durum Özeti" },
-     { key: "/leads", icon: <Search size={18} />, label: "Yeni Adaylar" },
-     { key: "/vip", icon: <Crown size={18} />, label: "Özel Müşteriler" },
-     { key: "/cariler", icon: <Users size={18} />, label: "Cariler (Bilsoft)" },
-     { key: "/faturalar", icon: <FileText size={18} />, label: "Faturalar (Bilsoft)" },
-     { key: "/stoklar", icon: <Package size={18} />, label: "Stok Kartları (Bilsoft)" },
-     { type: "divider" },
-     { key: "/musteriler", icon: <Users size={18} />, label: "Müşteriler (Ideasoft)" },
-     { key: "/urunler", icon: <Package size={18} />, label: "Ürünler (Ideasoft)" },
-     { key: "/siparisler", icon: <FileText size={18} />, label: "Siparişler (Ideasoft)" },
-     { type: "divider" },
-     { key: "/settings", icon: <Settings size={18} />, label: "Sistem Ayarları" },
+     {
+       type: "group",
+       label: "Genel",
+       children: [
+         { key: "/", icon: <LayoutDashboard size={18} />, label: "Durum Özeti" },
+         { key: "/leads", icon: <Search size={18} />, label: "Yeni Adaylar" },
+         { key: "/vip", icon: <Crown size={18} />, label: "Özel Müşteriler" },
+       ]
+     },
+     {
+       type: "group",
+       label: "Ideasoft",
+       children: [
+         { key: "/musteriler", icon: <Users size={18} />, label: "Müşteriler" },
+         { key: "/urunler", icon: <Package size={18} />, label: "Ürünler" },
+         { key: "/siparisler", icon: <FileText size={18} />, label: "Siparişler" },
+       ]
+     },
+     {
+       type: "group",
+       label: "Bilsoft",
+       children: [
+         { key: "/cariler", icon: <Users size={18} />, label: "Cariler" },
+         { key: "/faturalar", icon: <FileText size={18} />, label: "Faturalar" },
+         { key: "/stoklar", icon: <Package size={18} />, label: "Stok Kartları" },
+       ]
+     },
+     {
+       type: "group",
+       label: "NetGSM",
+       children: [
+         { key: "/sms", icon: <BarChart3 size={18} />, label: "Paket Bilgileri" },
+         { key: "/sms/gecmisi", icon: <History size={18} />, label: "SMS Geçmişi" },
+         { key: "/sms/gonder", icon: <Send size={18} />, label: "SMS Gönder" },
+       ],
+     },
+     {
+       type: "group",
+       label: "Sistem",
+       children: [
+         { key: "/settings", icon: <Settings size={18} />, label: "Sistem Ayarları" },
+       ]
+     }
    ];
 
   return (
@@ -248,7 +283,19 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
           background: transparent !important;
           border: none !important;
         }
-        .premium-unified-menu.ant-menu .ant-menu-item {
+        .premium-unified-menu.ant-menu .ant-menu-item-group-title {
+          font-size: 10px !important;
+          font-weight: 700 !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.12em !important;
+          color: ${isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.45)'} !important;
+          margin-top: 16px !important;
+          margin-bottom: 6px !important;
+          padding-left: 12px !important;
+          transition: all 0.3s !important;
+        }
+        .premium-unified-menu.ant-menu .ant-menu-item,
+        .premium-unified-menu.ant-menu .ant-menu-submenu-title {
           height: 40px !important;
           line-height: 40px !important;
           margin-bottom: 4px !important;
@@ -257,9 +304,16 @@ export default function Sidebar({ collapsed, onCollapse }: { collapsed: boolean;
           border-radius: 4px !important;
           color: ${isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'} !important;
         }
-        .premium-unified-menu.ant-menu .ant-menu-item:hover {
+        .premium-unified-menu.ant-menu .ant-menu-item:hover,
+        .premium-unified-menu.ant-menu .ant-menu-submenu-title:hover {
           color: ${isDark ? '#fff' : '#000'} !important;
           background: ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} !important;
+        }
+        .premium-unified-menu.ant-menu .ant-menu-submenu-arrow {
+          color: ${isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'} !important;
+        }
+        .premium-unified-menu.ant-menu .ant-menu-sub.ant-menu-inline {
+          background: transparent !important;
         }
         .premium-unified-menu.ant-menu .ant-menu-item-selected {
           background-color: ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} !important;

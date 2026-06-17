@@ -738,3 +738,27 @@ model IyzicoPayment {
    @@index([iyziReferenceCode])
    @@index([createdAt])
 }
+
+model SmsRecord {
+  id              String   @id @default(cuid())
+  recipient       String
+  message         String
+  type            String   @default("manual") // manual, order, notification, reminder, other
+  status          String   @default("pending") // pending, sent, failed
+  messageId       String?
+  bulkId          String?
+  jobId           String?
+  responseCode    String?
+  responseMessage String?
+  errorDetail     String?
+  orderId         String?
+  orderEvent      String?  // create, update, unknown
+  orderInfo       Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([type])
+  @@index([status])
+  @@index([recipient])
+}
