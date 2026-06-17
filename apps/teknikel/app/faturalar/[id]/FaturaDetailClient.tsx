@@ -60,14 +60,103 @@ const getFaturaTuruColor = (tur: string | undefined) => {
   return "default";
 };
 
+const formatCurrencyInner = (amount: number | null | undefined) => {
+  if (amount == null) return "-";
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+    minimumFractionDigits: 2,
+  }).format(amount);
+};
+
+const kalemColumns = [
+  {
+    title: "Sıra",
+    dataIndex: "sira",
+    key: "sira",
+    width: 60,
+    render: (val: any, _: any, idx: number) => val ?? idx + 1,
+  },
+  {
+    title: "Stok Kodu",
+    dataIndex: "stokKodu",
+    key: "stokKodu",
+    render: (val: string) => (
+      <span className="font-mono text-xs font-semibold text-slate-600">
+        {val || "-"}
+      </span>
+    ),
+  },
+  {
+    title: "Ürün Adı",
+    dataIndex: "stokAdi",
+    key: "stokAdi",
+    render: (val: string, record: any) => val || record.aciklama || "-",
+  },
+  {
+    title: "Miktar",
+    dataIndex: "miktar",
+    key: "miktar",
+    align: "right" as const,
+    render: (val: number) =>
+      val != null
+        ? new Intl.NumberFormat("tr-TR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }).format(val)
+        : "-",
+  },
+  {
+    title: "Birim",
+    dataIndex: "birim",
+    key: "birim",
+    render: (val: string) => val || "-",
+  },
+  {
+    title: "Birim Fiyat",
+    dataIndex: "birimFiyat",
+    key: "birimFiyat",
+    align: "right" as const,
+    render: (val: number) => formatCurrencyInner(val),
+  },
+  {
+    title: "İskonto %",
+    dataIndex: "iskontoOran",
+    key: "iskontoOran",
+    align: "right" as const,
+    render: (val: number, record: any) => {
+      const oran = val ?? record.iskonto;
+      return oran != null ? `%${oran}` : "-";
+    },
+  },
+  {
+    title: "KDV %",
+    dataIndex: "kdvOran",
+    key: "kdvOran",
+    align: "right" as const,
+    render: (val: number) => (val != null ? `%${val}` : "-"),
+  },
+  {
+    title: "Tutar",
+    dataIndex: "tutar",
+    key: "tutar",
+    align: "right" as const,
+    render: (val: number, record: any) => (
+      <span className="font-semibold">
+        {formatCurrencyInner(
+          val ?? (record.miktar || 0) * (record.birimFiyat || 0)
+        )}
+      </span>
+    ),
+  },
+];
+
 export function FaturaDetailContent({
   safeFatura,
   isEFatura,
-  kalemColumns,
 }: {
   safeFatura: any;
   isEFatura: boolean;
-  kalemColumns: any[];
 }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
