@@ -6,6 +6,7 @@ import {
   updateIdeasoftProduct,
 } from '@/src/services/ideasoft';
 import { getBilsoftStokKartlari } from '@/src/services/bilsoft';
+import { calculateEnhancedSimilarity, normalizeSkuForComparison } from '@/src/utils/similarity';
 
 // ============================================================================
 // TYPES
@@ -349,12 +350,15 @@ export async function executeBulkSync(
 
 /**
  * Bilsoft stok kodunu SKU olarak Ideasoft'ta arar
+ * Önce birebir eşleşme arar, bulamazsa yakın eşleşme (fuzzy match) dener.
  */
 export async function findIdeasoftMatchForStok(bilsoftKod: string): Promise<{
   found: boolean;
+  isExactMatch?: boolean;
   ideasoftId?: number;
   ideasoftName?: string;
   ideasoftSku?: string;
+  similarityScore?: number;
   message: string;
 }> {
   try {
@@ -369,19 +373,50 @@ export async function findIdeasoftMatchForStok(bilsoftKod: string): Promise<{
       };
     }
 
-    // SKU bazında eşleşmeyi bul
-    const matched = ideasoftProducts.find(
-      (p) => p.sku && p.sku.toUpperCase() === bilsoftKod.toUpperCase()
+    const normalizedBilsoftKod = normalizeSkuForComparison(bilsoftKod);
+
+    // 1. Önce birebir eşleşmeyi bul
+    const exactMatch = ideasoftProducts.find(
+      (p) => p.sku && normalizeSkuForComparison(p.sku) === normalizedBilsoftKod
     );
 
-    if (matched) {
-      console.log(`[StokMatch] Eşleşme bulundu: ${bilsoftKod} → ${matched.id} (${matched.name})`);
+    if (exactMatch) {
+      console.log(`[StokMatch] Birebir eşleşme bulundu: ${bilsoftKod} → ${exactMatch.id} (${exactMatch.name})`);
       return {
         found: true,
-        ideasoftId: matched.id,
-        ideasoftName: matched.name,
-        ideasoftSku: matched.sku,
-        message: `Eşleşme bulundu: ${matched.name}`,
+        isExactMatch: true,
+        ideasoftId: exactMatch.id,
+        ideasoftName: exactMatch.name,
+        ideasoftSku: exactMatch.sku,
+        similarityScore: 1,
+        message: `Birebir eşleşme bulundu: ${exactMatch.name}`,
+      };
+    }
+
+    // 2. Birebir eşleşme yoksa yakın eşleşme (fuzzy match) bul
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const product of ideasoftProducts) {
+      if (!product.sku) continue;
+      
+      const similarity = calculateEnhancedSimilarity(bilsoftKod, product.sku);
+      if (similarity.score > bestScore && similarity.score > 0.3) {
+        bestScore = similarity.score;
+        bestMatch = product;
+      }
+    }
+
+    if (bestMatch) {
+      console.log(`[StokMatch] Yakın eşleşme bulundu: ${bilsoftKod} → ${bestMatch.id} (${bestMatch.name}), Skor: ${bestScore}`);
+      return {
+        found: true,
+        isExactMatch: false,
+        ideasoftId: bestMatch.id,
+        ideasoftName: bestMatch.name,
+        ideasoftSku: bestMatch.sku,
+        similarityScore: bestScore,
+        message: `Yakın eşleşme önerisi (Benzerlik: %${Math.round(bestScore * 100)}): ${bestMatch.name}`,
       };
     }
 

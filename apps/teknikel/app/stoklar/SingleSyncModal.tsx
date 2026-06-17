@@ -50,8 +50,10 @@ export default function SingleSyncModal({
   const [syncResult, setSyncResult] = useState<any>(null);
   const [matchStatus, setMatchStatus] = useState<{
     found: boolean;
+    isExactMatch?: boolean;
     ideasoftId?: number;
     ideasoftName?: string;
+    similarityScore?: number;
     message: string;
   } | null>(null);
 
@@ -194,18 +196,28 @@ export default function SingleSyncModal({
               </Form.Item>
 
               {matchStatus.found ? (
-                <Alert
-                  message="✅ Otomatik Eşleşme Bulundu"
-                  description={`${matchStatus.ideasoftName} (ID: ${matchStatus.ideasoftId})`}
-                  type="success"
-                  showIcon
-                  style={{ marginBottom: '16px' }}
-                />
+                matchStatus.isExactMatch ? (
+                  <Alert
+                    message="✅ Otomatik Eşleşme Bulundu"
+                    description={`${matchStatus.ideasoftName} (ID: ${matchStatus.ideasoftId})`}
+                    type="success"
+                    showIcon
+                    style={{ marginBottom: '16px' }}
+                  />
+                ) : (
+                  <Alert
+                    message="⚠️ Yakın Eşleşme Bulundu (Bunu mu demek istediniz?)"
+                    description={`${matchStatus.ideasoftName} (ID: ${matchStatus.ideasoftId}) - Benzerlik: %${Math.round((matchStatus.similarityScore || 0) * 100)}`}
+                    type="warning"
+                    showIcon
+                    style={{ marginBottom: '16px' }}
+                  />
+                )
               ) : (
                 <Alert
-                  message="⚠️ Otomatik Eşleşme Bulunamadı"
-                  description="SKU ile eşleşme bulunamadı. Ideasoft Ürün ID'sini manuel girin."
-                  type="warning"
+                  message="❌ Eşleşme Bulunamadı"
+                  description="SKU ile tam veya yakın eşleşme bulunamadı. Ideasoft Ürün ID'sini manuel girin."
+                  type="error"
                   showIcon
                   style={{ marginBottom: '16px' }}
                 />

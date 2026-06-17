@@ -60,19 +60,70 @@ export default function FloatingSyncWidget() {
   };
 
   const handleExecuteSync = async () => {
+    if (!preCheckResult || !preCheckResult.validPairs) return;
+    
     setSyncing(true);
+    setSyncStep('syncing');
+    
+    const allPairs = preCheckResult.validPairs;
+    const totalItems = allPairs.length;
+    setProgress(0, totalItems);
+    
+    const BATCH_SIZE = 3;
+    let accumulatedResult = {
+      success: true,
+      message: '',
+      totalBilsoftItems: 0,
+      totalIdeasoftItems: 0,
+      matchedCount: totalItems,
+      updatedCount: 0,
+      skippedCount: 0,
+      errorCount: 0,
+      errors: [] as any[],
+    };
+
     try {
-      setSyncStep('syncing');
-      const result = await executeBulkSync(preCheckResult.validPairs, havaleIndirimi);
-      setSyncResult(result);
+      for (let i = 0; i < totalItems; i += BATCH_SIZE) {
+        // Chunk pairs
+        const chunk = allPairs.slice(i, i + BATCH_SIZE);
+        
+        // Execute chunk
+        const chunkResult = await executeBulkSync(chunk, havaleIndirimi);
+        
+        // Accumulate results
+        accumulatedResult.updatedCount += chunkResult.updatedCount;
+        accumulatedResult.skippedCount += chunkResult.skippedCount;
+        accumulatedResult.errorCount += chunkResult.errorCount;
+        accumulatedResult.errors = [...accumulatedResult.errors, ...chunkResult.errors];
+        if (!chunkResult.success && chunkResult.errorCount === chunk.length) {
+            // Only fail entirely if all failed in a chunk? No, just keep going.
+        }
+        
+        // Update progress
+        setProgress(Math.min(i + BATCH_SIZE, totalItems), totalItems);
+      }
+      
+      accumulatedResult.message = `Senkronizasyon tamamlandı. Güncellenen: ${accumulatedResult.updatedCount}, Hata: ${accumulatedResult.errorCount}`;
+      accumulatedResult.success = accumulatedResult.errorCount < totalItems;
+      
+      setSyncResult(accumulatedResult);
       setSyncStep('result');
-      if (result.success) {
+      
+      if (accumulatedResult.errorCount === 0) {
         message.success('Senkronizasyon başarıyla tamamlandı!');
+      } else if (accumulatedResult.updatedCount > 0) {
+        message.warning(`Senkronizasyon kısmen tamamlandı. ${accumulatedResult.errorCount} hata oluştu.`);
       } else {
-        message.error(result.message);
+        message.error('Senkronizasyon başarısız oldu.');
       }
     } catch (error: any) {
       message.error('Senkronizasyon hatası: ' + error.message);
+      setSyncStep('result');
+      setSyncResult({
+          ...accumulatedResult,
+          success: false,
+          message: 'Kritik hata: ' + error.message
+      });
     } finally {
       setSyncing(false);
     }
@@ -299,7 +350,7 @@ export default function FloatingSyncWidget() {
               loading={syncing}
               disabled={syncing}
             >
-              Ön Kontrol Et
+              Önizleme Yap
             </Button>
             <Button
               type="dashed"
