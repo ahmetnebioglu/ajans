@@ -1,17 +1,17 @@
 import { config } from "dotenv";
 import path from "path";
-config({ path: "C:/GitHub/ajans/packages/db/.env" });
+config({ path: path.join(__dirname, ".env") });
 
-import { prisma } from "./index";
+import { unsecured_prisma as prisma } from "./index";
 
 async function main() {
   console.log("Initializing homepage settings...");
   
   const settings = await prisma.homepageSettings.upsert({
-    where: { id: 1 },
+    where: { tenantId: "mercan" },
     update: {},
     create: {
-      id: 1,
+      tenantId: "mercan",
       heroTitle: "İşletmenizin Güvenliği İçin Uzman Dokunuş.",
       heroSubtitle: "20 yıllık sektörel tecrübemiz ve uzman kadromuzla, iş kazalarını minimize ediyor, çalışan sağlığını koruyan profesyonel sistemler kuruyoruz.",
       heroButtonText: "Hizmetlerimizi Keşfedin",

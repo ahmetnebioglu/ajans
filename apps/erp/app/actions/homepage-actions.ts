@@ -29,8 +29,11 @@ async function triggerWebsiteRevalidate(path: string) {
 
 export async function getHomepageSettings() {
   try {
+    const session = await getServerSession(authOptions);
+    const tenantId = (session?.user as any)?.tenantId || "mercan";
+
     const settings = await (db as any).homepageSettings.findUnique({
-      where: { id: 1 },
+      where: { tenantId },
     });
     return settings;
   } catch (error) {
@@ -61,9 +64,25 @@ export async function updateHomepageSettings(data: any) {
       );
     }
 
-    const settings = await (db as any).homepageSettings.update({
-      where: { id: 1 },
-      data: {
+    const targetTenant = (session?.user as any)?.tenantId || "mercan";
+
+    const settings = await (db as any).homepageSettings.upsert({
+      where: { tenantId: targetTenant },
+      update: {
+        heroTitle: data.heroTitle,
+        heroSubtitle: data.heroSubtitle,
+        heroButtonText: data.heroButtonText,
+        heroImages: data.heroImages,
+        katipProcess: data.katipProcess,
+        naceBannerTitle: data.naceBannerTitle,
+        naceBannerSubtitle: data.naceBannerSubtitle,
+        mapUrl: data.mapUrl,
+        aboutTitle: data.aboutTitle,
+        aboutContent: data.aboutContent,
+        aboutImage: data.aboutImage,
+      },
+      create: {
+        tenantId: targetTenant,
         heroTitle: data.heroTitle,
         heroSubtitle: data.heroSubtitle,
         heroButtonText: data.heroButtonText,

@@ -119,7 +119,9 @@ export default function HomepageSettingsPage() {
   };
 
   const handleMediaSelect = (fileId: string, fileUrl?: string) => {
-    const imageUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+    const imageUrl = fileUrl && fileUrl.startsWith("http")
+      ? fileUrl
+      : `https://drive.google.com/uc?export=view&id=${fileId}`;
     
     if (activeImageIndex === -1) {
       setFormData(prev => ({ ...prev, aboutImage: imageUrl }));

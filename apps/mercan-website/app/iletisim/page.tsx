@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ContactPage() {
   const settings = await (db as any)?.homepageSettings?.findUnique({
-    where: { id: 1 }
+    where: { tenantId: "mercan" }
   });
 
   const mapUrl = settings?.mapUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3014.2863673752693!2d29.1415177!3d40.9231885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac3762269a911%3A0x6b40e79782559b1!2sCevizli%2C%20Ba%C4%9Fdat%20Cd.%20No%3A538%2C%2034846%20Maltepe%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1713824000000!5m2!1str!2str";

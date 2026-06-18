@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function CorporatePage() {
   const settings = await (db as any)?.homepageSettings?.findUnique({
-    where: { id: 1 }
+    where: { tenantId: "mercan" }
   });
 
   const aboutTitle = settings?.aboutTitle || "Biz Kimiz?";
