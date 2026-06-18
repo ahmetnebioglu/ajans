@@ -65,11 +65,9 @@ export default function CompaniesPage() {
     setIsSubmitting(true);
     const res = await createCompany({ 
       name: newName, 
-      driveFolderId: newFolderId 
     });
     if (res.success) {
       setNewName("");
-      setNewFolderId("");
       await loadCompanies();
     } else {
       alert(res.error || "Firma eklenirken bir hata oluştu.");
@@ -151,13 +149,6 @@ export default function CompaniesPage() {
                   placeholder="Firma Adı"
                   className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 dark:text-white rounded-[4px] outline-none focus:ring-1 focus:ring-blue-500 transition-all font-black text-[10px] uppercase"
                 />
-                <input 
-                  type="text" 
-                  value={newFolderId}
-                  onChange={(e) => setNewFolderId(e.target.value)}
-                  placeholder="Google Drive Folder ID"
-                  className="w-full p-3 bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 dark:text-white rounded-[4px] outline-none focus:ring-1 focus:ring-blue-500 transition-all font-mono text-[9px]"
-                />
                 <button 
                   type="submit"
                   disabled={isSubmitting || !newName}
@@ -225,10 +216,9 @@ export default function CompaniesPage() {
                               </button>
                             )}
                             <a 
-                              href={`https://drive.google.com/drive/folders/${company.driveFolderId}`} 
-                              target="_blank" 
+                              href={`/dashboard/companies/${company.id}`} 
                               className="p-2 text-slate-400 dark:text-zinc-700 hover:text-blue-600 transition-colors"
-                              title="Drive Gözat"
+                              title="Dosyaları Görüntüle"
                             >
                               <FolderOpen size={16} />
                             </a>

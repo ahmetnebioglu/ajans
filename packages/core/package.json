@@ -12,6 +12,7 @@
     "@ai-sdk/openai": "^3.0.53",
     "@ajans/auth": "*",
     "@ajans/db": "*",
+    "@aws-sdk/client-s3": "^3.1071.0",
     "@google/generative-ai": "^0.24.1",
     "ai": "^6.0.168",
     "google-auth-library": "^10.6.2",

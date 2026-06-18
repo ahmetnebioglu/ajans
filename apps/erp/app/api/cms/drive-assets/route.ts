@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getGoogleAuth } from "@ajans/google-api";
-import { google } from "googleapis";
+import { listTenantFiles } from "@ajans/core";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -12,19 +11,12 @@ export async function GET() {
   }
 
   try {
-    const auth = await getGoogleAuth();
-    const drive = google.drive({ version: "v3", auth });
-    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+    const tenantId = (session?.user as any)?.tenantId || "mercan";
+    const files = await listTenantFiles(tenantId, "cms");
 
-    const res = await drive.files.list({
-      q: folderId ? `'${folderId}' in parents and trashed=false` : "trashed=false",
-      fields: "files(id, name, mimeType, thumbnailLink, size, webViewLink)",
-      pageSize: 50,
-    });
-
-    return NextResponse.json({ success: true, files: res.data.files || [] });
+    return NextResponse.json({ success: true, files });
   } catch (error) {
-    console.error("Drive assets fetch error:", error);
+    console.error("R2 assets fetch error:", error);
     return NextResponse.json({ success: true, files: [] });
   }
 }

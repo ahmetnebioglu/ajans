@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { DEFAULT_TENANT_ID } from "@/lib/auth";
-import { uploadToDrive } from "@ajans/google-api";
+import { uploadFile } from "@ajans/core";
 import { protectedAction } from "@ajans/core/server";
 import { revalidatePath } from "next/cache";
 
@@ -28,38 +28,32 @@ export async function uploadReportAction(
         throw new Error("Bu firmaya rapor yükleme yetkiniz bulunmamaktadır.");
     }
 
-    // 2. Veritabanından firmanın Drive Klasör ID'sini bul
+    // 2. Veritabanından firma adını bul
     const company = await db.workspace.findUnique({
       where: { id: workspaceId },
-      select: { driveFolderId: true, name: true },
+      select: { name: true },
     });
 
-    const driveFolderId = company?.driveFolderId || "mock_folder_id";
-
-    // 2. Dosyayı işle
+    // 3. Dosyayı işle
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileName = `${new Date().toISOString().split("T")[0]}_${file.name}`;
 
-    // 3. Google API ile yükle
-    let driveResp: { id?: string | null; webViewLink?: string | null } = {
-      id: "mock_file_id",
-      webViewLink: "https://drive.google.com/mock",
-    };
-    if (driveFolderId !== "mock_folder_id") {
-      driveResp = await uploadToDrive(
-        buffer,
-        fileName,
-        file.type,
-        driveFolderId,
-      );
-    }
+    // 4. S3/R2 ile yükle
+    const uploadTenantId = tenantId || DEFAULT_TENANT_ID;
+    const s3Resp = await uploadFile(
+      buffer,
+      fileName,
+      file.type,
+      uploadTenantId,
+      `reports/${workspaceId}`
+    );
 
-    // 4. Veritabanına Rapor Kaydını At
+    // 5. Veritabanına Rapor Kaydını At
     try {
       console.log(">>> [DriveAction] Creating report with data:", {
         title: (formData.get("title") as string) || fileName,
         workspaceId,
-        tenantId,
+        tenantId: uploadTenantId,
         userId: user.id,
       });
 
@@ -67,8 +61,8 @@ export async function uploadReportAction(
         data: {
           title: (formData.get("title") as string) || fileName,
           fileName: fileName,
-          fileUrl: driveResp.webViewLink || "",
-          driveFileId: driveResp.id || "",
+          fileUrl: s3Resp.url,
+          s3Key: s3Resp.key,
           category: (formData.get("category") as string) || "Genel",
           status: (formData.get("status") as string) || "BEKLEMEDE",
           folderId: formData.get("folderId")
@@ -77,7 +71,7 @@ export async function uploadReportAction(
           note: (formData.get("note") as string) || null,
           uploadedById: user.id,
           workspaceId: workspaceId,
-          tenantId: tenantId || DEFAULT_TENANT_ID,
+          tenantId: uploadTenantId,
         },
       });
 
@@ -90,7 +84,7 @@ export async function uploadReportAction(
           details: `"${report.title}" isimli yeni bir rapor yüklendi.`,
           userId: (user as any).id || null,
           workspaceId: workspaceId || null,
-          tenantId: tenantId || DEFAULT_TENANT_ID,
+          tenantId: uploadTenantId,
         },
       });
 
@@ -112,8 +106,8 @@ export async function uploadReportAction(
       revalidatePath(`/dashboard/companies/${workspaceId}`);
       return {
         success: true,
-        fileId: driveResp.id,
-        link: driveResp.webViewLink,
+        fileId: s3Resp.key,
+        link: s3Resp.url,
       };
     } catch (dbError: any) {
       console.error(

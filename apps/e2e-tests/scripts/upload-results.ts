@@ -1,4 +1,4 @@
-import { uploadToDrive } from "@ajans/google-api";
+import { uploadFile } from "@ajans/core";
 import fs from "fs";
 import path from "path";
 import * as dotenv from "dotenv";
@@ -8,18 +8,12 @@ dotenv.config({ path: path.join(__dirname, "../../../.env") });
 
 async function uploadResults() {
   const reportPath = path.join(__dirname, "../playwright-report/results.json");
-  const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
   console.log("--- Playwright Rapor Köprüsü Başlatıldı ---");
 
   if (!fs.existsSync(reportPath)) {
     console.error(`Hata: Rapor dosyası bulunamadı: ${reportPath}`);
     console.log("Lütfen testlerin başarıyla tamamlandığından emin olun.");
-    return;
-  }
-
-  if (!folderId) {
-    console.error("Hata: GOOGLE_DRIVE_FOLDER_ID .env dosyasında tanımlı değil.");
     return;
   }
 
@@ -31,24 +25,25 @@ async function uploadResults() {
     const timestamp = now.toISOString().replace(/T/, '_').replace(/:/g, '-').split('.')[0].slice(0, 16);
     const fileName = `report_${timestamp}.json`;
 
-    console.log(`[Drive] Yükleniyor: ${fileName}...`);
+    console.log(`[R2/S3] Yükleniyor: ${fileName}...`);
 
-    const result = await uploadToDrive(
+    const result = await uploadFile(
       fileContent,
       fileName,
       "application/json",
-      folderId
+      "system",
+      "e2e-reports"
     );
 
-    if (result && result.id) {
-      console.log(`[Drive] Başarıyla yüklendi! Dosya ID: ${result.id}`);
+    if (result && result.key) {
+      console.log(`[R2/S3] Başarıyla yüklendi! Dosya Key: ${result.key}`);
+      console.log(`[R2/S3] URL: ${result.url}`);
     } else {
-      console.error("[Drive] Yükleme tamamlandı ancak dosya ID alınamadı.");
+      console.error("[R2/S3] Yükleme tamamlandı ancak dosya Key alınamadı.");
     }
   } catch (error) {
-    console.error("[Drive] Yükleme sırasında bir hata oluştu:");
+    console.error("[R2/S3] Yükleme sırasında bir hata oluştu:");
     console.error(error instanceof Error ? error.message : error);
-    // Hata test sürecini durdurmasın (Kullanıcı isteği)
   }
 }
 

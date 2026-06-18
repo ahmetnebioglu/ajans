@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { uploadToDrive } from "@ajans/google-api";
+import { uploadFile } from "@ajans/core";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -22,18 +22,22 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Upload to Google Drive (folderId optional, uses default if not provided)
-    const result = await uploadToDrive(
+    // Get tenantId from session
+    const tenantId = (session?.user as any)?.tenantId || "mercan";
+
+    // Upload to S3/R2
+    const result = await uploadFile(
       buffer,
       file.name,
       file.type,
-      process.env.GOOGLE_DRIVE_FOLDER_ID
+      tenantId,
+      "cms"
     );
 
     return NextResponse.json({ 
       success: true, 
-      fileId: result.id, 
-      webViewLink: result.webViewLink 
+      fileId: result.key, 
+      webViewLink: result.url 
     });
   } catch (error: any) {
     console.error("Upload Error:", error);

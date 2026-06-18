@@ -1,6 +1,6 @@
 "use server";
 
-import { uploadToDrive } from "@ajans/google-api";
+import { uploadFile } from "@ajans/core";
 import { unsecured_prisma as db } from "@ajans/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
@@ -29,24 +29,25 @@ export async function updateProfile(formData: FormData) {
       console.log(`[ProfileAction] Uploading new avatar: ${file.name}, size: ${file.size}`);
       const buffer = Buffer.from(await file.arrayBuffer());
       
-      // Google Drive'a yükle
+      // S3/R2'ye yükle
       try {
-        const driveFile = await uploadToDrive(
+        const uploadTenant = user.tenantId || "teknikel";
+        const s3Resp = await uploadFile(
           buffer,
           `profile_${user.email.split('@')[0]}_${Date.now()}.jpg`,
           file.type,
-          process.env.GOOGLE_DRIVE_FOLDER_ID
+          uploadTenant,
+          "avatars"
         );
 
-        if (driveFile && driveFile.id) {
-          console.log(`[ProfileAction] File uploaded to Drive, ID: ${driveFile.id}`);
-          // Google Drive kısıtlamalarını aşmak için yerel Proxy API kullan
-          imageUrl = `/api/drive-image?id=${driveFile.id}`;
+        if (s3Resp && s3Resp.key) {
+          console.log(`[ProfileAction] File uploaded to R2, Key: ${s3Resp.key}`);
+          imageUrl = s3Resp.url;
         } else {
-          console.error("[ProfileAction] Drive upload failed: No ID returned");
+          console.error("[ProfileAction] R2 upload failed: No Key returned");
         }
       } catch (uploadError: any) {
-        console.error("[ProfileAction] Drive upload exception:", uploadError);
+        console.error("[ProfileAction] R2 upload exception:", uploadError);
         return { success: false, error: "Resim yükleme sırasında teknik bir hata oluştu: " + uploadError.message };
       }
     }

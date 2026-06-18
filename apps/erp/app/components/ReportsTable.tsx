@@ -160,8 +160,8 @@ export default function ReportsTable({
                 const driveIdMatch = record.fileUrl?.match(/\/d\/(.+?)\//) || record.fileUrl?.match(/\/d\/(.+?)$/);
                 setPreviewFile({
                   ...record,
-                  driveFileId: driveIdMatch ? driveIdMatch[1] : "mock_id_" + record.id,
-                  fileName: record.title + ".pdf"
+                  s3Key: record.s3Key || (driveIdMatch ? driveIdMatch[1] : "mock_id_" + record.id),
+                  fileName: record.fileName || record.title + ".pdf"
                 });
               }} 
               className="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-[4px] hover:bg-blue-600 hover:text-white transition-all shadow-sm"
@@ -170,7 +170,7 @@ export default function ReportsTable({
               <Eye size={14} />
             </button>
           </Tooltip>
-          <Tooltip title="Drive'da Aç">
+          <Tooltip title="Dosyayı Yeni Sekmede Aç">
             <a 
               href={record.fileUrl || "#"} 
               target="_blank" 

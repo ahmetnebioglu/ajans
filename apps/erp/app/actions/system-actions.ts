@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { uploadFile } from "@ajans/core";
 import { protectedAction } from "@ajans/core/server";
-import { uploadToDrive } from "@ajans/google-api";
 
 /**
  * Kullanıcının aktif oturumlarını getirir
@@ -70,7 +70,7 @@ export async function killOtherSessions(currentSessionToken: string) {
  * Kullanıcı profil bilgilerini günceller
  */
 export async function updateProfile(formData: FormData) {
-  return protectedAction(async ({ db, user }) => {
+  return protectedAction(async ({ db, user, tenantId }) => {
     const name = formData.get("name") as string;
     const file = formData.get("image") as File | null;
     
@@ -79,11 +79,9 @@ export async function updateProfile(formData: FormData) {
     if (file && file.size > 0) {
       const buffer = Buffer.from(await file.arrayBuffer());
       const fileName = `profile_${user.id}_${Date.now()}`;
-      // Profil resimleri için özel bir klasör ID'si yoksa "root" veya sabit bir klasör kullanılabilir
-      const driveResp = await uploadToDrive(buffer, fileName, file.type, "root");
-      if (driveResp.webViewLink) {
-        imageUrl = driveResp.webViewLink;
-      }
+      const uploadTenant = tenantId || (user as any).tenantId || "mercan";
+      const s3Resp = await uploadFile(buffer, fileName, file.type, uploadTenant, "profiles");
+      imageUrl = s3Resp.url;
     }
 
     const updatedUser = await db.user.update({
