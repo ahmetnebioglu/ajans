@@ -108,7 +108,6 @@ model Workspace {
   taxNumber     String?
   taxOffice     String?
   phone         String?
-  driveFolderId String?         @unique
   createdById   String?
   tenantId      String          @unique @default(cuid())
   
@@ -185,7 +184,7 @@ model Report {
   folderId     String?
   note         String?
   uploadedById String?
-  driveFileId  String?
+  s3Key        String?
   fileName     String?
   workspace    Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   folder       Folder?    @relation(fields: [folderId], references: [id])
@@ -230,6 +229,9 @@ model IsgLibrary {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   category    IsgCategory @relation(fields: [categoryId], references: [id])
+  tenantId    String      @default("mercan")
+
+  @@index([tenantId])
 }
 
 model IsgCategory {
@@ -240,6 +242,9 @@ model IsgCategory {
   order     Int           @default(0)
   documents IsgDocument[]
   items     IsgLibrary[]
+  tenantId  String        @default("mercan")
+
+  @@index([tenantId])
 }
 
 model IsgDocument {
@@ -249,9 +254,12 @@ model IsgDocument {
   categoryId  String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  driveFileId String
+  s3Key       String
   fileType    String?
   category    IsgCategory @relation(fields: [categoryId], references: [id])
+  tenantId    String      @default("mercan")
+
+  @@index([tenantId])
 }
 
 model Service {
@@ -268,6 +276,9 @@ model Service {
   seoDescription String?
   seoTitle       String?
   summary        String?
+  tenantId       String   @default("mercan")
+
+  @@index([tenantId])
 }
 
 model ReferenceSector {
@@ -275,6 +286,9 @@ model ReferenceSector {
   name       String
   order      Int         @default(0)
   references Reference[]
+  tenantId   String      @default("mercan")
+
+  @@index([tenantId])
 }
 
 model Reference {
@@ -285,6 +299,9 @@ model Reference {
   createdAt DateTime         @default(now())
   sectorId  String?
   sector    ReferenceSector? @relation(fields: [sectorId], references: [id])
+  tenantId  String           @default("mercan")
+
+  @@index([tenantId])
 }
 
 model ContactMessage {
@@ -297,10 +314,13 @@ model ContactMessage {
   createdAt         DateTime @default(now())
   isVerified        Boolean  @default(false)
   verificationToken String?  @unique
+  tenantId          String   @default("mercan")
+
+  @@index([tenantId])
 }
 
 model HomepageSettings {
-  id                 Int      @id @default(1)
+  id                 String   @id @default(cuid())
   heroTitle          String?
   heroSubtitle       String?
   heroButtonText     String?
@@ -313,6 +333,9 @@ model HomepageSettings {
   aboutImage         String?
   aboutTitle         String?
   heroImages         Json?
+  tenantId           String   @unique @default("mercan")
+
+  @@index([tenantId])
 }
 
 model ReferenceRequest {
@@ -325,13 +348,19 @@ model ReferenceRequest {
   createdAt         DateTime @default(now())
   isVerified        Boolean  @default(false)
   verificationToken String?  @unique
+  tenantId          String   @default("mercan")
+
+  @@index([tenantId])
 }
 
 model BlogCategory {
-  id    String     @id @default(cuid())
-  name  String
-  slug  String     @unique
-  posts BlogPost[]
+  id       String     @id @default(cuid())
+  name     String
+  slug     String     @unique
+  posts    BlogPost[]
+  tenantId String     @default("mercan")
+
+  @@index([tenantId])
 }
 
 model BlogPost {
@@ -348,13 +377,20 @@ model BlogPost {
   seoDescription String?
   seoTitle       String?
   category       BlogCategory? @relation(fields: [categoryId], references: [id])
+  tenantId       String        @default("mercan")
+
+  @@index([tenantId])
 }
 
 model NaceCode {
   id          String @id @default(cuid())
-  code        String @unique
+  code        String
   dangerClass String
   description String
+  tenantId    String @default("mercan")
+
+  @@unique([tenantId, code])
+  @@index([tenantId])
 }
 
 model Page {
@@ -366,6 +402,9 @@ model Page {
   updatedAt   DateTime      @updatedAt
   isPublished Boolean       @default(false)
   sections    PageSection[]
+  tenantId    String        @default("mercan")
+
+  @@index([tenantId])
 }
 
 model PageSection {
@@ -377,10 +416,13 @@ model PageSection {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  tenantId  String   @default("mercan")
+
+  @@index([tenantId])
 }
 
 model SiteSettings {
-  id                 String   @id @default("global")
+  id                 String   @id @default(cuid())
   logo               String?
   title              String?
   email              String?
@@ -399,6 +441,9 @@ model SiteSettings {
   iyzicoSecretKey    String?
   iyzicoBaseUrl      String?
   updatedAt          DateTime @updatedAt
+  tenantId           String   @unique @default("mercan")
+
+  @@index([tenantId])
 }
 
 model Newsletter {
@@ -407,6 +452,9 @@ model Newsletter {
   createdAt         DateTime @default(now())
   status            String   @default("PENDING")
   verificationToken String?  @unique
+  tenantId          String   @default("mercan")
+
+  @@index([tenantId])
 }
 
 model NewsletterSubscriber {

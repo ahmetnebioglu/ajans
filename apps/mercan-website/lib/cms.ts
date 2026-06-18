@@ -13,9 +13,7 @@ export async function getPageData(slug: string) {
 }
 
 export async function getSiteSettings() {
-  return await prisma.siteSettings.findUnique({
-    where: { id: "global" }
-  });
+  return await prisma.siteSettings.findFirst();
 }
 
 export async function getAllPages() {

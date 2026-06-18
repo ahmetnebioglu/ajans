@@ -14,7 +14,7 @@ import {
 interface Document {
   id: string;
   title: string;
-  driveFileId: string;
+  fileUrl: string;
   fileType?: string;
   categoryId: string;
   category: {
@@ -137,12 +137,12 @@ export default function IsgLibraryClient({ documents }: IsgLibraryClientProps) {
                           <BookOpen size={14} className="text-teal-500" /> {doc.category.name}
                        </div>
                        <a 
-                         href={`https://drive.google.com/file/d/${doc.driveFileId}/view?usp=sharing`} 
+                         href={doc.fileUrl} 
                          target="_blank"
                          rel="noopener noreferrer"
                          className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-teal-600 transition-all shadow-lg shadow-slate-900/5"
                        >
-                          <Download size={14} /> İNDİR
+                          <Download size={14} /> GÖRÜNTÜLE / İNDİR
                        </a>
                     </div>
                  </div>

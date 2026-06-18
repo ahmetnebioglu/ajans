@@ -23,7 +23,6 @@ export async function getExpertCompanies() {
     const companies = userData.workspaceUsers.map(access => ({
       id: access.workspace.id,
       name: access.workspace.name,
-      driveFolderId: access.workspace.driveFolderId
     }));
 
     return companies;

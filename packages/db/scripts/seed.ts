@@ -66,15 +66,12 @@ async function main() {
   }
 
   // 2. Şirket Oluştur (Mercan Grup)
-  const company = await prisma.company.upsert({
+  const company = await prisma.workspace.upsert({
     where: { id: "mercan-grup-id" },
     update: {},
     create: {
       id: "mercan-grup-id",
       name: "Mercan Grup",
-      driveFolderId:
-        process.env.GOOGLE_DRIVE_FOLDER_ID ||
-        "1RZDr4xQnqu4e374KobCwOc4fInttWKtQ",
     },
   });
 

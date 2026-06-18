@@ -8,8 +8,6 @@ dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 const TABLES_TO_PROTECT = [
   "Lead",
   "LeadActivity",
-  "LeadInteraction",
-  "Company",
   "Folder",
   "Report",
   "AuditLog",
@@ -21,7 +19,23 @@ const TABLES_TO_PROTECT = [
   "Candidate",
   "LeaveRequest",
   "ServiceAccount",
-  "NewsletterSubscriber"
+  "NewsletterSubscriber",
+  "Page",
+  "PageSection",
+  "Service",
+  "BlogCategory",
+  "BlogPost",
+  "Reference",
+  "ReferenceSector",
+  "ContactMessage",
+  "ReferenceRequest",
+  "SiteSettings",
+  "HomepageSettings",
+  "Newsletter",
+  "IsgLibrary",
+  "IsgCategory",
+  "IsgDocument",
+  "NaceCode"
 ];
 
 async function setupRLS() {

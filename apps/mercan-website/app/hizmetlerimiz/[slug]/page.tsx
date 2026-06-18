@@ -39,7 +39,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       <section className="relative h-[400px] md:h-[500px] w-full overflow-hidden bg-slate-900">
         {service.featuredImage ? (
           <Image
-            src={`https://drive.google.com/thumbnail?id=${service.featuredImage}&sz=w1920`}
+            src={service.featuredImage.startsWith("http") ? service.featuredImage : `https://drive.google.com/thumbnail?id=${service.featuredImage}&sz=w1920`}
             alt={service.title}
             fill
             className="object-cover opacity-50"

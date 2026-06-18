@@ -48,7 +48,6 @@ export async function POST(req: Request) {
     address,
     taxNumber,
     taxOffice,
-    driveFolderId,
     password,
   } = parsed.data;
 
@@ -78,7 +77,6 @@ export async function POST(req: Request) {
         taxNumber: taxNumber || undefined,
         taxOffice: taxOffice || undefined,
         phone: phone || undefined,
-        driveFolderId: driveFolderId || undefined,
         tenantId: workspaceId,
       },
     });

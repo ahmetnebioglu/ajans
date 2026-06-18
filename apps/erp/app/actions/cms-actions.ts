@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { uploadFile } from "@ajans/core";
 import { protectedAction } from "@ajans/core/server";
-import { uploadToDrive } from "@ajans/google-api";
 
 // --- WEBSITE REVALIDATION HELPER ---
 async function triggerWebsiteRevalidate(path: string) {
@@ -256,7 +256,7 @@ export async function getIsgDocuments() {
 export async function addIsgDocument(data: {
   title: string;
   categoryId: string;
-  driveFileId: string;
+  s3Key: string;
   fileType?: string;
   isPublished?: boolean;
 }) {
@@ -338,7 +338,7 @@ export async function deleteNaceCode(id: string) {
 }
 
 export async function uploadIsgDocument(formData: FormData) {
-  return protectedAction(async ({ db, user }) => {
+  return protectedAction(async ({ db, user, tenantId }) => {
     if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
     const file = formData.get("file") as File;
@@ -352,22 +352,19 @@ export async function uploadIsgDocument(formData: FormData) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const driveFile = await uploadToDrive(
+    const s3Resp = await uploadFile(
       buffer,
       file.name,
       file.type,
-      process.env.GOOGLE_DRIVE_FOLDER_ID,
+      tenantId || "mercan",
+      "isg-documents"
     );
-
-    if (!driveFile || !driveFile.id) {
-      throw new Error("Google Drive yükleme hatası.");
-    }
 
     const doc = await db.isgDocument.create({
       data: {
         title,
         categoryId,
-        driveFileId: driveFile.id,
+        s3Key: s3Resp.key,
         fileType:
           fileType || file.name.split(".").pop()?.toUpperCase() || "PDF",
         isPublished: true,

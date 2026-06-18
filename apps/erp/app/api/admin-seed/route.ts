@@ -27,19 +27,19 @@ export async function GET() {
 
     // 2. Workspace'ler (eski adıyla Firmalar)
     const companyData = [
-      { name: "Mercan Tekstil Fabrikası", folder: "1T_mercan_tekstil_folder" },
-      { name: "Zirve İnşaat Projesi", folder: "1Z_zirve_insaat_folder" },
-      { name: "Anadolu Lojistik Merkezi", folder: "1A_anadolu_lojistik_folder" },
+      { id: "seed-ws-mercan-tekstil", name: "Mercan Tekstil Fabrikası" },
+      { id: "seed-ws-zirve-insaat", name: "Zirve İnşaat Projesi" },
+      { id: "seed-ws-anadolu-lojistik", name: "Anadolu Lojistik Merkezi" },
     ];
 
     const workspaceMap: Record<string, any> = {};
     for (const c of companyData) {
       workspaceMap[c.name] = await prisma.workspace.upsert({
-        where: { driveFolderId: c.folder },
+        where: { id: c.id },
         update: { name: c.name },
         create: { 
+          id: c.id,
           name: c.name, 
-          driveFolderId: c.folder,
           createdById: users["admin@mercan.com"].id
         }
       });
@@ -110,7 +110,7 @@ export async function GET() {
             title: r.title,
             fileName: `${r.title.toLowerCase().replace(/ /g, "_")}.pdf`,
             fileUrl: "https://drive.google.com/sample_file",
-            driveFileId: `mock_id_${Math.random().toString(36).slice(-8)}`,
+            s3Key: `mock_id_${Math.random().toString(36).slice(-8)}`,
             status: r.status as any,
             note: r.note,
             uploadedById: users["uzman1@mercan.com"].id,

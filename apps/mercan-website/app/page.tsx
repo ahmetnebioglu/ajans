@@ -13,9 +13,7 @@ export default async function HomePage() {
     orderBy: { order: "asc" },
   }) || [];
 
-  const settings = await (db as any)?.homepageSettings?.findUnique({
-    where: { id: 1 }
-  });
+  const settings = await (db as any)?.homepageSettings?.findFirst();
 
   return (
     <div className="flex flex-col min-h-screen">

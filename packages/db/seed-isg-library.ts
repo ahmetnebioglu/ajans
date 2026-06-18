@@ -21,7 +21,7 @@ type DocumentSeed = {
   title: string;
   categoryId: string;
   fileType: string;
-  driveFileId: string;
+  s3Key: string;
 };
 
 const documents: DocumentSeed[] = [
@@ -31,21 +31,21 @@ const documents: DocumentSeed[] = [
     title: "6331 İş Güvenliği Kanunu İdari Para Cezaları (2019)",
     categoryId: "isg-cat-idari-para",
     fileType: "PDF",
-    driveFileId: "1SeedIsgIdari63312019ParaCezalari01",
+    s3Key: "1SeedIsgIdari63312019ParaCezalari01",
   },
   {
     id: "isg-doc-idari-4857",
     title: "4857 İş Kanunu İdari Para Cezaları (2019)",
     categoryId: "isg-cat-idari-para",
     fileType: "PDF",
-    driveFileId: "1SeedIsgIdari48572019ParaCezalari01",
+    s3Key: "1SeedIsgIdari48572019ParaCezalari01",
   },
   {
     id: "isg-doc-idari-5510",
     title: "5510 Sosyal Sigortalar ve Genel Sağlık Sigortası Kanunu İdari Para Cezaları (2019)",
     categoryId: "isg-cat-idari-para",
     fileType: "PDF",
-    driveFileId: "1SeedIsgIdari55102019ParaCezalari01",
+    s3Key: "1SeedIsgIdari55102019ParaCezalari01",
   },
 
   // İSG Eğitim Soruları
@@ -54,42 +54,42 @@ const documents: DocumentSeed[] = [
     title: "Güvenli Sürüş Eğitim Sonu Değerlendirme Testi Soruları",
     categoryId: "isg-cat-egitim-sorulari",
     fileType: "PDF",
-    driveFileId: "1SeedIsgEgitimGuvenliSurusTesti01",
+    s3Key: "1SeedIsgEgitimGuvenliSurusTesti01",
   },
   {
     id: "isg-doc-egitim-is-sagligi",
     title: "İş Sağlığı Testi Soruları",
     categoryId: "isg-cat-egitim-sorulari",
     fileType: "PDF",
-    driveFileId: "1SeedIsgEgitimIsSagligiTesti01",
+    s3Key: "1SeedIsgEgitimIsSagligiTesti01",
   },
   {
     id: "isg-doc-egitim-depo",
     title: "Depo Çalışanları İş Güvenliği Testi Soruları",
     categoryId: "isg-cat-egitim-sorulari",
     fileType: "PDF",
-    driveFileId: "1SeedIsgEgitimDepoCalisanlari01",
+    s3Key: "1SeedIsgEgitimDepoCalisanlari01",
   },
   {
     id: "isg-doc-egitim-sera",
     title: "Sera Çalışanları İş Sağlığı Testi Soruları",
     categoryId: "isg-cat-egitim-sorulari",
     fileType: "PDF",
-    driveFileId: "1SeedIsgEgitimSeraCalisanlari01",
+    s3Key: "1SeedIsgEgitimSeraCalisanlari01",
   },
   {
     id: "isg-doc-egitim-forklift",
     title: "Forklift Kullanılan Alanlarda Güvenli Çalışma Testi",
     categoryId: "isg-cat-egitim-sorulari",
     fileType: "PDF",
-    driveFileId: "1SeedIsgEgitimForkliftAlani01",
+    s3Key: "1SeedIsgEgitimForkliftAlani01",
   },
   {
     id: "isg-doc-egitim-vinc",
     title: "Sepetli Vinç, Manlift, Personel Yükselticilerde Çalışma Soruları",
     categoryId: "isg-cat-egitim-sorulari",
     fileType: "PDF",
-    driveFileId: "1SeedIsgEgitimSepetliVinc01",
+    s3Key: "1SeedIsgEgitimSepetliVinc01",
   },
 
   // Bilgilendirmeler
@@ -98,28 +98,28 @@ const documents: DocumentSeed[] = [
     title: "6111 Sayılı Kanun Kapsamında MYK Teşviklerinden Yararlanma Kılavuzu",
     categoryId: "isg-cat-bilgilendirme",
     fileType: "PDF",
-    driveFileId: "1SeedIsgBilgiMykTesvikKilavuzu01",
+    s3Key: "1SeedIsgBilgiMykTesvikKilavuzu01",
   },
   {
     id: "isg-doc-bilgi-6331",
     title: "6331 Sayılı İş Sağlığı ve Güvenliği Kanununa Göre İşverenler Ne Yapmalı?",
     categoryId: "isg-cat-bilgilendirme",
     fileType: "PDF",
-    driveFileId: "1SeedIsgBilgi6331IsverenRehber01",
+    s3Key: "1SeedIsgBilgi6331IsverenRehber01",
   },
   {
     id: "isg-doc-bilgi-sgk-kod",
     title: "2019 SGK Meslek Kodları",
     categoryId: "isg-cat-bilgilendirme",
     fileType: "PDF",
-    driveFileId: "1SeedIsgBilgiSgkMeslekKodlari01",
+    s3Key: "1SeedIsgBilgiSgkMeslekKodlari01",
   },
   {
     id: "isg-doc-bilgi-defter",
     title: "Onaylı (Öneri Tespit) Defter Nasıl Onaylatılır?",
     categoryId: "isg-cat-bilgilendirme",
     fileType: "PDF",
-    driveFileId: "1SeedIsgBilgiOnayliDefterRehber01",
+    s3Key: "1SeedIsgBilgiOnayliDefterRehber01",
   },
 
   // İSG Videoları
@@ -128,42 +128,42 @@ const documents: DocumentSeed[] = [
     title: "LPG Tüpü Yangın Dik - Yatık Söndürülmesi",
     categoryId: "isg-cat-videolar",
     fileType: "MP4",
-    driveFileId: "1SeedIsgVideoLpgTupuYangin01",
+    s3Key: "1SeedIsgVideoLpgTupuYangin01",
   },
   {
     id: "isg-doc-video-mutfak-su",
     title: "Mutfak Yangını - Yanmakta Olan Yağa Su Dökülürse Ne Olur?",
     categoryId: "isg-cat-videolar",
     fileType: "MP4",
-    driveFileId: "1SeedIsgVideoMutfakYaginaSu01",
+    s3Key: "1SeedIsgVideoMutfakYaginaSu01",
   },
   {
     id: "isg-doc-video-tatbikat",
     title: "Yangın Tatbikatı Kazaları / Hataları",
     categoryId: "isg-cat-videolar",
     fileType: "MP4",
-    driveFileId: "1SeedIsgVideoYanginTatbikati01",
+    s3Key: "1SeedIsgVideoYanginTatbikati01",
   },
   {
     id: "isg-doc-video-tava",
     title: "Mutfak Yangını - İçinde Yağ Olan Tava Alev Alırsa Nasıl Söndürülür",
     categoryId: "isg-cat-videolar",
     fileType: "MP4",
-    driveFileId: "1SeedIsgVideoMutfakTavaAlev01",
+    s3Key: "1SeedIsgVideoMutfakTavaAlev01",
   },
   {
     id: "isg-doc-video-uzman",
     title: "İSG Eğitimini Ciddiye Almayan Çalışanların Arkasından Konuşan Uzman (Temsili)",
     categoryId: "isg-cat-videolar",
     fileType: "MP4",
-    driveFileId: "1SeedIsgVideoEgitimTemsili01",
+    s3Key: "1SeedIsgVideoEgitimTemsili01",
   },
   {
     id: "isg-doc-video-kola",
     title: "Kola (Gazlı İçecek) ile Yangın Söndürme",
     categoryId: "isg-cat-videolar",
     fileType: "MP4",
-    driveFileId: "1SeedIsgVideoKolaYangin01",
+    s3Key: "1SeedIsgVideoKolaYangin01",
   },
 
   // KKD Zimmet Formları
@@ -172,28 +172,28 @@ const documents: DocumentSeed[] = [
     title: "Toz Maskesi KKD Zimmet Formu",
     categoryId: "isg-cat-kkd",
     fileType: "PDF",
-    driveFileId: "1SeedIsgKkdTozMaskesiZimmet01",
+    s3Key: "1SeedIsgKkdTozMaskesiZimmet01",
   },
   {
     id: "isg-doc-kkd-kulak",
     title: "Kulak Tıkacı KKD Zimmet Formu",
     categoryId: "isg-cat-kkd",
     fileType: "PDF",
-    driveFileId: "1SeedIsgKkdKulakTikaciZimmet01",
+    s3Key: "1SeedIsgKkdKulakTikaciZimmet01",
   },
   {
     id: "isg-doc-kkd-ayakkabi",
     title: "İş Ayakkabısı KKD Zimmet Formu",
     categoryId: "isg-cat-kkd",
     fileType: "PDF",
-    driveFileId: "1SeedIsgKkdIsAyakkabisiZimmet01",
+    s3Key: "1SeedIsgKkdIsAyakkabisiZimmet01",
   },
   {
     id: "isg-doc-kkd-kemer",
     title: "Paraşüt Tipi (Tam Vücut) Emniyet Kemeri KKD Zimmet Formu",
     categoryId: "isg-cat-kkd",
     fileType: "PDF",
-    driveFileId: "1SeedIsgKkdEmniyetKemeriZimmet01",
+    s3Key: "1SeedIsgKkdEmniyetKemeriZimmet01",
   },
 
   // Eğitim Sunumları
@@ -202,14 +202,14 @@ const documents: DocumentSeed[] = [
     title: "Güvenli Forklift Kullanma Eğitimi",
     categoryId: "isg-cat-sunumlar",
     fileType: "PPTX",
-    driveFileId: "1SeedIsgSunumGuvenliForklift01",
+    s3Key: "1SeedIsgSunumGuvenliForklift01",
   },
   {
     id: "isg-doc-sunum-yangin",
     title: "Yangın Güvenliği Temel Eğitimi",
     categoryId: "isg-cat-sunumlar",
     fileType: "PPTX",
-    driveFileId: "1SeedIsgSunumYanginGuvenligi01",
+    s3Key: "1SeedIsgSunumYanginGuvenligi01",
   },
 
   // Kontrol Formları
@@ -218,7 +218,7 @@ const documents: DocumentSeed[] = [
     title: "Yangın Söndürme Tüpleri Aylık Kontrol Formu",
     categoryId: "isg-cat-kontrol",
     fileType: "PDF",
-    driveFileId: "1SeedIsgKontrolYanginTupuAylik01",
+    s3Key: "1SeedIsgKontrolYanginTupuAylik01",
   },
 
   // Talimat
@@ -227,7 +227,7 @@ const documents: DocumentSeed[] = [
     title: "Şirket Aracı Kullanma İSG Talimatı",
     categoryId: "isg-cat-talimat",
     fileType: "PDF",
-    driveFileId: "1SeedIsgTalimatSirketAraci01",
+    s3Key: "1SeedIsgTalimatSirketAraci01",
   },
 
   // ÇSGB Yayınları
@@ -236,14 +236,14 @@ const documents: DocumentSeed[] = [
     title: "Yapı İşlerinde Yüksekten Düşmeyi Önleme Sistemleri",
     categoryId: "isg-cat-csgb",
     fileType: "PDF",
-    driveFileId: "1SeedIsgCsgbYuksektenDusme01",
+    s3Key: "1SeedIsgCsgbYuksektenDusme01",
   },
   {
     id: "isg-doc-csgb-el-kitabi",
     title: "ÇSGB Yapı Sektörü İş Güvenliği El Kitabı",
     categoryId: "isg-cat-csgb",
     fileType: "PDF",
-    driveFileId: "1SeedIsgCsgbYapiSektoruElKitabi01",
+    s3Key: "1SeedIsgCsgbYapiSektoruElKitabi01",
   },
 
   // İş Sağlığı
@@ -252,14 +252,14 @@ const documents: DocumentSeed[] = [
     title: "Ecza Dolabındaki Sarf Malzemesinde Dikkat Edilmesi Gerekenler",
     categoryId: "isg-cat-is-sagligi",
     fileType: "PDF",
-    driveFileId: "1SeedIsgSaglikEczaDolabi01",
+    s3Key: "1SeedIsgSaglikEczaDolabi01",
   },
   {
     id: "isg-doc-saglik-tetanos",
     title: "Tetanos Aşısı Beyan / Talep Formu",
     categoryId: "isg-cat-is-sagligi",
     fileType: "PDF",
-    driveFileId: "1SeedIsgSaglikTetanosAsisi01",
+    s3Key: "1SeedIsgSaglikTetanosAsisi01",
   },
 
   // Çalışan Temsilcisi
@@ -268,14 +268,14 @@ const documents: DocumentSeed[] = [
     title: "Çalışan Temsilcisi Seçim ve Aday Duyurusu",
     categoryId: "isg-cat-temsilci",
     fileType: "PDF",
-    driveFileId: "1SeedIsgTemsilciSecimDuyurusu01",
+    s3Key: "1SeedIsgTemsilciSecimDuyurusu01",
   },
   {
     id: "isg-doc-temsilci-cizelge",
     title: "Çalışan Temsilcisi Seçmen Takip Çizelgesi",
     categoryId: "isg-cat-temsilci",
     fileType: "PDF",
-    driveFileId: "1SeedIsgTemsilciSecmenCizelgesi01",
+    s3Key: "1SeedIsgTemsilciSecmenCizelgesi01",
   },
 ];
 
@@ -302,7 +302,7 @@ export async function seedIsgLibrary(prisma: PrismaClient) {
         title: doc.title,
         categoryId: doc.categoryId,
         fileType: doc.fileType,
-        driveFileId: doc.driveFileId,
+        s3Key: doc.s3Key,
         isPublished: true,
       },
       create: {

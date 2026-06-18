@@ -53,7 +53,6 @@ export async function createCompany(data: {
   name: string;
   taxNumber?: string;
   address?: string;
-  driveFolderId?: string;
 }) {
   return protectedAction(async ({ db, tenantId }) => {
     const company = await db.$transaction(async (tx) => {
@@ -62,7 +61,6 @@ export async function createCompany(data: {
           name: data.name,
           taxNumber: data.taxNumber,
           address: data.address,
-          driveFolderId: data.driveFolderId,
           tenantId,
         },
       });

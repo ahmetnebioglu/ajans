@@ -299,8 +299,11 @@ export default function ServiceFormPage({ params: paramsPromise }: { params: Pro
       <MediaPicker
         isOpen={isMediaPickerOpen}
         onClose={() => setIsMediaPickerOpen(false)}
-        onSelect={(fileId) => {
-          setFormData({ ...formData, featuredImage: `https://drive.google.com/uc?export=view&id=${fileId}` });
+        onSelect={(fileId, fileUrl) => {
+          const imageUrl = fileUrl && fileUrl.startsWith("http")
+            ? fileUrl
+            : `https://drive.google.com/uc?export=view&id=${fileId}`;
+          setFormData({ ...formData, featuredImage: imageUrl });
           setIsMediaPickerOpen(false);
         }}
       />

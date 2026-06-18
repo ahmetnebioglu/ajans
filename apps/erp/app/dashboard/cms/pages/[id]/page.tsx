@@ -86,14 +86,18 @@ export default function PageBuilderPage({ params }: { params: Promise<{ id: stri
     setIsMediaPickerOpen(true);
   };
 
-  const handleMediaSelect = (fileId: string) => {
+  const handleMediaSelect = (fileId: string, fileUrl?: string) => {
     if (!activeMediaTarget) return;
     
+    const imageUrl = fileUrl && fileUrl.startsWith("http")
+      ? fileUrl
+      : `https://drive.google.com/uc?export=view&id=${fileId}`;
+
     setSections(prev => prev.map(s => {
       if (s.id === activeMediaTarget.sectionId) {
         return {
           ...s,
-          content: { ...s.content, [activeMediaTarget.field]: fileId }
+          content: { ...s.content, [activeMediaTarget.field]: imageUrl }
         };
       }
       return s;
