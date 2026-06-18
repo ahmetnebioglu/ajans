@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     console.log(`[SCRAPE] Başlatılıyor: Query="${query}", Location="${location || 'Belirtilmedi'}"`);
 
     // Google API'den verileri çek
-    const businesses = await searchBusinesses(query, location || undefined);
+    const businesses = await searchBusinesses(query, location || undefined, "teknikel");
     
     if (businesses.length === 0) {
       return NextResponse.json({ 

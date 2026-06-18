@@ -6,8 +6,8 @@ import { getBalance, getSenders } from "@ajans/core/server";
 export async function getApiUsageStats() {
   try {
     const [netgsmBalance, apiSenders] = await Promise.all([
-      getBalance(),
-      getSenders()
+      getBalance("teknikel"),
+      getSenders("teknikel")
     ]);
     const startOfMonth = new Date();
     startOfMonth.setDate(1);

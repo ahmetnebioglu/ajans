@@ -11,8 +11,8 @@ export interface BusinessResult {
   placeId: string;
 }
 
-export async function searchBusinesses(query: string, location?: string): Promise<BusinessResult[]> {
-  const settings = await getGoogleSettings();
+export async function searchBusinesses(query: string, location?: string, tenantId: string = "mercan"): Promise<BusinessResult[]> {
+  const settings = await getGoogleSettings(tenantId);
   const apiKey = settings?.googlePlacesApiKey || process.env.GOOGLE_PLACES_API_KEY;
 
   if (!apiKey) {

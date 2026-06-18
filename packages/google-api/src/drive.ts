@@ -7,10 +7,11 @@ export async function uploadToDrive(
   fileBuffer: Buffer,
   fileName: string,
   mimeType: string,
-  folderId?: string
+  folderId?: string,
+  tenantId: string = "mercan"
 ) {
-  const auth = await getGoogleAuth();
-  const settings = await getGoogleSettings();
+  const auth = await getGoogleAuth(tenantId);
+  const settings = await getGoogleSettings(tenantId);
   
   // Eğer folderId parametre olarak gelmediyse DB'den al, o da yoksa ENV'den al
   const targetFolderId = folderId || settings?.googleDriveFolderId || process.env.GOOGLE_DRIVE_FOLDER_ID;

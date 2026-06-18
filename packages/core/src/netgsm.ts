@@ -7,8 +7,8 @@ import { getCachedSettings } from './settings';
  * @param message Mesaj metni
  * @returns Başarı durumunda true, hata durumunda false döner
  */
-export async function sendSms(phone: string, message: string): Promise<boolean> {
-  const settings = await getCachedSettings();
+export async function sendSms(phone: string, message: string, tenantId: string = "mercan"): Promise<boolean> {
+  const settings = await getCachedSettings(tenantId);
   const usercode = settings?.netgsmUsercode || process.env.NETGSM_USERCODE;
   const password = settings?.netgsmPassword || process.env.NETGSM_PASSWORD;
   const sender = process.env.NETGSM_SENDER || process.env.NETGSM_HEADER || 'TEKNIKEL';
@@ -53,8 +53,8 @@ export async function sendSms(phone: string, message: string): Promise<boolean> 
  * NetGSM bakiye sorgulama servisi
  * @returns Kalan SMS kredi miktarı veya hata durumunda null
  */
-export async function getBalance(): Promise<{ amount: number; expiryDate?: string } | null> {
-  const settings = await getCachedSettings();
+export async function getBalance(tenantId: string = "mercan"): Promise<{ amount: number; expiryDate?: string } | null> {
+  const settings = await getCachedSettings(tenantId);
   const usercode = settings?.netgsmUsercode || process.env.NETGSM_USERCODE;
   const password = settings?.netgsmPassword || process.env.NETGSM_PASSWORD;
   const baseUrl = process.env.NETGSM_BASE_URL || 'https://api.netgsm.com.tr';
@@ -87,8 +87,8 @@ export async function getBalance(): Promise<{ amount: number; expiryDate?: strin
 /**
  * NetGSM onaylı gönderici adlarını (header) sorgulama servisi
  */
-export async function getSenders(): Promise<string[]> {
-  const settings = await getCachedSettings();
+export async function getSenders(tenantId: string = "mercan"): Promise<string[]> {
+  const settings = await getCachedSettings(tenantId);
   const usercode = settings?.netgsmUsercode || process.env.NETGSM_USERCODE;
   const password = settings?.netgsmPassword || process.env.NETGSM_PASSWORD;
   const baseUrl = process.env.NETGSM_BASE_URL || 'https://api.netgsm.com.tr';

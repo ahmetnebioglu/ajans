@@ -95,24 +95,26 @@ export async function createBlogPost(data: {
 // --- SETTINGS ACTIONS ---
 
 export async function getSiteSettings() {
-  return protectedAction(async ({ db }) => {
+  return protectedAction(async ({ db, tenantId }) => {
     let settings = await db.siteSettings.findUnique({
-      where: { id: "global" },
+      where: { tenantId },
     });
     if (!settings) {
-      settings = await db.siteSettings.create({ data: { id: "global" } });
+      settings = await db.siteSettings.create({ data: { tenantId } });
     }
     return settings;
   });
 }
 
 export async function updateSiteSettings(data: any) {
-  return protectedAction(async ({ db, user }) => {
+  return protectedAction(async ({ db, user, tenantId }) => {
     if (user.role !== "ADMIN") throw new Error("UNAUTHORIZED");
 
+    const { id, ...updateData } = data;
+
     await db.siteSettings.update({
-      where: { id: "global" },
-      data,
+      where: { tenantId },
+      data: updateData,
     });
     revalidatePath("/dashboard/cms/settings");
     await triggerWebsiteRevalidate(`/`);

@@ -4,8 +4,8 @@ import fs from "fs";
 import { getGoogleSettings } from "./settings";
 
 // Google Cloud Authentication (Hybrid: Supports Service Account & OAuth2 Refresh Token)
-export const getGoogleAuth = async () => {
-  const settings = await getGoogleSettings();
+export const getGoogleAuth = async (tenantId: string = "mercan") => {
+  const settings = await getGoogleSettings(tenantId);
   
   const clientId = settings?.googleClientId || process.env.GOOGLE_CLIENT_ID;
   const clientSecret = settings?.googleClientSecret || process.env.GOOGLE_CLIENT_SECRET;

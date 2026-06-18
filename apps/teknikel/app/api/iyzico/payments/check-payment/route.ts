@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     try {
       const db = getSecuredPrisma('teknikel');
-      const settings = await db.siteSettings.findUnique({ where: { id: 'global' } });
+      const settings = await db.siteSettings.findUnique({ where: { tenantId: 'teknikel' } });
       if (settings) {
         baseUrl = settings.iyzicoBaseUrl || baseUrl;
         apiKey = settings.iyzicoApiKey || apiKey;

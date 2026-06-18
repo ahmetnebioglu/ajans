@@ -53,6 +53,7 @@ export async function scrapeLeads(
     const businesses = await searchBusinesses(
       query.trim(),
       location?.trim() || undefined,
+      "teknikel"
     );
 
     if (businesses.length === 0) {

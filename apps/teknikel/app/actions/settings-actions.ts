@@ -10,7 +10,7 @@ import { clearSettingsCache } from '@ajans/core/server';
  */
 export async function getIntegrationStatuses() {
   const db = getSecuredPrisma("teknikel");
-  const settings = await db.siteSettings.findUnique({ where: { id: 'global' } });
+  const settings = await db.siteSettings.findUnique({ where: { tenantId: 'teknikel' } });
   const bilsoft = await db.bilsoftConfig.findUnique({ where: { tenantId: 'teknikel' } });
 
   return {
@@ -29,7 +29,7 @@ export async function getIntegrationStatuses() {
  */
 export async function getIntegrationSettings() {
   const db = getSecuredPrisma("teknikel");
-  return await db.siteSettings.findUnique({ where: { id: 'global' } });
+  return await db.siteSettings.findUnique({ where: { tenantId: 'teknikel' } });
 }
 
 /**
@@ -61,10 +61,11 @@ export async function updateIntegrationSettings(data: any) {
       }
     }
 
+    const { id, ...updateData } = filteredData;
     await db.siteSettings.upsert({
-      where: { id: 'global' },
-      create: { id: 'global', ...filteredData },
-      update: filteredData,
+      where: { tenantId: 'teknikel' },
+      create: { tenantId: 'teknikel', ...updateData },
+      update: updateData,
     });
     
     // Core paketindeki önbelleği temizle

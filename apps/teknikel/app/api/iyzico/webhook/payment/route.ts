@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     // DB'den secret key'i oku
     const db = getSecuredPrisma('teknikel');
     try {
-      const settings = await db.siteSettings.findUnique({ where: { id: 'global' } });
+      const settings = await db.siteSettings.findUnique({ where: { tenantId: 'teknikel' } });
       if (settings?.iyzicoSecretKey) {
         secretKey = settings.iyzicoSecretKey;
       }
