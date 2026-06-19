@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import WorkspaceSwitcher from "./WorkspaceSwitcher";
 import {
   Layout,
   Menu,
@@ -363,6 +364,12 @@ export default function UnifiedSidebar({
             items={
               [
                 ...config.items,
+                { type: "divider" } as const,
+                {
+                  key: "/dashboard/settings/workspace",
+                  icon: <Settings size={18} />,
+                  label: "Ayarlar",
+                },
                 ...(userRole === "ADMIN"
                   ? [
                       { type: "divider" } as const,
@@ -394,6 +401,11 @@ export default function UnifiedSidebar({
             onClick={({ key }) => router.push(key as string)}
             className="border-none bg-transparent premium-unified-menu"
           />
+        </div>
+
+        {/* WORKSPACE SWITCHER */}
+        <div className="px-3 pb-2">
+          <WorkspaceSwitcher collapsed={collapsed} isDark={isDark} />
         </div>
 
         {/* PROFILE SECTION - DISCORD STYLE */}

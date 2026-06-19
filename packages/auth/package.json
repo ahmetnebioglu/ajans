@@ -4,7 +4,8 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./options": "./src/options.ts"
+    "./options": "./src/options.ts",
+    "./permissions": "./src/permissions.ts"
   },
   "types": "./src/index.ts",
   "license": "MIT",

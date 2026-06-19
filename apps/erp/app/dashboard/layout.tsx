@@ -18,9 +18,6 @@ export default async function DashboardLayout({
   }
 
   const user = session.user as any;
-  if (user.tenantId !== DEFAULT_TENANT_ID) {
-    redirect("/login?error=TenantMismatch");
-  }
 
   // Redirect CUSTOMER users to their dedicated portal
   if (user.role === "CUSTOMER") {

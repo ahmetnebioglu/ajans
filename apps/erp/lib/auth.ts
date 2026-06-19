@@ -97,7 +97,17 @@ export const authOptions: NextAuthOptions = {
               tenantId: DEFAULT_TENANT_ID,
             },
           });
-          return toSessionUser(user);
+
+          const fullUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            include: {
+              workspaceUsers: {
+                include: { workspace: true, role: true }
+              }
+            }
+          });
+
+          return toSessionUser(user, fullUser?.workspaceUsers as any);
         }
 
         let userRaw = await findLoginUser(email);
@@ -163,7 +173,17 @@ export const authOptions: NextAuthOptions = {
               tenantId: DEFAULT_TENANT_ID,
             },
           });
-          return toSessionUser(user);
+
+          const fullUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            include: {
+              workspaceUsers: {
+                include: { workspace: true, role: true }
+              }
+            }
+          });
+
+          return toSessionUser(user, fullUser?.workspaceUsers as any);
         }
 
         let user = await prisma.user.findUnique({
@@ -215,10 +235,39 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, trigger, session: updateSession }: any) {
-      // Workspace switcher: session.update() ile tetiklenir
-      if (trigger === "update" && updateSession?.currentWorkspaceId) {
-        token.currentWorkspaceId = updateSession.currentWorkspaceId;
-        token.permissions = updateSession.permissions || [];
+      // Onboarding veya Switch sonrasında tetiklenen session.update()
+      if (trigger === "update") {
+        if (updateSession?.currentWorkspaceId) {
+          token.currentWorkspaceId = updateSession.currentWorkspaceId;
+        }
+
+        // Veritabanından en güncel bilgileri çek
+        const fullUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          include: {
+            workspaceUsers: {
+              include: { workspace: true, role: true }
+            }
+          }
+        });
+
+        if (fullUser) {
+          token.role = fullUser.role;
+          token.tenantId = fullUser.tenantId;
+          
+          const workspaces = (fullUser.workspaceUsers || []).map((wu) => ({
+            id: wu.workspaceId,
+            name: wu.workspace.name,
+            roleId: wu.roleId,
+            tenantId: wu.workspace.tenantId,
+          }));
+          token.availableWorkspaces = workspaces;
+
+          const currentWU = (fullUser.workspaceUsers || []).find(
+            (wu) => wu.workspaceId === token.currentWorkspaceId
+          );
+          token.permissions = currentWU?.role?.permissions || [];
+        }
       }
       if (user) {
         token.id = user.id;
