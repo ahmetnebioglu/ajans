@@ -192,10 +192,32 @@ export default function InvoiceCreatorButton({
        try {
          const customerName =
            `${order.customerFirstname || ''} ${order.customerSurname || ''}`.trim();
+           
+         const companyName =
+           order.billingAddress?.company ||
+           order.billingAddress?.companyName ||
+           order.billingAddress?.invoiceTitle ||
+           order.company ||
+           '';
+         const identityNumber =
+           order.billingAddress?.identityRegistrationNumber ||
+           order.tcKimlikNo ||
+           order.customerIdentityNumber ||
+           order.identityNumber ||
+           order.customerTc ||
+           '';
+         const taxNumber = order.billingAddress?.taxNo || order.taxNumber || '';
+
          const resp = await fetch('/api/bilsoft/cari-search', {
            method: 'POST',
            headers: { 'Content-Type': 'application/json' },
-           body: JSON.stringify({ customerName }),
+           body: JSON.stringify({ 
+             orderId: order.id, 
+             customerName, 
+             companyName, 
+             identityNumber, 
+             taxNumber 
+           }),
          });
 
          const data = await resp.json();
