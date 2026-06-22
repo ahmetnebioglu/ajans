@@ -1,6 +1,19 @@
 import { unsecured_prisma as db } from '@ajans/db';
 import { getValidToken as getCentralValidToken } from './tokenManager';
 import { unstable_cache } from 'next/cache';
+import zlib from 'zlib';
+
+function compressData(data: any): string {
+  const str = JSON.stringify(data);
+  return zlib.gzipSync(str).toString('base64');
+}
+
+function decompressData(base64Str: string): any {
+  if (!base64Str) return [];
+  const buffer = Buffer.from(base64Str, 'base64');
+  const decompressed = zlib.gunzipSync(buffer);
+  return JSON.parse(decompressed.toString('utf-8'));
+}
 
 // ============================================================
 // SKU NORMALIZATION & CACHING
@@ -57,7 +70,7 @@ export async function fetchAndCacheBilsoftStocks(force: boolean = false): Promis
 
     let allStocks: any[] = [];
     let page = 1;
-    const pageSize = 500;
+    const pageSize = 1500;
     let hasMore = true;
 
     while (hasMore) {
@@ -89,7 +102,8 @@ export async function fetchAndCacheBilsoftStocks(force: boolean = false): Promis
       const rawData = result.data?.data ?? result.data ?? [];
       allStocks = allStocks.concat(rawData);
 
-      if (rawData.length < pageSize) {
+      const totalCount = result.data?.totalCount ?? result.totalCount ?? 0;
+      if (rawData.length < pageSize || allStocks.length >= totalCount) {
         hasMore = false;
       } else {
         page++;
@@ -218,74 +232,96 @@ export async function getValidToken(): Promise<string> {
  * @param page Sayfa numarası (1-indexed)
  * @param pageSize Sayfa başına kayıt sayısı
  */
-const _getBilsoftCariler = async (
-  searchTerm: string = "", 
-  page: number = 1, 
-  pageSize: number = 50
-): Promise<{ data: BilsoftCari[], totalCount: number }> => {
+const _fetchAllBilsoftCariler = async (): Promise<string> => {
   try {
     const token = await getValidToken();
-    
-    // Temel payload
-    const payload: any = {
-      subeAdi: 'Merkez',
-      pagingOptions: {
-        pageSize: pageSize, 
-        pageNumber: page - 1, // API 0 tabanlı bekliyor
-      },
-    };
+    let allCariler: BilsoftCari[] = [];
+    let page = 1;
+    const pageSize = 1500;
+    let hasMore = true;
 
-    // Koşullu Arama Mantığı
-    if (searchTerm && searchTerm.trim() !== "") {
-      payload.aranacakKelime = searchTerm;
-      payload.searchType = ['Contains'];
-      payload.veri = { faturaUnvan: searchTerm };
+    while (hasMore) {
+      const response = await fetch('https://apiv3.bilsoft.com/api/CariKart/getall', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          subeAdi: 'Merkez',
+          pagingOptions: {
+            pageSize,
+            pageNumber: page - 1,
+          },
+        }),
+        cache: 'no-store',
+      });
+
+      const result = await response.json();
+      if (!result.success) {
+        console.warn('[bilsoft.ts] Cari fetch failed:', result.message);
+        break;
+      }
+
+      const rawData: BilsoftCari[] = result.data || [];
+      allCariler = allCariler.concat(rawData);
+
+      const totalCount = result.totalCount || 0;
+      if (rawData.length < pageSize || allCariler.length >= totalCount) {
+        hasMore = false;
+      } else {
+        page++;
+      }
     }
 
-    console.log("🛠️ BİLSOFT FETCH PAYLOAD:", JSON.stringify(payload, null, 2));
-
-    const response = await fetch('https://apiv3.bilsoft.com/api/CariKart/getall', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const resText = await response.text();
-    console.log("🛠️ BİLSOFT HTTP STATUS:", response.status);
-    console.log("🛠️ BİLSOFT RAW RESPONSE (İlk 500 karakter):", resText.substring(0, 500));
-
-    let result;
-    try {
-      result = JSON.parse(resText);
-    } catch (e) {
-      console.error("🛠️ BİLSOFT JSON Parse Hatası:", e);
-      return { data: [], totalCount: 0 };
-    }
-
-    if (!result.success) {
-      console.warn("🛠️ BİLSOFT API ERROR:", result.message);
-      return { data: [], totalCount: 0 };
-    }
-
-    return {
-      data: result.data || [],
-      totalCount: result.totalCount || 0
-    };
+    return compressData(allCariler);
   } catch (error) {
-    console.error('[BilsoftService] Fetch Currents Error:', error);
-    return { data: [], totalCount: 0 };
+    console.error('[bilsoft.ts] Fetch All Caris Error:', error);
+    return compressData([]);
   }
 };
 
-// Cache 24 saat
-export const getBilsoftCariler = unstable_cache(
-  _getBilsoftCariler,
-  ['bilsoft-cariler'],
+const getCachedAllCariler = unstable_cache(
+  _fetchAllBilsoftCariler,
+  ['bilsoft-all-cariler'],
   { revalidate: 86400, tags: ['bilsoft-cariler'] }
 );
+
+export async function getBilsoftCariler(
+  searchTerm: string = "",
+  page: number = 1,
+  pageSize: number = 50
+): Promise<{ data: BilsoftCari[]; totalCount: number }> {
+  const compressed = await getCachedAllCariler();
+  const allCariler = decompressData(compressed) as BilsoftCari[];
+  let filtered = allCariler;
+
+  if (searchTerm && searchTerm.trim() !== "") {
+    const cleanTerm = normalizeString(searchTerm);
+    const cleanPhoneTerm = normalizePhone(searchTerm);
+    
+    filtered = allCariler.filter(cari => {
+      const unvan = normalizeString(cari.faturaUnvan);
+      const kod = normalizeString(cari.cariKod);
+      const yetkili = normalizeString(cari.yetkili);
+      const tel = normalizePhone(cari.tel);
+      const cep = normalizePhone(cari.cep);
+      
+      return (
+        unvan.includes(cleanTerm) ||
+        kod.includes(cleanTerm) ||
+        yetkili.includes(cleanTerm) ||
+        (cleanPhoneTerm && (tel.includes(cleanPhoneTerm) || cep.includes(cleanPhoneTerm)))
+      );
+    });
+  }
+
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+  return {
+    data: paginated,
+    totalCount: filtered.length
+  };
+}
 
 /**
  * Bilsoft'tan ID ile tekil cari detayı çeker.
@@ -408,71 +444,92 @@ export interface BilsoftFaturaKalem {
 /**
  * Bilsoft'tan fatura listesini çeker (Server-Side Pagination & Search).
  */
-const _getBilsoftFaturalar = async (
-  searchTerm: string = "",
-  page: number = 1,
-  pageSize: number = 50
-): Promise<{ data: BilsoftFatura[]; totalCount: number }> => {
+const _fetchAllBilsoftFaturalar = async (): Promise<string> => {
   try {
     const token = await getValidToken();
+    let allFaturalar: BilsoftFatura[] = [];
+    let page = 1;
+    const pageSize = 1500;
+    let hasMore = true;
 
-    const payload: any = {
-      subeAdi: 'Merkez',
-      pagingOptions: {
-        pageSize,
-        pageNumber: page - 1,
-      },
-    };
+    while (hasMore) {
+      const response = await fetch('https://apiv3.bilsoft.com/api/Fatura/getall', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          subeAdi: 'Merkez',
+          pagingOptions: {
+            pageSize,
+            pageNumber: page - 1,
+          },
+        }),
+        cache: 'no-store',
+      });
 
-    if (searchTerm && searchTerm.trim() !== "") {
-      payload.aranacakKelime = searchTerm;
-      payload.searchType = ['Contains'];
+      const result = await response.json();
+      if (!result.success) {
+        console.warn('[bilsoft.ts] Fatura fetch failed:', result.message);
+        break;
+      }
+
+      const rawData = result.data?.data ?? result.data ?? [];
+      allFaturalar = allFaturalar.concat(rawData);
+
+      const totalCount = result.data?.totalCount ?? result.totalCount ?? 0;
+      if (rawData.length < pageSize || allFaturalar.length >= totalCount) {
+        hasMore = false;
+      } else {
+        page++;
+      }
     }
 
-    const response = await fetch('https://apiv3.bilsoft.com/api/Fatura/getall', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-      cache: 'no-store',
-    });
-
-    const resText = await response.text();
-    let result;
-    try {
-      result = JSON.parse(resText);
-    } catch {
-      console.error('[BilsoftService] Fatura JSON Parse Hatası');
-      return { data: [], totalCount: 0 };
-    }
-
-    if (!result.success) {
-      console.warn('[BilsoftService] Fatura API ERROR:', result.message);
-      return { data: [], totalCount: 0 };
-    }
-
-    // API yanıtı: result.data.data (array) + result.data.totalCount
-    const rawData = result.data?.data ?? result.data ?? [];
-    const totalCount = result.data?.totalCount ?? result.totalCount ?? rawData.length;
-
-    // ID'ye göre azalan sıralama (en yeni fatura başta)
-    const sorted = [...rawData].sort((a: any, b: any) => b.id - a.id);
-
-    return { data: sorted, totalCount };
+    return compressData(allFaturalar.sort((a, b) => b.id - a.id));
   } catch (error) {
-    console.error('[BilsoftService] Fetch Faturalar Error:', error);
-    return { data: [], totalCount: 0 };
+    console.error('[bilsoft.ts] Fetch All Faturalar Error:', error);
+    return compressData([]);
   }
 };
 
-// Cache 2 saat
-export const getBilsoftFaturalar = unstable_cache(
-  _getBilsoftFaturalar,
-  ['bilsoft-faturalar'],
+const getCachedAllFaturalar = unstable_cache(
+  _fetchAllBilsoftFaturalar,
+  ['bilsoft-all-faturalar'],
   { revalidate: 7200, tags: ['bilsoft-faturalar'] }
 );
+
+export async function getBilsoftFaturalar(
+  searchTerm: string = "",
+  page: number = 1,
+  pageSize: number = 50
+): Promise<{ data: BilsoftFatura[]; totalCount: number }> {
+  const compressed = await getCachedAllFaturalar();
+  const allFaturalar = decompressData(compressed) as BilsoftFatura[];
+  let filtered = allFaturalar;
+
+  if (searchTerm && searchTerm.trim() !== "") {
+    const term = normalizeString(searchTerm);
+    filtered = allFaturalar.filter(fat => {
+      const unvan = normalizeString(fat.unvan);
+      const cariKod = normalizeString(fat.cariKod);
+      const fisno = normalizeString(fat.fisno);
+      const eFaturaNo = normalizeString(fat.eFaturaNo);
+      return (
+        unvan.includes(term) ||
+        cariKod.includes(term) ||
+        fisno.includes(term) ||
+        eFaturaNo.includes(term)
+      );
+    });
+  }
+
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+  return {
+    data: paginated,
+    totalCount: filtered.length
+  };
+}
 
 /**
  * Bilsoft'tan ID ile tekil fatura detayı çeker.
@@ -539,74 +596,95 @@ export interface BilsoftStokKarti {
 /**
  * Bilsoft'tan stok kartı listesini çeker (Server-Side Pagination & Search).
  */
-const _getBilsoftStokKartlari = async (
-  searchTerm: string = "",
-  page: number = 1,
-  pageSize: number = 50
-): Promise<{ data: BilsoftStokKarti[]; totalCount: number }> => {
+const _fetchAllBilsoftStokKartlari = async (): Promise<string> => {
   try {
     const token = await getValidToken();
+    let allStoklar: BilsoftStokKarti[] = [];
+    let page = 1;
+    const pageSize = 1500;
+    let hasMore = true;
 
-    const payload: any = {
-      aranacakKelime: searchTerm && searchTerm.trim() !== "" ? searchTerm : '',
-      searchType: ['Contains'],
-      subeAdi: 'Merkez',
-      pagingOptions: {
-        pageSize: pageSize,
-        pageNumber: page - 1,
-      },
-      veri: {
-        kod: '',
-      },
-    };
+    while (hasMore) {
+      const response = await fetch('https://apiv3.bilsoft.com/api/Stok/GetListWithBakiye', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          aranacakKelime: '',
+          searchType: ['Contains'],
+          subeAdi: 'Merkez',
+          pagingOptions: {
+            pageSize,
+            pageNumber: page - 1,
+          },
+          veri: {
+            kod: '',
+          },
+        }),
+        cache: 'no-store',
+      });
 
-    console.log("🛠️ BİLSOFT STOK FETCH PAYLOAD:", JSON.stringify(payload, null, 2));
+      const result = await response.json();
+      if (!result.success) {
+        console.warn('[bilsoft.ts] Stok fetch failed:', result.message);
+        break;
+      }
 
-    const response = await fetch('https://apiv3.bilsoft.com/api/Stok/GetListWithBakiye', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-      cache: 'no-store',
-    });
+      const rawData = result.data?.data ?? result.data ?? [];
+      allStoklar = allStoklar.concat(rawData);
 
-    const resText = await response.text();
-    console.log("🛠️ BİLSOFT STOK HTTP STATUS:", response.status);
-    console.log("🛠️ BİLSOFT STOK RAW RESPONSE (İlk 500 karakter):", resText.substring(0, 500));
-
-    let result;
-    try {
-      result = JSON.parse(resText);
-    } catch {
-      console.error('[BilsoftService] StokKart JSON Parse Hatası');
-      return { data: [], totalCount: 0 };
+      const totalCount = result.data?.totalCount ?? result.totalCount ?? 0;
+      if (rawData.length < pageSize || allStoklar.length >= totalCount) {
+        hasMore = false;
+      } else {
+        page++;
+      }
     }
 
-    if (!result.success) {
-      console.warn('[BilsoftService] StokKart API ERROR:', result.message);
-      return { data: [], totalCount: 0 };
-    }
-
-    const rawData = result.data?.data ?? result.data ?? [];
-    const totalCount = result.data?.totalCount ?? result.totalCount ?? rawData.length;
-
-    console.log(`🛠️ BİLSOFT STOK: ${rawData.length} kayıt, toplam: ${totalCount}`);
-
-    return { data: rawData, totalCount };
+    return compressData(allStoklar);
   } catch (error) {
-    console.error('[BilsoftService] Fetch StokKartlari Error:', error);
-    return { data: [], totalCount: 0 };
+    console.error('[bilsoft.ts] Fetch All Stoklar Error:', error);
+    return compressData([]);
   }
 };
 
-// Cache 12 saat
-export const getBilsoftStokKartlari = unstable_cache(
-  _getBilsoftStokKartlari,
-  ['bilsoft-stoklar'],
+const getCachedAllStokKartlari = unstable_cache(
+  _fetchAllBilsoftStokKartlari,
+  ['bilsoft-all-stoklar'],
   { revalidate: 43200, tags: ['bilsoft-stoklar'] }
 );
+
+export async function getBilsoftStokKartlari(
+  searchTerm: string = "",
+  page: number = 1,
+  pageSize: number = 50
+): Promise<{ data: BilsoftStokKarti[]; totalCount: number }> {
+  const compressed = await getCachedAllStokKartlari();
+  const allStoklar = decompressData(compressed) as BilsoftStokKarti[];
+  let filtered = allStoklar;
+
+  if (searchTerm && searchTerm.trim() !== "") {
+    const term = normalizeString(searchTerm);
+    filtered = allStoklar.filter(stok => {
+      const kod = normalizeString(stok.kod);
+      const ad = normalizeString(stok.ad);
+      const barkod = normalizeString(stok.barkod);
+      return (
+        kod.includes(term) ||
+        ad.includes(term) ||
+        barkod.includes(term)
+      );
+    });
+  }
+
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+  return {
+    data: paginated,
+    totalCount: filtered.length
+  };
+}
 
 /**
  * Bilsoft'tan stok kodu ile tekil stok kartı detayı çeker.
