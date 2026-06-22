@@ -725,17 +725,24 @@ export async function getIdeasoftAllProducts(
   }
 }
 
+export interface IdeasoftProductUpdateRequest {
+  name?: string;
+  sku?: string;
+  barcode?: string;
+  stockAmount?: number;
+  price1?: number;
+  price2?: number;
+  price3?: number;
+  tax?: number;
+  taxIncluded?: boolean;
+}
+
 /**
- * Ideasoft ürününü günceller (stok ve fiyat).
+ * Ideasoft ürününü günceller (stok, fiyat, vb. tüm temel bilgiler).
  */
 export async function updateIdeasoftProduct(
   id: number,
-  data: {
-    stockAmount?: number;
-    price1?: number;
-    price2?: number;
-    price3?: number;
-  }
+  data: IdeasoftProductUpdateRequest
 ): Promise<IdeasoftProduct | null> {
   const domain = process.env.domain || 'https://teknikelkombi.myideasoft.com';
 

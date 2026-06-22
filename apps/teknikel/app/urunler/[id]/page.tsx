@@ -18,9 +18,11 @@ import {
   DollarOutlined,
   BarcodeOutlined,
   InfoCircleOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import ProductImageGallery from "./ProductImageGallery";
+
 
 const formatPrice = (price: number | null | undefined) => {
   if (price == null) return "-";
@@ -88,6 +90,9 @@ export default async function UrunDetailPage({
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <Link href={`/urunler/${id}/edit`}>
+            <Button type="primary" icon={<EditOutlined />}>Düzenle</Button>
+          </Link>
           <Tag color={stockStatus.color} className="font-bold text-sm px-3 py-1">
             {stockStatus.label}: {safeProduct.stockAmount}{" "}
             {safeProduct.stockTypeLabel || "Adet"}
