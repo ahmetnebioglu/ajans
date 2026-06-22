@@ -7,8 +7,11 @@ import {
   ShoppingOutlined,
   SortAscendingOutlined,
   ReloadOutlined,
+  EditOutlined,
 } from '@ant-design/icons';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { revalidateUrunler } from '@/app/actions/revalidate';
+import { CacheRevalidateButton } from '@/app/components/CacheRevalidateButton';
 
 interface IdeasoftProduct {
   id: number;
@@ -105,11 +108,7 @@ export default function ProductGrid({
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const handleRefresh = () => {
-    setLoading(true);
-    router.refresh();
-    setTimeout(() => setLoading(false), 1000);
-  };
+  // handleRefresh removed since we use CacheRevalidateButton
 
   return (
     <div className="space-y-4">
@@ -152,39 +151,38 @@ export default function ProductGrid({
         </div>
       )}
 
-      {/* Arama ve Filtreler */}
-      <Card className="shadow-sm border-slate-100 dark:border-slate-800">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4 flex-wrap">
-            <Input.Search
-              placeholder="Ürün kodu ile ara..."
-              onSearch={handleSearch}
-              defaultValue={searchTerm}
-              allowClear
-              enterButton
-              className="flex-1 min-w-[250px]"
-            />
-            <Select
-              value={sort}
-              onChange={handleSortChange}
-              options={sortOptions}
-              className="w-[200px]"
-              prefix={<SortAscendingOutlined />}
-            />
-            <Button
-              icon={<ReloadOutlined />}
-              onClick={handleRefresh}
-              loading={loading}
-            >
-              Yenile
-            </Button>
-          </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+      {/* Header Alanı */}
+      <div className="mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+            Ürünler (Ideasoft)
+          </h1>
+          <div className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Toplam <strong>{totalCount}</strong> ürün
             {searchTerm && <span> • "{searchTerm}" araması</span>}
           </div>
         </div>
-      </Card>
+
+        <div className="flex items-center gap-3">
+          <Input.Search
+            placeholder="Ürün ara..."
+            onSearch={handleSearch}
+            defaultValue={searchTerm}
+            allowClear
+            size="large"
+            className="w-[160px]"
+          />
+          <Select
+            value={sort}
+            onChange={handleSortChange}
+            options={sortOptions}
+            size="large"
+            className="w-[160px]"
+            prefix={<SortAscendingOutlined />}
+          />
+          <CacheRevalidateButton onRevalidate={revalidateUrunler} label="Yenile" />
+        </div>
+      </div>
 
       {/* Ürün Grid */}
       {initialData.length === 0 ? (
@@ -246,19 +244,29 @@ export default function ProductGrid({
                           {formatPrice(product.price1)}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-xs text-slate-500">Stok</p>
-                        <p
-                          className={`font-bold text-sm ${
-                            stockStatus.color === 'error'
-                              ? 'text-rose-500'
-                              : stockStatus.color === 'warning'
-                              ? 'text-amber-500'
-                              : 'text-emerald-600'
-                          }`}
-                        >
-                          {product.stockAmount}
-                        </p>
+                      <div className="flex items-center gap-3 text-right">
+                        <div>
+                          <p className="text-xs text-slate-500">Stok</p>
+                          <p
+                            className={`font-bold text-sm ${
+                              stockStatus.color === 'error'
+                                ? 'text-rose-500'
+                                : stockStatus.color === 'warning'
+                                ? 'text-amber-500'
+                                : 'text-emerald-600'
+                            }`}
+                          >
+                            {product.stockAmount}
+                          </p>
+                        </div>
+                        <Button
+                          size="small"
+                          icon={<EditOutlined />}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            router.push(`/urunler/${product.id}/edit`);
+                          }}
+                        />
                       </div>
                     </div>
                   </div>

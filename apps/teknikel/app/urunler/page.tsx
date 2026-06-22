@@ -2,8 +2,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { redirect } from "next/navigation";
 import { getIdeasoftProducts } from "@/src/services/ideasoft";
-import { revalidateUrunler } from "@/app/actions/revalidate";
-import { CacheRevalidateButton } from "@/app/components/CacheRevalidateButton";
 import ProductGrid from "./ProductGrid";
 import type { Session } from "next-auth";
 
@@ -40,18 +38,6 @@ export default async function UrunlerPage({
 
   return (
     <div className="p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-            Ürünler (Ideasoft)
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Ideasoft üzerinden alınan ürün listesi
-          </p>
-        </div>
-        <CacheRevalidateButton onRevalidate={revalidateUrunler} label="Ürünler Önbelleğini Yenile" />
-      </div>
-
       <ProductGrid
         initialData={safeProducts}
         totalCount={totalCount}
