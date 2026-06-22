@@ -14,6 +14,7 @@ build/
 dist/
 .turbo/
 next-env.d.ts
+*.tsbuildinfo
 
 # =========================================
 # 3. ENVIRONMENT VARIABLES
