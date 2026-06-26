@@ -16,6 +16,7 @@ import {
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import Link from "next/link";
+import PageHeader from "@/components/layout/PageHeader";
 
 interface IyzicoPayment {
   _id: string;
@@ -200,16 +201,72 @@ export default function OdemelerClient() {
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">
-          Iyzico Ödemeleri
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Webhook ile gelen tüm ödeme kayıtları
-        </p>
-      </div>
+    <>
+      <PageHeader
+        title="Iyzico Ödemeleri"
+        subtitle="Webhook ile gelen tüm ödeme kayıtları"
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <Input
+            placeholder="Order veya Customer Ref..."
+            prefix={<SearchOutlined />}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress}
+            style={{ width: "220px" }}
+            size="large"
+          />
 
+          <Select
+            value={statusFilter}
+            onChange={setStatusFilter}
+            style={{ width: "140px" }}
+            size="large"
+            options={[
+              { value: "all", label: "Tümü" },
+              { value: "success", label: "Başarılı" },
+              { value: "failure", label: "Başarısız" },
+              { value: "pending", label: "Beklemede" },
+              { value: "refunded", label: "İade Edildi" },
+            ]}
+          />
+
+          <Select
+            value={eventTypeFilter}
+            onChange={setEventTypeFilter}
+            style={{ width: "180px" }}
+            size="large"
+            options={[
+              { value: "all", label: "Event Tümü" },
+              {
+                value: "subscription.order.success",
+                label: "Abonelik Başarılı",
+              },
+              {
+                value: "subscription.order.failure",
+                label: "Abonelik Başarısız",
+              },
+              { value: "payment.success", label: "Ödeme Başarılı" },
+              { value: "payment.failure", label: "Ödeme Başarısız" },
+              { value: "refund", label: "İade" },
+            ]}
+          />
+
+          <Space>
+            <Button type="primary" onClick={handleSearch} size="large">
+              Ara
+            </Button>
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={fetchPayments}
+              loading={loading}
+              size="large"
+            />
+          </Space>
+        </div>
+      </PageHeader>
+
+      <div className="p-6">
       {error && (
         <div
           className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800"
@@ -222,71 +279,6 @@ export default function OdemelerClient() {
           {error}
         </div>
       )}
-
-      <Card className="shadow-sm mb-6">
-        <div className="flex flex-wrap gap-3 items-end">
-          <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-medium mb-2">Arama</label>
-            <Input
-              placeholder="Order Reference, Customer Reference..."
-              prefix={<SearchOutlined />}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-          </div>
-
-          <div className="min-w-[150px]">
-            <label className="block text-sm font-medium mb-2">Durum</label>
-            <Select
-              value={statusFilter}
-              onChange={setStatusFilter}
-              style={{ width: "100%" }}
-              options={[
-                { value: "all", label: "Tümü" },
-                { value: "success", label: "Başarılı" },
-                { value: "failure", label: "Başarısız" },
-                { value: "pending", label: "Beklemede" },
-                { value: "refunded", label: "İade Edildi" },
-              ]}
-            />
-          </div>
-
-          <div className="min-w-[200px]">
-            <label className="block text-sm font-medium mb-2">Event Tipi</label>
-            <Select
-              value={eventTypeFilter}
-              onChange={setEventTypeFilter}
-              style={{ width: "100%" }}
-              options={[
-                { value: "all", label: "Tümü" },
-                {
-                  value: "subscription.order.success",
-                  label: "Abonelik Başarılı",
-                },
-                {
-                  value: "subscription.order.failure",
-                  label: "Abonelik Başarısız",
-                },
-                { value: "payment.success", label: "Ödeme Başarılı" },
-                { value: "payment.failure", label: "Ödeme Başarısız" },
-                { value: "refund", label: "İade" },
-              ]}
-            />
-          </div>
-
-          <Space>
-            <Button type="primary" onClick={handleSearch}>
-              Ara
-            </Button>
-            <Button
-              icon={<ReloadOutlined />}
-              onClick={fetchPayments}
-              loading={loading}
-            />
-          </Space>
-        </div>
-      </Card>
 
       <Card className="shadow-sm">
         <Spin spinning={loading}>
@@ -316,6 +308,7 @@ export default function OdemelerClient() {
           )}
         </Spin>
       </Card>
-    </div>
+      </div>
+    </>
   );
 }

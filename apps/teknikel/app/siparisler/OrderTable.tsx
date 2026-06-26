@@ -24,6 +24,7 @@ import {
 } from "@ant-design/icons";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
+import PageHeader from "@/components/layout/PageHeader";
 import { printEmptyOrder } from "./utils/printOrder";
 import OrderCard from "./OrderCard";
 import { CacheRevalidateButton } from "@/app/components/CacheRevalidateButton";
@@ -297,75 +298,48 @@ export default function OrderTable({
         </div>
       )}
 
-      {/* Üst Toolbar */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "12px",
-          marginBottom: "16px",
-        }}
-        className="w-full sticky top-0 z-10 p-4 backdrop-blur-lg border-b border-gray-200 dark:border-gray-900"
+      <PageHeader
+        title="Sipariş Listesi"
+        subtitle={
+          <>Toplam <strong>{totalCount}</strong> siparişinizi burada yönetebilirsiniz</>
+        }
       >
-        {/* Başlık */}
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-            Sipariş Listesi
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Toplam {totalCount} adet siparişinizi burada yönetebilirsiniz
-          </p>
-        </div>
-
-        {/* Sol: Arama */}
         <Input
           prefix={<SearchOutlined style={{ color: "#9ca3af" }} />}
           placeholder="Müşteri Ara"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          style={{ width: "240px", marginInlineStart: "auto" }}
           allowClear
+          size="large"
+          style={{ width: "200px" }}
+        />
+
+        <Select
+          value={statusFilter}
+          onChange={handleStatusChange}
+          options={statusOptions}
+          style={{ width: "180px" }}
+          placeholder="Durum Filtresi"
           size="large"
         />
 
-        {/* Sağ: Durum filtresi + Diğer sayfalar + Boş Şablon + Yenile */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            flexWrap: "wrap",
-          }}
-        >
-          <Select
-            value={statusFilter}
-            onChange={handleStatusChange}
-            options={statusOptions}
-            style={{ width: "180px" }}
-            placeholder="Durum Filtresi"
-            size="large"
-          />
+        <Dropdown menu={otherPagesMenu} trigger={["click"]}>
+          <Button size="large">
+            Diğer Sayfalar <DownOutlined />
+          </Button>
+        </Dropdown>
 
-          <Dropdown menu={otherPagesMenu} trigger={["click"]}>
-            <Button size="large">
-              Diğer sayfalar <DownOutlined />
-            </Button>
-          </Dropdown>
+        <Button size="large" onClick={() => setEmptyPrintOpen(true)}>
+          <PrinterOutlined /> Boş Şablon Yazdır
+        </Button>
 
-           <Button
-             icon={<FileAddOutlined />}
-             onClick={() => setEmptyPrintOpen(true)}
-             size="large"
-           >
-             Boş Şablon
-           </Button>
+        <CacheRevalidateButton
+          onRevalidate={onRevalidate}
+          label="Siparişleri Yenile"
+        />
+      </PageHeader>
 
-           <CacheRevalidateButton onRevalidate={onRevalidate} label="Yenile" />
-        </div>
-      </div>
-
-      <div className="w-full max-w-5xl mt-4 mx-auto">
+      <div className="w-full max-w-5xl mt-6 mx-auto">
         {/* Sayfalama + Sıralama + Gösterim Satırı */}
         {totalPages > 1 && (
           <div

@@ -15,6 +15,9 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useSyncContext } from '@/src/context/SyncContext';
+import { revalidateStoklar } from '@/app/actions/revalidate';
+import { CacheRevalidateButton } from '@/app/components/CacheRevalidateButton';
+import PageHeader from '@/components/layout/PageHeader';
 import SingleSyncModal from './SingleSyncModal';
 
 interface BilsoftStokKarti {
@@ -263,33 +266,31 @@ export default function StokTable({ initialData, totalCount, currentPage }: Stok
 
   return (
     <>
-      <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mb-4">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Input.Search
-              placeholder="Stok kodu, adı veya barkod ile ara..."
-              onSearch={handleSearch}
-              defaultValue={searchParams.get('q') || ''}
-              allowClear
-              enterButton
-              className="max-w-md"
-            />
-            <div className="text-sm text-slate-500 dark:text-slate-400">
-              Toplam <strong>{totalCount}</strong> stok kartı
-            </div>
-          </div>
-          <Button
-            icon={<SyncOutlined />}
-            onClick={openSyncModal}
-            type="primary"
-            style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
-          >
-            Stok & Fiyat Senkronizasyonu
-          </Button>
-        </div>
-      </Card>
+      <PageHeader
+        title="Stok Kartları (Bilsoft)"
+        subtitle={<>Toplam <strong>{totalCount}</strong> stok kartı</>}
+      >
+        <Input.Search
+          placeholder="Stok kodu, adı veya barkod..."
+          onSearch={handleSearch}
+          defaultValue={searchParams.get('q') || ''}
+          allowClear
+          size="large"
+          className="w-[260px]"
+        />
+        <Button
+          icon={<SyncOutlined />}
+          onClick={openSyncModal}
+          type="primary"
+          size="large"
+          className="bg-primary"
+        >
+          Senkronizasyon
+        </Button>
+        <CacheRevalidateButton onRevalidate={revalidateStoklar} label="Yenile" />
+      </PageHeader>
 
-      <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-6">
         <Table
           columns={columns}
           dataSource={initialData}

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import Sidebar from "./Sidebar";
 
-const { Content } = Layout;
+const { Content, Header } = Layout;
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -39,6 +39,27 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           minHeight: "100vh"
         }}
       >
+        {!isAuthPage && (
+          <Header 
+            id="main-layout-header"
+            style={{ 
+              padding: '0 24px', 
+              background: isDark ? "rgba(2, 6, 23, 0.7)" : "rgba(255, 255, 255, 0.7)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              borderBottom: `1px solid ${isDark ? '#1e293b' : '#e2e8f0'}`,
+              display: 'none', // Sadece sayfa içinden portal ile aktif edilecek
+              alignItems: 'center',
+              position: 'sticky',
+              top: 0,
+              zIndex: 50,
+              height: 72,
+              lineHeight: 'normal'
+            }}
+          >
+            <div id="layout-header-portal" className="w-full h-full flex items-center justify-between"></div>
+          </Header>
+        )}
         <Content className="min-h-screen">
           <AnimatePresence mode="wait">
             <motion.div

@@ -60,6 +60,7 @@ import {
 import { syncAndScoreLeads } from "../actions/bilsoft-actions";
 import { revalidateLeads } from "../actions/revalidate";
 import { scrapeLeads } from "../actions/scrape-leads";
+import PageHeader from "@/components/layout/PageHeader";
 
 const { Text } = Typography;
 
@@ -505,20 +506,15 @@ export default function LeadsPage() {
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto flex flex-col gap-6 animate-in fade-in duration-700">
+    <>
       {contextHolder}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-        <div>
-          <h1 className="text-xl font-bold text-slate-800 dark:text-white">
-            Yeni Adaylar (Potansiyel Müşteriler)
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Google üzerinden taranan usta ve dükkan listesi
-          </p>
-        </div>
+      <PageHeader
+        title="Yeni Adaylar (Potansiyel Müşteriler)"
+        subtitle="Google üzerinden taranan usta ve dükkan listesi"
+      >
         <div className="flex items-center gap-2">
           <Input
-            size="small"
+            size="large"
             prefix={<SearchOutlined size={14} className="text-slate-400" />}
             placeholder="Ara..."
             value={searchText}
@@ -527,23 +523,9 @@ export default function LeadsPage() {
             className="w-40 dark:bg-slate-900 dark:border-slate-800"
           />
           <Button
-            icon={
-              <RotateCw
-                size={14}
-                className={refreshing ? "animate-spin" : ""}
-              />
-            }
-            size="small"
-            onClick={handleRefresh}
-            loading={refreshing}
-            className="flex items-center justify-center"
-          >
-            Listeyi Güncelle
-          </Button>
-          <Button
             type="primary"
             icon={<Radar size={14} />}
-            size="small"
+            size="large"
             className="bg-primary shadow-md hover:shadow-lg transition-all"
             onClick={() => setIsScannerOpen(true)}
           >
@@ -557,15 +539,31 @@ export default function LeadsPage() {
                 className={isSyncing ? "animate-pulse" : ""}
               />
             }
-            size="small"
+            size="large"
             onClick={handleBilsoftSync}
             loading={isSyncing}
             className="border-blue-200 text-blue-600 hover:bg-blue-50"
           >
-            Muhasebe Senkronizasyon
+            Muhasebe Senk
+          </Button>
+          <Button
+            icon={
+              <RotateCw
+                size={14}
+                className={refreshing ? "animate-spin" : ""}
+              />
+            }
+            size="large"
+            onClick={handleRefresh}
+            loading={refreshing}
+            className="flex items-center justify-center"
+          >
+            Yenile
           </Button>
         </div>
-      </div>
+      </PageHeader>
+
+      <div className="p-6 max-w-7xl mx-auto flex flex-col gap-6 animate-in fade-in duration-700">
 
       <div className="bg-white dark:bg-slate-900/50 rounded-md border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <Table
@@ -868,6 +866,7 @@ export default function LeadsPage() {
           margin-left: 28px !important;
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }

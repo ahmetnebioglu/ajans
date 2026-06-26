@@ -248,6 +248,8 @@ const _fetchAllBilsoftCariler = async (): Promise<string> => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          aranacakKelime: '',
+          searchType: ['Contains'],
           subeAdi: 'Merkez',
           pagingOptions: {
             pageSize,
@@ -460,6 +462,8 @@ const _fetchAllBilsoftFaturalar = async (): Promise<string> => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          aranacakKelime: '',
+          searchType: ['Contains'],
           subeAdi: 'Merkez',
           pagingOptions: {
             pageSize,
@@ -561,7 +565,51 @@ export async function getBilsoftFaturaById(id: string | number): Promise<Bilsoft
     return null;
   }
 }
+// ============================================================
+// FATURA OLUŞTURMA VE RAPORLAMA SERVİSLERİ
+// ============================================================
 
+/**
+ * Belirli bir cari ID'si için sadece en son faturayı çeker.
+ * (Cron job vb. arka plan görevleri için optimize edilmiştir)
+ */
+export async function getBilsoftLatestInvoiceForCari(cariId: string | number): Promise<string | null> {
+  try {
+    const token = await getValidToken();
+
+    const response = await fetch('https://apiv3.bilsoft.com/api/Fatura/getall', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        aranacakKelime: '',
+        searchType: ['Contains'],
+        subeAdi: 'Merkez',
+        pagingOptions: {
+          pageSize: 1, // Sadece en sonuncuyu istiyoruz
+          pageNumber: 0,
+        },
+        veri: { cariId },
+      }),
+      cache: 'no-store',
+    });
+
+    const result = await response.json();
+    
+    if (result.success && result.data && result.data.data && result.data.data.length > 0) {
+      // API faturayı döndürdüğünde tarihini al
+      const latestInvoice = result.data.data[0];
+      return latestInvoice.fatTarih || null;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error(`[BilsoftService] Cari ${cariId} için fatura çekilemedi:`, error);
+    return null;
+  }
+}
 // ============================================================
 // STOK KARTI SERVİSLERİ
 // ============================================================

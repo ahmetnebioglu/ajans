@@ -10,6 +10,9 @@ import {
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { revalidateFaturalar } from '@/app/actions/revalidate';
+import { CacheRevalidateButton } from '@/app/components/CacheRevalidateButton';
+import PageHeader from '@/components/layout/PageHeader';
 
 interface BilsoftFatura {
   id: number;
@@ -216,20 +219,23 @@ export default function FaturaTable({ initialData, totalCount, currentPage }: Fa
   ];
 
   return (
-    <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-      <div className="mb-4 flex items-center justify-between gap-4">
+    <>
+      <PageHeader
+        title="Faturalar (Bilsoft)"
+        subtitle={<>Toplam <strong>{totalCount}</strong> fatura</>}
+      >
         <Input.Search
-          placeholder="Ünvan, cari kodu veya fiş no ile ara..."
+          placeholder="Ünvan, cari kodu, fiş no..."
           onSearch={handleSearch}
           defaultValue={searchParams.get('q') || ''}
           allowClear
-          enterButton
-          className="max-w-md"
+          size="large"
+          className="w-[260px]"
         />
-        <div className="text-sm text-slate-500 dark:text-slate-400">
-          Toplam <strong>{totalCount}</strong> fatura
-        </div>
-      </div>
+        <CacheRevalidateButton onRevalidate={revalidateFaturalar} label="Yenile" />
+      </PageHeader>
+
+      <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-6">
 
       <Table
         columns={columns}
@@ -251,5 +257,6 @@ export default function FaturaTable({ initialData, totalCount, currentPage }: Fa
         className="fatura-table"
       />
     </Card>
+    </>
   );
 }

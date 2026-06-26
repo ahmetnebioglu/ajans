@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Table, Input, Tag, Card, Tooltip } from 'antd';
 import {
@@ -11,6 +11,9 @@ import {
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { revalidateMusteriler } from '@/app/actions/revalidate';
+import { CacheRevalidateButton } from '@/app/components/CacheRevalidateButton';
+import PageHeader from '@/components/layout/PageHeader';
 
 interface IdeasoftCustomer {
   id: number;
@@ -102,11 +105,11 @@ export default function CustomerTable({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [filteredData, setFilteredData] = React.useState(initialData);
-  const [searchTerm, setSearchTerm] = React.useState(searchParams.get('q') || '');
+  const [filteredData, setFilteredData] = useState(initialData);
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
 
   // Client-side arama (legacy'deki gibi)
-  React.useEffect(() => {
+  useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredData(initialData);
       return;
@@ -300,26 +303,32 @@ export default function CustomerTable({
         </div>
       )}
 
-      <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <Input.Search
-          placeholder="Ad, soyad, e-posta, telefon ile ara..."
+      <PageHeader 
+        title="Müşteriler"
+        subtitle={
+          <>
+            Toplam <strong>{totalCount}</strong> müşteri
+            {searchTerm && (
+              <span className="ml-1">
+                ({filteredData.length} sonuç bulundu)
+              </span>
+            )}
+          </>
+        }
+      >
+        <Input.Search
+          placeholder="Ad, soyad, e-posta, telefon..."
           onSearch={handleSearch}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           allowClear
-          enterButton
-          className="max-w-md"
-          />
-          <div className="text-sm text-slate-500 dark:text-slate-400">
-            Toplam <strong>{totalCount}</strong> müşteri
-            {searchTerm && (
-              <span className="ml-2">
-                ({filteredData.length} sonuç)
-              </span>
-            )}
-          </div>
-        </div>
+          size="large"
+          className="w-[280px]"
+        />
+        <CacheRevalidateButton onRevalidate={revalidateMusteriler} label="Yenile" />
+      </PageHeader>
+
+      <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-6">
 
         <Table
         columns={columns}

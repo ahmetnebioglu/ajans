@@ -2,8 +2,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { redirect } from "next/navigation";
 import { getBilsoftFaturalar } from "@/src/services/bilsoft";
-import { revalidateFaturalar } from "@/app/actions/revalidate";
-import { CacheRevalidateButton } from "@/app/components/CacheRevalidateButton";
 import FaturaTable from "./FaturaTable";
 import type { Session } from "next-auth";
 
@@ -27,18 +25,6 @@ export default async function FaturalarPage({
 
   return (
     <div className="p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-            Faturalar (Bilsoft)
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Bilsoft Ön Muhasebe sistemindeki güncel fatura listesi
-          </p>
-        </div>
-        <CacheRevalidateButton onRevalidate={revalidateFaturalar} label="Faturalar Önbelleğini Yenile" />
-      </div>
-
       <FaturaTable
         initialData={safeFaturalar}
         totalCount={totalCount}

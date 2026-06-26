@@ -3,9 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Table, Input, Tag, Card, Button, Space } from 'antd';
-import { UserOutlined, PhoneOutlined, HomeOutlined, PlusOutlined } from '@ant-design/icons';
+import { UserOutlined, PhoneOutlined, HomeOutlined, PlusOutlined, BarChartOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { revalidateCariler } from '@/app/actions/revalidate';
+import { CacheRevalidateButton } from '@/app/components/CacheRevalidateButton';
+import PageHeader from '@/components/layout/PageHeader';
 import CariEkleDrawer from './CariEkleDrawer';
 
 interface BilsoftCari {
@@ -111,25 +114,39 @@ export default function CariTable({ initialData, totalCount, currentPage }: Cari
   ];
 
   return (
-    <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-      <div className="mb-4 flex items-center justify-between gap-4">
+    <>
+      <PageHeader
+        title="Cariler (Bilsoft)"
+        subtitle={
+          <>Toplam <strong>{totalCount}</strong> cari</>
+        }
+      >
         <Input.Search
-          placeholder="Bilsoft sisteminde ara..."
+          placeholder="Ara..."
           onSearch={handleSearch}
           defaultValue={searchParams.get('q') || ''}
           allowClear
-          enterButton
-          className="max-w-md dark:bg-slate-800 dark:border-slate-700"
+          size="large"
+          className="w-[200px]"
         />
+        <Link href="/cariler/rapor">
+          <Button size="large" icon={<BarChartOutlined />}>
+            Rapor
+          </Button>
+        </Link>
         <Button 
           type="primary" 
           icon={<PlusOutlined />} 
+          size="large"
           onClick={() => setDrawerOpen(true)}
           className="bg-primary"
         >
           Yeni Cari Ekle
         </Button>
-      </div>
+        <CacheRevalidateButton onRevalidate={revalidateCariler} label="Yenile" />
+      </PageHeader>
+
+      <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-6">
 
       <Table
         columns={columns}
@@ -152,5 +169,6 @@ export default function CariTable({ initialData, totalCount, currentPage }: Cari
         onClose={() => setDrawerOpen(false)} 
       />
     </Card>
+    </>
   );
 }
