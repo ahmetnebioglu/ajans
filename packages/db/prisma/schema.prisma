@@ -810,3 +810,20 @@ model SmsRecord {
   @@index([status])
   @@index([recipient])
 }
+
+model BilsoftCariCache {
+  id              String    @id @default(cuid())
+  cariId          Int       @unique
+  cariKod         String?
+  faturaUnvan     String
+  yetkili         String?
+  cep             String?
+  tel             String?
+  mail            String?
+  grup            String?
+  lastInvoiceDate DateTime?
+  lastCheckedAt   DateTime  @default(now())
+  tenantId        String    @default("teknikel")
+
+  @@index([tenantId])
+}
