@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, Progress, Spin, Alert, Descriptions, Tag, Row, Col, Statistic } from "antd";
+import { Card, Progress, Spin, Alert, Tag, Row, Col, Statistic } from "antd";
 import { MessageSquare, Calendar, CreditCard, Send, Radio, Building2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { format } from "date-fns";
@@ -221,75 +221,67 @@ export default function SmsClient() {
             }
             className={isDark ? "bg-zinc-900 border-white/10" : ""}
           >
-            <Descriptions
-              column={{ xs: 1, sm: 2 }}
-              size="small"
-              styles={{
-                label: { color: isDark ? "#94a3b8" : undefined, fontWeight: 500 },
-                content: { color: isDark ? "#e2e8f0" : undefined }
-              }}
-            >
-              <Descriptions.Item
-                label={
-                  <span className="flex items-center gap-1.5">
-                    <Calendar size={14} /> Paket Başlangıç
-                  </span>
-                }
-              >
-                {formatDate(creditInfo.startDate)}
-              </Descriptions.Item>
-              <Descriptions.Item
-                label={
-                  <span className="flex items-center gap-1.5">
-                    <Calendar size={14} /> Paket Bitiş
-                  </span>
-                }
-              >
-                {formatDate(creditInfo.endDate)}
-              </Descriptions.Item>
-              <Descriptions.Item
-                label={
-                  <span className="flex items-center gap-1.5">
-                    <Send size={14} /> Son Gönderim
-                  </span>
-                }
-              >
-                {formatDateTime(creditInfo.lastSentDate)}
-              </Descriptions.Item>
-              <Descriptions.Item
-                label={
-                  <span className="flex items-center gap-1.5">
-                    <CreditCard size={14} /> Son Yükleme
-                  </span>
-                }
-              >
-                {formatDate(creditInfo.lastRechargeDate)}
-              </Descriptions.Item>
-              <Descriptions.Item
-                label={
-                  <span className="flex items-center gap-1.5">
-                    <Building2 size={14} /> Son Yükleme Miktarı
-                  </span>
-                }
-              >
-                {formatNumber(creditInfo.lastRechargeAmount)} SMS
-              </Descriptions.Item>
-              <Descriptions.Item
-                label={
-                  <span className="flex items-center gap-1.5">
-                    <Radio size={14} /> Gönderici Adları
-                  </span>
-                }
-              >
-                {Array.isArray(creditInfo.senderNames) && creditInfo.senderNames.length > 0
-                  ? creditInfo.senderNames.map((name) => (
-                      <Tag key={name} color="blue" className="mr-1">
-                        {name}
-                      </Tag>
-                    ))
-                  : "Belirtilmemiş"}
-              </Descriptions.Item>
-            </Descriptions>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
+              <div className="flex flex-col">
+                <span className={`flex items-center gap-1.5 text-xs font-medium mb-1.5 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  <Calendar size={14} /> Paket Başlangıç
+                </span>
+                <span className={`text-sm font-medium ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                  {formatDate(creditInfo.startDate)}
+                </span>
+              </div>
+              
+              <div className="flex flex-col">
+                <span className={`flex items-center gap-1.5 text-xs font-medium mb-1.5 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  <Calendar size={14} /> Paket Bitiş
+                </span>
+                <span className={`text-sm font-medium ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                  {formatDate(creditInfo.endDate)}
+                </span>
+              </div>
+
+              <div className="flex flex-col">
+                <span className={`flex items-center gap-1.5 text-xs font-medium mb-1.5 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  <Send size={14} /> Son Gönderim
+                </span>
+                <span className={`text-sm font-medium ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                  {formatDateTime(creditInfo.lastSentDate)}
+                </span>
+              </div>
+
+              <div className="flex flex-col">
+                <span className={`flex items-center gap-1.5 text-xs font-medium mb-1.5 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  <CreditCard size={14} /> Son Yükleme
+                </span>
+                <span className={`text-sm font-medium ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                  {formatDate(creditInfo.lastRechargeDate)}
+                </span>
+              </div>
+
+              <div className="flex flex-col">
+                <span className={`flex items-center gap-1.5 text-xs font-medium mb-1.5 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  <Building2 size={14} /> Son Yükleme Miktarı
+                </span>
+                <span className={`text-sm font-medium ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                  {formatNumber(creditInfo.lastRechargeAmount)} SMS
+                </span>
+              </div>
+
+              <div className="flex flex-col">
+                <span className={`flex items-center gap-1.5 text-xs font-medium mb-1.5 ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  <Radio size={14} /> Gönderici Adları
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {Array.isArray(creditInfo.senderNames) && creditInfo.senderNames.length > 0
+                    ? creditInfo.senderNames.map((name) => (
+                        <Tag key={name} color="blue" className="m-0">
+                          {name}
+                        </Tag>
+                      ))
+                    : <span className={`text-sm font-medium ${isDark ? "text-slate-200" : "text-slate-700"}`}>Belirtilmemiş</span>}
+                </div>
+              </div>
+            </div>
           </Card>
 
           {/* Düşük Bakiye Uyarısı */}
