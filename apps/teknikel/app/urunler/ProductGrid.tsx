@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card, Input, Select, Pagination, Button, Space, Empty } from 'antd';
 import {
@@ -12,6 +12,7 @@ import {
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { revalidateUrunler } from '@/app/actions/revalidate';
 import { CacheRevalidateButton } from '@/app/components/CacheRevalidateButton';
+import PageHeader from '@/components/layout/PageHeader';
 
 interface IdeasoftProduct {
   id: number;
@@ -81,7 +82,7 @@ export default function ProductGrid({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -151,38 +152,33 @@ export default function ProductGrid({
         </div>
       )}
 
-      {/* Header Alanı */}
-      <div className="mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-            Ürünler (Ideasoft)
-          </h1>
-          <div className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+      <PageHeader
+        title="Ürünler"
+        subtitle={
+          <>
             Toplam <strong>{totalCount}</strong> ürün
             {searchTerm && <span> • "{searchTerm}" araması</span>}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Input.Search
-            placeholder="Ürün ara..."
-            onSearch={handleSearch}
-            defaultValue={searchTerm}
-            allowClear
-            size="large"
-            className="w-[160px]"
-          />
-          <Select
-            value={sort}
-            onChange={handleSortChange}
-            options={sortOptions}
-            size="large"
-            className="w-[160px]"
-            prefix={<SortAscendingOutlined />}
-          />
-          <CacheRevalidateButton onRevalidate={revalidateUrunler} label="Yenile" />
-        </div>
-      </div>
+          </>
+        }
+      >
+        <Input.Search
+          placeholder="Ürün ara..."
+          onSearch={handleSearch}
+          defaultValue={searchTerm}
+          allowClear
+          size="large"
+          className="w-[160px]"
+        />
+        <Select
+          value={sort}
+          onChange={handleSortChange}
+          options={sortOptions}
+          size="large"
+          className="w-[160px]"
+          prefix={<SortAscendingOutlined />}
+        />
+        <CacheRevalidateButton onRevalidate={revalidateUrunler} label="Yenile" />
+      </PageHeader>
 
       {/* Ürün Grid */}
       {initialData.length === 0 ? (

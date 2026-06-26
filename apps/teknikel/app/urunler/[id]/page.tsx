@@ -22,6 +22,7 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import ProductImageGallery from "./ProductImageGallery";
+import PageHeader from "@/components/layout/PageHeader";
 
 
 const formatPrice = (price: number | null | undefined) => {
@@ -63,42 +64,34 @@ export default async function UrunDetailPage({
   const defaultImage = "/default.webp";
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      {/* Başlık */}
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/urunler">
-            <Button icon={<ArrowLeftOutlined />} />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-0">
-              {safeProduct.name}
-            </h1>
-            <div className="flex items-center gap-3 mt-1">
-              <span className="text-slate-400 text-sm font-mono">
-                {safeProduct.sku}
-              </span>
-              {safeProduct.brand && (
-                <>
-                  <span className="text-slate-300">|</span>
-                  <span className="text-slate-400 text-sm">
-                    {safeProduct.brand.name}
-                  </span>
-                </>
-              )}
-            </div>
+    <>
+      <PageHeader
+        title={safeProduct.name}
+        subtitle={
+          <div className="flex items-center gap-3">
+            <span className="font-mono">{safeProduct.sku}</span>
+            {safeProduct.brand && (
+              <>
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <span>{safeProduct.brand.name}</span>
+              </>
+            )}
           </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href={`/urunler/${id}/edit`}>
-            <Button type="primary" icon={<EditOutlined />}>Düzenle</Button>
-          </Link>
-          <Tag color={stockStatus.color} className="font-bold text-sm px-3 py-1">
-            {stockStatus.label}: {safeProduct.stockAmount}{" "}
-            {safeProduct.stockTypeLabel || "Adet"}
-          </Tag>
-        </div>
-      </div>
+        }
+      >
+        <Link href="/urunler">
+          <Button icon={<ArrowLeftOutlined />} size="large">Geri</Button>
+        </Link>
+        <Link href={`/urunler/${id}/edit`}>
+          <Button type="primary" icon={<EditOutlined />} size="large">Düzenle</Button>
+        </Link>
+        <Tag color={stockStatus.color} className="font-bold text-sm px-3 py-2 m-0 flex items-center">
+          {stockStatus.label}: {safeProduct.stockAmount}{" "}
+          {safeProduct.stockTypeLabel || "Adet"}
+        </Tag>
+      </PageHeader>
+
+      <div className="p-6 max-w-6xl mx-auto mt-4">
 
       <Row gutter={[24, 24]}>
         {/* Sol Kolon - Görsel */}
@@ -125,7 +118,7 @@ export default async function UrunDetailPage({
               className="shadow-sm border-slate-100 dark:border-slate-800"
             >
               <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
                   <span className="text-slate-600 dark:text-slate-300">
                     Fiyat 1
                   </span>
@@ -134,7 +127,7 @@ export default async function UrunDetailPage({
                   </span>
                 </div>
                 {safeProduct.price2 && safeProduct.price2 !== safeProduct.price1 && (
-                  <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                  <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
                     <span className="text-slate-600 dark:text-slate-300">
                       Fiyat 2
                     </span>
@@ -146,7 +139,7 @@ export default async function UrunDetailPage({
                 {safeProduct.price3 &&
                   safeProduct.price3 !== safeProduct.price1 &&
                   safeProduct.price3 !== safeProduct.price2 && (
-                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
                       <span className="text-slate-600 dark:text-slate-300">
                         Fiyat 3
                       </span>
@@ -253,5 +246,6 @@ export default async function UrunDetailPage({
         </Card>
       )}
     </div>
+    </>
   );
 }

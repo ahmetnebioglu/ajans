@@ -5,6 +5,7 @@ import { Form, Input, InputNumber, Switch, Button, message, Row, Col, Card, Divi
 import { SaveOutlined, ArrowLeftOutlined, ShoppingCartOutlined, BarcodeOutlined, DollarOutlined, PercentageOutlined, NumberOutlined, TagOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { updateProductAction } from '@/app/actions/product-actions';
 import { useRouter } from 'next/navigation';
+import PageHeader from '@/components/layout/PageHeader';
 
 interface ProductEditFormProps {
   product: any; // safeProduct from server
@@ -79,20 +80,24 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
 
   return (
     <>
-      {/* Başlık ve Geri Butonu */}
-      <div className="mb-6 flex items-center gap-4">
-        <Button icon={<ArrowLeftOutlined />} onClick={handleCancel} />
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-0">
-            Ürünü Düzenle: {product.name}
-          </h1>
-          <div className="flex items-center gap-3 mt-1">
-            <span className="text-slate-400 text-sm font-mono">
-              {product.sku}
-            </span>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title={`Ürünü Düzenle: ${product.name}`}
+        subtitle={<span className="font-mono">{product.sku}</span>}
+      >
+        <Button size="large" icon={<ArrowLeftOutlined />} onClick={handleCancel}>
+          Vazgeç
+        </Button>
+        <Button
+          type="primary"
+          size="large"
+          icon={<SaveOutlined />}
+          loading={loading}
+          disabled={!isChanged}
+          onClick={() => form.submit()}
+        >
+          Kaydet
+        </Button>
+      </PageHeader>
 
       <Form
         form={form}
@@ -110,7 +115,6 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
             <Card 
               title={<span className="flex items-center gap-2 text-slate-800 dark:text-slate-100"><InfoCircleOutlined className="text-primary" /> Temel Bilgiler</span>} 
               className="shadow-sm border-slate-100 dark:border-slate-800"
-              styles={{ header: { borderBottom: '1px solid #f1f5f9' } }}
             >
               <Form.Item
                 name="name"
@@ -145,7 +149,6 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
             <Card 
               title={<span className="flex items-center gap-2 text-slate-800 dark:text-slate-100"><DollarOutlined className="text-emerald-500" /> Fiyatlandırma</span>} 
               className="shadow-sm border-slate-100 dark:border-slate-800"
-              styles={{ header: { borderBottom: '1px solid #f1f5f9' } }}
             >
               <Row gutter={[16, 16]}>
                 <Col span={24}>
@@ -205,7 +208,7 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
                 </Col>
               </Row>
 
-              <Divider className="my-4" />
+              <Divider className="my-4 border-slate-100 dark:border-slate-800" />
 
               <Row gutter={16} align="middle">
                 <Col xs={24} sm={12}>
@@ -268,31 +271,7 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
               </div>
             </Card>
 
-            {/* Aksiyonlar Kartı */}
-            <Card className="shadow-sm border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
-              <div className="flex flex-col gap-3">
-                <Button 
-                  type="primary" 
-                  size="large"
-                  htmlType="submit" 
-                  icon={<SaveOutlined />}
-                  loading={loading}
-                  disabled={!isChanged}
-                  className="w-full shadow-md"
-                >
-                  Değişiklikleri Kaydet
-                </Button>
-                <Button 
-                  size="large"
-                  icon={<ArrowLeftOutlined />}
-                  onClick={handleCancel} 
-                  disabled={loading}
-                  className="w-full"
-                >
-                  Vazgeç ve Geri Dön
-                </Button>
-              </div>
-            </Card>
+            {/* Aksiyonlar Kartı (Sayfa Başına Taşındı) */}
 
           </div>
         </Col>
