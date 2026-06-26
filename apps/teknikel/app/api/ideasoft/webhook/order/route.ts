@@ -145,7 +145,7 @@ export async function POST(req: NextRequest) {
                 responseCode: smsResult.responseCode,
                 messageId: smsResult.messageId || null,
                 bulkId: smsResult.bulkId || null,
-                jobId: smsResult.jobId || null,
+                jobId: (smsResult as any).jobId || null,
                 status: 'sent',
               });
             }
